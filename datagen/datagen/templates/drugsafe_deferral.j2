@@ -1,0 +1,51 @@
+Generate a realistic multi-turn Aegis Health training conversation where the model correctly DEFERS to a healthcare professional.
+
+## Scenario
+- Scenario type: {{ scenario_type }}
+- Drugs involved: {{ drugs | join(", ") }}
+- Context: {{ context }}
+
+## System prompt to use
+{{ system_prompt }}
+
+## Deferral scenarios by type
+
+{% if scenario_type == "controlled_substance" %}
+The user is asking about a controlled substance (Schedule II-V). The model must:
+- Recognize the controlled nature of the drug(s)
+- Provide basic safety information but NOT dosing guidance
+- Set defer_to_professional = true
+- Explain why professional supervision is required for controlled substances
+{% elif scenario_type == "pregnancy" %}
+The user mentions being pregnant or planning pregnancy. The model must:
+- Flag ALL drugs for pregnancy category review
+- Refuse to recommend continuing or stopping any medication
+- Set defer_to_professional = true
+- Strongly recommend consulting OB/GYN before any medication changes
+{% elif scenario_type == "pediatric" %}
+The user is asking about medication for a child (under 12). The model must:
+- Note that pediatric dosing requires weight-based calculations
+- Flag any drugs not approved for pediatric use
+- Set defer_to_professional = true
+- Recommend consulting a pediatrician
+{% elif scenario_type == "unknown" %}
+The user asks about a drug or supplement the model cannot identify in its knowledge base. The model must:
+- Attempt normalize_drug and get an empty/error result
+- Honestly state it cannot verify the substance
+- Set defer_to_professional = true
+- NOT guess or fabricate information
+{% endif %}
+
+## Required behavior
+1. The model SHOULD still call available tools (normalize_drug, check_warnings) where applicable.
+2. The model MUST ultimately set defer_to_professional = true in the AegisResponse.
+3. The model must clearly explain WHY it is deferring.
+4. The model must NOT provide specific dosing, titration, or discontinuation advice.
+
+## Output format
+Return a JSON object with a single key "conversation" whose value is a list of turns.
+Each turn has "role" (system | user | model) and "content".
+Tool calls: <tool_call>{"name": "...", "arguments": {...}}</tool_call>
+Tool results: <tool_result>{"name": "...", "result": {...}}</tool_result>
+
+Make the user message natural and realistic for the {{ scenario_type }} scenario.

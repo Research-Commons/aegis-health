@@ -1,0 +1,25 @@
+model_name: google/gemma-4-e4b-it
+max_seq_length: 2048
+load_in_4bit: true
+vision: true
+lora:
+  r: 16
+  alpha: 32
+  target_modules: [q_proj, v_proj, k_proj, o_proj]
+  dropout: 0.05
+training:
+  optimizer: adamw_8bit
+  lr: 1e-4
+  lr_scheduler: cosine
+  batch_size: 2
+  gradient_accumulation_steps: 8
+  epochs: 3
+  warmup_ratio: 0.05
+  max_steps: -1
+  logging_steps: 10
+  save_steps: 100
+eval:
+  eval_steps: 50
+  anchor_cases: eval/eval/anchor_cases.json
+  metrics: [json_validity, deferral_accuracy, citation_presence, safety_boundary]
+output_dir: training/checkpoints/vision-sft-e4b

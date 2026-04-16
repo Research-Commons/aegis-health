@@ -1,0 +1,32 @@
+base_model: training/checkpoints/aegis-sft-merged/
+max_seq_length: 2048
+load_in_4bit: true
+
+grpo:
+  beta: 0.1
+  epsilon: 0.2
+  loss_type: dapo
+  num_generations: 4
+  max_new_tokens: 512
+  temperature: 0.7
+
+training:
+  optimizer: adamw_8bit
+  lr: 5e-6
+  lr_scheduler: cosine
+  batch_size: 2
+  gradient_accumulation_steps: 8
+  epochs: 1
+  warmup_ratio: 0.05
+  logging_steps: 5
+  save_steps: 50
+
+reward:
+  weights:
+    json: 0.2
+    citation: 0.2
+    deferral: 0.3
+    safety: 0.3
+
+output_dir: rl/checkpoints/grpo-e4b
+prompt_data: eval/eval/anchor_cases.json

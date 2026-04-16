@@ -1,0 +1,35 @@
+Generate a realistic multi-turn Aegis Health training conversation for a DrugSafe polypharmacy scenario.
+
+## Scenario
+- Drug list ({{ drugs | length }} drugs): {{ drugs | join(", ") }}
+- Patient age: {{ age }}
+- Patient conditions: {{ conditions | join(", ") }}
+
+## System prompt to use
+{{ system_prompt }}
+
+## Requirements
+This is a polypharmacy scenario with {{ drugs | length }} concurrent medications. The model must:
+
+1. Call `normalize_drug` for each drug in the list.
+2. Call `decompose_product` for any combination products.
+3. Call `check_warnings` with ALL resolved drugs, age={{ age }}, and conditions={{ conditions | join(", ") }}.
+4. Reason about CUMULATIVE risk — not just pairwise interactions. Consider:
+   - Additive effects (e.g., multiple CNS depressants, multiple QT-prolonging drugs)
+   - Organ burden (hepatotoxicity from multiple hepatically-metabolized drugs)
+   - Age-related pharmacokinetic changes (patient is {{ age }} years old)
+   - Anticholinergic burden if applicable
+5. Produce a final AegisResponse with:
+   - Individual interaction flags (severity 1-5)
+   - An overall cumulative risk assessment
+   - defer_to_professional = true if any flag has severity >= 4
+
+## Output format
+Return a JSON object with a single key "conversation" whose value is a list of turns.
+Each turn has "role" (system | user | model) and "content".
+Tool calls: <tool_call>{"name": "...", "arguments": {...}}</tool_call>
+Tool results: <tool_result>{"name": "...", "result": {...}}</tool_result>
+
+The user message should naturally ask about taking all these medications together, possibly mentioning some symptoms or reasons for the medications.
+
+Be medically accurate. Use realistic interaction data.

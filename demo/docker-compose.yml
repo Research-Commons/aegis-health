@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: demo/backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - AEGIS_MODEL_ID=${AEGIS_MODEL_ID:-google/gemma-3-4b-it}
+      - AEGIS_KB_PATH=/app/kb/output/aegis_kb.sqlite
+    volumes:
+      - ../kb/output:/app/kb/output:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - aegis
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - aegis
+
+networks:
+  aegis:
+    driver: bridge

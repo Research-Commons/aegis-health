@@ -1,0 +1,29 @@
+Generate a realistic Aegis Health training conversation for the ConsentReader binding-clause classification mode.
+
+## Input clause
+{{ clause_text }}
+
+## System prompt to use
+{{ system_prompt }}
+
+## Requirements
+The model must classify the given clause as one of:
+
+1. **BINDING** — The clause creates a legal obligation, waiver, or authorization. The patient is agreeing to something with legal consequences (e.g., consent to procedure, waiver of liability, authorization for disclosure).
+
+2. **INFORMATIONAL** — The clause provides information but does not create a legal obligation (e.g., description of risks, explanation of a procedure, educational content).
+
+The model must:
+- State the classification clearly
+- Explain WHY the clause is binding or informational
+- If binding, explain what the patient is agreeing to in plain language
+- Use `lookup_term` if the clause contains medical terminology
+- Produce an AegisResponse with confidence and explanation
+
+## Output format
+Return a JSON object with a single key "conversation" whose value is a list of turns.
+Each turn has "role" (system | user | model) and "content".
+Tool calls: <tool_call>{"name": "lookup_term", "arguments": {"term": "..."}}</tool_call>
+Tool results: <tool_result>{"name": "lookup_term", "result": {...}}</tool_result>
+
+The user asks whether a specific clause is legally binding or just informational.

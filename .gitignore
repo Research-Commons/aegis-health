@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Generated outputs
+kb/output/*.sqlite
+datagen/output/*.jsonl
+datagen/output/pill_images/*.png
+training/checkpoints/
+rl/checkpoints/
+export/output/*.task
+eval/reports/*.md
+eval/reports/*.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+*.key
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/app/src/main/assets/aegis_model.task
+android/app/src/main/assets/aegis_kb.sqlite
+
+# Node
+node_modules/
+demo/frontend/dist/
+demo/frontend/.next/
+
+# Model weights (too large for git)
+*.bin
+*.safetensors
+*.gguf
+*.tflite
+
+# Jupyter
+.ipynb_checkpoints/
+
+# W&B
+wandb/

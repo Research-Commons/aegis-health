@@ -1,0 +1,31 @@
+Generate a realistic Aegis Health training conversation showing HealthPartner tool-use traces with get_guideline calls.
+
+## Patient profile
+- Age: {{ age }}
+- Sex: {{ sex }}
+- Conditions: {{ conditions | join(", ") if conditions else "none" }}
+
+## System prompt to use
+{{ system_prompt }}
+
+## Requirements
+This example focuses on demonstrating correct `get_guideline` tool usage. The model must:
+
+1. Parse the user's natural-language description of themselves to extract age, sex, and conditions.
+2. Call `get_guideline` with the extracted parameters.
+3. Receive structured guideline results and format them into a user-friendly checklist.
+4. If the user mentions symptoms or concerns, call `get_guideline` again with updated conditions to show how recommendations change.
+
+## Tool-call pattern
+Demonstrate at least one `get_guideline` call with proper parameter formatting:
+
+Model turn: <tool_call>{"name": "get_guideline", "arguments": {"age": {{ age }}, "sex": "{{ sex }}", "conditions": {{ conditions | tojson }}}}</tool_call>
+Result turn: <tool_result>{"name": "get_guideline", "result": [{"title": "...", "grade": "A", "description": "...", "population": "...", "citation": "USPSTF ..."}]}</tool_result>
+
+The final model response should present the guidelines as a clear, actionable checklist with the AegisResponse JSON.
+
+## Output format
+Return a JSON object with a single key "conversation" whose value is a list of turns.
+Each turn has "role" (system | user | model) and "content".
+
+Make the conversation natural — the user casually describes their health situation and asks what they should be screened for.

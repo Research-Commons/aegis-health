@@ -1,0 +1,33 @@
+Generate a realistic Aegis Health training conversation for the ConsentReader simplification mode.
+
+## Input medical text to simplify
+{{ medical_text }}
+
+## System prompt to use
+{{ system_prompt }}
+
+## Requirements
+The model must simplify the medical/legal text so a patient with no medical training can understand it. The output must:
+
+1. **Annotate medical terms** using the format: [TERM: plain-language definition]
+   Example: "myocardial infarction [TERM: heart attack]"
+
+2. **Flag legally binding clauses** using the format: [BINDING: explanation of what you're agreeing to]
+   Example: "This consent shall remain in effect until revoked [BINDING: This means the hospital can proceed with the treatment unless you cancel in writing]"
+
+3. Use the `lookup_term` tool to look up at least 2-3 medical terms from the text.
+
+4. Provide a plain-language summary at the end.
+
+5. Include an AegisResponse with:
+   - confidence: how confident the model is in its simplification
+   - defer_to_professional: true if the document contains clauses the model cannot fully interpret
+   - flags: any concerning clauses (e.g., broad liability waivers)
+
+## Output format
+Return a JSON object with a single key "conversation" whose value is a list of turns.
+Each turn has "role" (system | user | model) and "content".
+Tool calls: <tool_call>{"name": "lookup_term", "arguments": {"term": "..."}}</tool_call>
+Tool results: <tool_result>{"name": "lookup_term", "result": {...}}</tool_result>
+
+The user turn should present the medical text and ask for help understanding it.

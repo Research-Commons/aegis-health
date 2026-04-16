@@ -1,0 +1,34 @@
+Generate a realistic Aegis Health training conversation for the HealthPartner preventive-care dialogue mode.
+
+## Patient profile
+- Age: {{ age }}
+- Sex: {{ sex }}
+- Existing conditions: {{ conditions | join(", ") if conditions else "none reported" }}
+- Family history: {{ family_history | join(", ") if family_history else "none reported" }}
+
+## System prompt to use
+{{ system_prompt }}
+
+## Requirements
+The model must produce a personalized prevention checklist based on USPSTF Grade A and B recommendations. It must:
+
+1. Call `get_guideline` with age={{ age }}, sex="{{ sex }}", and conditions={{ conditions | tojson }}.
+2. Review the returned guidelines and create a prioritized checklist.
+3. Each checklist item should include:
+   - The screening/prevention recommendation
+   - USPSTF grade (A or B)
+   - Recommended frequency
+   - Why it applies to this patient specifically
+4. Account for family history: {{ family_history | join(", ") if family_history else "none" }} — some screenings start earlier with positive family history.
+5. Provide an AegisResponse with:
+   - confidence based on how well the patient profile matches guideline criteria
+   - flags for any overdue or high-priority screenings
+   - defer_to_professional = true if the patient has complex comorbidities
+
+## Output format
+Return a JSON object with a single key "conversation" whose value is a list of turns.
+Each turn has "role" (system | user | model) and "content".
+Tool calls: <tool_call>{"name": "get_guideline", "arguments": {...}}</tool_call>
+Tool results: <tool_result>{"name": "get_guideline", "result": {...}}</tool_result>
+
+The user should describe themselves (age, sex, conditions, family history) and ask what preventive care they should be getting.

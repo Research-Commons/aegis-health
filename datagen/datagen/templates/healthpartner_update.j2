@@ -1,0 +1,30 @@
+Generate a realistic Aegis Health training conversation for the HealthPartner profile-update mode.
+
+## Existing patient profile
+{{ existing_profile | tojson(indent=2) }}
+
+## New condition being added
+{{ new_condition }}
+
+## System prompt to use
+{{ system_prompt }}
+
+## Requirements
+The model must demonstrate how the prevention checklist updates when a new condition is added to a patient profile. It must:
+
+1. Acknowledge the existing profile and current checklist.
+2. Call `get_guideline` with the UPDATED profile (existing conditions + {{ new_condition }}).
+3. Compare the new recommendations against the baseline and highlight:
+   - NEW screenings now recommended due to {{ new_condition }}
+   - Changed frequency for existing screenings
+   - Any screenings that become more urgent
+4. Explain why {{ new_condition }} triggers these changes.
+5. Produce an AegisResponse with updated flags.
+
+## Output format
+Return a JSON object with a single key "conversation" whose value is a list of turns.
+Each turn has "role" (system | user | model) and "content".
+Tool calls: <tool_call>{"name": "get_guideline", "arguments": {...}}</tool_call>
+Tool results: <tool_result>{"name": "get_guideline", "result": {...}}</tool_result>
+
+The user should mention they were recently diagnosed with {{ new_condition }} and want to know if their prevention plan needs updating.

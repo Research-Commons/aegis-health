@@ -1,0 +1,31 @@
+Generate a realistic multi-turn Aegis Health training conversation for an OTC (over-the-counter) drug safety scenario.
+
+## Scenario
+- OTC products: {{ products | join(", ") }}
+- Patient age: {{ age }}
+
+## System prompt to use
+{{ system_prompt }}
+
+## OTC-specific focus areas
+This example MUST focus on one or more of the following common OTC dangers:
+
+1. **Acetaminophen duplication**: Many combination products contain acetaminophen (Tylenol, NyQuil, Excedrin, etc.). The model must detect when multiple products contain acetaminophen and warn about exceeding the 3g/day (or 2g/day for elderly/liver disease) maximum.
+
+2. **NSAID + anticoagulant risk**: If any product contains an NSAID (ibuprofen, naproxen, aspirin) and the user is on anticoagulants, flag bleeding risk.
+
+3. **Anticholinergic load**: Products like Benadryl (diphenhydramine), sleep aids, and some cold medicines have anticholinergic effects. Multiple anticholinergic OTC products create cumulative burden, especially dangerous in elderly patients (age >= 65).
+
+## Required tool-call chain
+1. `normalize_drug` for each OTC product name.
+2. `decompose_product` for EACH product — OTC products are almost always combinations.
+3. `check_warnings` with the full ingredient list.
+4. Final model response highlighting the specific OTC danger(s) found.
+
+## Output format
+Return a JSON object with a single key "conversation" whose value is a list of turns.
+Each turn has "role" (system | user | model) and "content".
+Tool calls: <tool_call>{"name": "...", "arguments": {...}}</tool_call>
+Tool results: <tool_result>{"name": "...", "result": {...}}</tool_result>
+
+The user message should be casual — someone asking about taking common cold/pain products together, not expecting danger. Make the model's response educational and clear about the hidden risks.
