@@ -22,7 +22,7 @@ import kotlinx.serialization.json.Json
 object GemmaEngine {
 
     private const val TAG = "GemmaEngine"
-    private const val MODEL_ASSET = "gemma4-aegis.task"
+    private const val MODEL_ASSET = "aegis_model.task"
 
     private val mutex = Mutex()
 

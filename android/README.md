@@ -40,16 +40,18 @@ Offline, on-device medical safety assistant powered by Gemma 4 via LiteRT-LM.
 Place the quantized Gemma 4 `.task` file in the assets directory:
 
 ```
-android/app/src/main/assets/gemma4-aegis.task
+android/app/src/main/assets/aegis_model.task
 ```
 
 Generate this file using the export pipeline:
 
 ```bash
 cd /path/to/aegis-health
-make export   # produces export/output/gemma4-aegis.task
-cp export/output/gemma4-aegis.task android/app/src/main/assets/
+make export   # produces export/output/aegis_model.task
+cp export/output/aegis_model.task android/app/src/main/assets/
 ```
+
+> The filename `aegis_model.task` is hard-coded in `GemmaEngine.kt` as the `MODEL_ASSET` constant. If you rename the file, update that constant to match.
 
 ### 2. Add the knowledge base
 

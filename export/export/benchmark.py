@@ -4,8 +4,8 @@ Measures time-to-first-token, tokens/sec, peak memory, and model load time
 across a set of standard prompts derived from the eval anchor cases.
 
 Usage:
-    python -m export.benchmark --model export/output/aegis_health.task
-    python -m export.benchmark --model export/output/aegis_health.task \
+    python -m export.benchmark --model export/output/aegis_model.task
+    python -m export.benchmark --model export/output/aegis_model.task \
         --baseline path/to/checkpoint --device cpu --num-runs 20
 """
 

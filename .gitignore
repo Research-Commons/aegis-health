@@ -46,6 +46,10 @@ android/local.properties
 android/app/src/main/assets/aegis_model.task
 android/app/src/main/assets/aegis_kb.sqlite
 
+# Merged model checkpoints (too large for git — track via HF Hub or cloud bucket)
+training/checkpoints/**/aegis-sft-merged/
+rl/checkpoints/**/aegis-grpo-merged/
+
 # Node
 node_modules/
 demo/frontend/dist/

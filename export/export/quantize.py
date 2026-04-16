@@ -6,7 +6,7 @@ Validates output and reports compression statistics.
 Usage:
     python -m export.quantize \
         --checkpoint path/to/merged_model \
-        --output export/output/aegis_health.task \
+        --output export/output/aegis_model.task \
         --quantization int4
 """
 
@@ -170,8 +170,8 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=str,
-        default="export/output/aegis_health.task",
-        help="Output .task file path (default: export/output/aegis_health.task)",
+        default="export/output/aegis_model.task",
+        help="Output .task file path (default: export/output/aegis_model.task)",
     )
     parser.add_argument(
         "--quantization",

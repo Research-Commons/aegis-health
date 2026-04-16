@@ -20,8 +20,17 @@ Convert a merged HuggingFace checkpoint to INT4 (default) or INT8:
 
 ```bash
 python -m export quantize \
-    --checkpoint path/to/merged_model \
-    --output export/output/aegis_health_e4b.task \
+    --checkpoint rl/checkpoints/aegis-grpo-merged/ \
+    --output export/output/aegis_model.task \
+    --quantization int4
+```
+
+If you only trained SFT (skipping GRPO), use the SFT checkpoint instead:
+
+```bash
+python -m export quantize \
+    --checkpoint training/checkpoints/aegis-sft-merged/ \
+    --output export/output/aegis_model.task \
     --quantization int4
 ```
 
@@ -34,7 +43,7 @@ exists and reports input size, output size, and compression ratio.
 | Flag | Default | Description |
 |------|---------|-------------|
 | `--checkpoint` | *(required)* | Path to the merged HF model directory |
-| `--output` | `export/output/aegis_health.task` | Output `.task` file path |
+| `--output` | `export/output/aegis_model.task` | Output `.task` file path |
 | `--quantization` | `int4` | `int4` or `int8` |
 | `-v` / `--verbose` | off | Debug-level logging |
 
@@ -44,7 +53,7 @@ Measure latency, throughput, and memory for a quantized model:
 
 ```bash
 python -m export benchmark \
-    --model export/output/aegis_health_e4b.task \
+    --model export/output/aegis_model.task \
     --device cpu \
     --num-runs 20
 ```
@@ -55,8 +64,8 @@ Benchmark a quantized model against the original checkpoint:
 
 ```bash
 python -m export benchmark \
-    --model export/output/aegis_health_e4b.task \
-    --baseline path/to/merged_model \
+    --model export/output/aegis_model.task \
+    --baseline training/checkpoints/aegis-sft-merged/ \
     --output export/output/benchmark_results.json
 ```
 
@@ -76,7 +85,7 @@ a pre-quantization eval report:
 
 ```bash
 python -m export validate \
-    --model export/output/aegis_health_e4b.task \
+    --model export/output/aegis_model.task \
     --anchor-cases eval/eval/anchor_cases.json \
     --baseline-report eval/reports/eval_results_run_*.json \
     --output export/output/validation_results.json
@@ -109,7 +118,18 @@ Generated artifacts go to `export/output/`:
 
 ```
 export/output/
-├── aegis_health_e4b.task      # INT4 quantized model
+├── aegis_model.task           # INT4 quantized Gemma 4 model for on-device inference
 ├── benchmark_results.json     # Benchmark measurements
 └── validation_results.json    # Post-quant validation scores
 ```
+
+## Copying to the Android app
+
+After successful quantization and validation, copy the artifact to the Android assets folder alongside the KB:
+
+```bash
+cp export/output/aegis_model.task android/app/src/main/assets/
+cp kb/output/aegis_kb.sqlite      android/app/src/main/assets/
+```
+
+These two files are what `GemmaEngine` and `KBDatabase` load on app startup.

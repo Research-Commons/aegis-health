@@ -6,7 +6,7 @@ compares against a pre-quantization baseline report.  Any metric regression
 
 Usage:
     python -m export.validate_on_device \
-        --model export/output/aegis_health.task \
+        --model export/output/aegis_model.task \
         --anchor-cases eval/eval/anchor_cases.json \
         --baseline-report eval/reports/eval_results_run_*.json
 """
