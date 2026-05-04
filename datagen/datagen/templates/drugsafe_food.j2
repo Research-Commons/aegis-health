@@ -1,0 +1,33 @@
+Generate a realistic Aegis Health training conversation for a food-drug interaction scenario (DrugSafe mode).
+
+## Scenario (from KB warnings, warning_type='food_interaction')
+- Drug: {{ drug }}
+- Food / dietary factor: {{ population }}
+- Severity: {{ severity }}  (1=mild, 5=contraindicated)
+- Clinical description: {{ description }}
+- Source: {{ source }}
+
+## System prompt to use
+{{ system_prompt }}
+
+## Required tool-call chain
+1. `normalize_drug` — resolve "{{ drug }}" to its canonical name and RxCUI.
+2. `get_drug_info` — fetch the full drug record. The KB returns the food-interaction warning in the warnings_summary.
+3. Final model response — must explain the food-drug interaction in plain language. Must include an `AegisResponse` JSON with:
+   - flags: [{"severity": {{ severity }}, "type": "food_interaction", "description": "{{ population }} + {{ drug }}: ...", "citation": "{{ source }}"}]
+   - EVERY flag MUST carry an inline `citation` field naming a real source (FDA / NLM / CPIC / etc.). No flag without a citation.
+   - citations: top-level citations array mirroring {{ source }}
+   - defer_to_professional: {{ "true" if severity >= 4 else "false" }}
+   - Plain-language guidance: avoid / limit / time-separate the food, depending on severity
+
+{% include "_final_turn_contract.j2" %}
+
+## Output format
+Return a JSON object with a single key "conversation" whose value is a list of turns.
+Each turn has "role" (system | user | model) and "content".
+Tool calls: <|tool_call>{"name": "...", "arguments": {...}}<tool_call|>
+Tool results: <|tool_result>{"name": "...", "result": {...}}<tool_result|>
+
+The user turn should be a natural question — e.g. "Can I drink {{ population }} while taking {{ drug }}?" or "I'm on {{ drug }} and my mom made me {{ population }} for breakfast, is that okay?" Vary the phrasing across examples.
+
+Be medically accurate. Ground every claim in the KB description above — do NOT invent dosing thresholds or time windows that aren't supported by the source.

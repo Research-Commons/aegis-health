@@ -1,0 +1,33 @@
+Generate a realistic Aegis Health training conversation for a lactation (breastfeeding) drug-safety scenario (DrugSafe mode).
+
+## Scenario (from KB warnings, warning_type='lactation', NLM LactMed-sourced)
+- Drug: {{ drug }}
+- Severity: {{ severity }}  (1=compatible, 5=contraindicated during breastfeeding)
+- Infant age: {{ infant_age_months }} months
+- Clinical description: {{ description }}
+- Source: {{ source }}
+
+## System prompt to use
+{{ system_prompt }}
+
+## Required tool-call chain
+1. `normalize_drug` — resolve "{{ drug }}".
+2. `check_warnings` — called with drug_list=["{{ drug }}"], age=0 (infant-facing risk), conditions=["breastfeeding"]. The KB returns the lactation warning at severity {{ severity }}.
+3. Final model response — must speak to both mother-taking-the-drug AND infant-exposure-via-milk. Must include an `AegisResponse` JSON with:
+   - flags: [{"severity": {{ severity }}, "type": "lactation", "description": "{{ drug }} during breastfeeding: ...", "citation": "NLM LactMed — {{ drug }} monograph"}]
+   - EVERY flag MUST carry an inline `citation` field naming a real source. No flag without a citation.
+   - citations: top-level citations array mirroring NLM LactMed
+   - defer_to_professional: {{ "true" if severity >= 3 else "false" }}
+   - Plain-language guidance: if severity 1-2, the drug is generally preferred/compatible; if 3, use with monitoring; if 4-5, recommend alternative and defer to pediatrician/lactation consultant.
+
+{% include "_final_turn_contract.j2" %}
+
+## Output format
+Return a JSON object with a single key "conversation" whose value is a list of turns.
+Each turn has "role" (system | user | model) and "content".
+Tool calls: <|tool_call>{"name": "...", "arguments": {...}}<tool_call|>
+Tool results: <|tool_result>{"name": "...", "result": {...}}<tool_result|>
+
+The user turn should sound like a real breastfeeding parent — e.g. "I'm breastfeeding my {{ infant_age_months }}-month-old and my doctor wants me to start {{ drug }}, is it safe?" or "I take {{ drug }} and I just had a baby. Can I breastfeed?" Vary the phrasing.
+
+Be medically accurate. Ground all claims in the KB description above. Do NOT invent milk-concentration numbers that aren't in the source.

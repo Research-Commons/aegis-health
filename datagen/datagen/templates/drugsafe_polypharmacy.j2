@@ -20,15 +20,18 @@ This is a polypharmacy scenario with {{ drugs | length }} concurrent medications
    - Age-related pharmacokinetic changes (patient is {{ age }} years old)
    - Anticholinergic burden if applicable
 5. Produce a final AegisResponse with:
-   - Individual interaction flags (severity 1-5)
+   - Individual interaction flags (severity 1-5). EVERY flag MUST include inline `citation` naming a real source (FDA / NLM / CPIC / USPSTF / AGS Beers / Clinical best practice). No flag without a citation.
    - An overall cumulative risk assessment
    - defer_to_professional = true if any flag has severity >= 4
+   - Top-level `citations` array listing every source referenced in flags
+
+{% include "_final_turn_contract.j2" %}
 
 ## Output format
 Return a JSON object with a single key "conversation" whose value is a list of turns.
 Each turn has "role" (system | user | model) and "content".
-Tool calls: <tool_call>{"name": "...", "arguments": {...}}</tool_call>
-Tool results: <tool_result>{"name": "...", "result": {...}}</tool_result>
+Tool calls: <|tool_call>{"name": "...", "arguments": {...}}<tool_call|>
+Tool results: <|tool_result>{"name": "...", "result": {...}}<tool_result|>
 
 The user message should naturally ask about taking all these medications together, possibly mentioning some symptoms or reasons for the medications.
 

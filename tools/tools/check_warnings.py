@@ -21,6 +21,23 @@ _DEFER_THRESHOLD_DRUG_COUNT = 5
 _ELDERLY_AGE = 65
 _PEDIATRIC_AGE = 12
 
+# Suffixes stripped when normalising supplement names for fuzzy lookup.
+_SUPPLEMENT_SUFFIXES = (
+    " extract", " preparation", " root extract", " seed meal",
+    " berry", " root", " seed", " leaf", " oil",
+)
+
+
+def _normalise_supplement_name(name: str) -> str:
+    """Lowercase + strip common botanical suffixes for supplements table matching."""
+    n = name.lower().strip()
+    # remove trailing punctuation variants ("st. john's wort" → "st john's wort")
+    n = n.replace(".", "")
+    for suffix in _SUPPLEMENT_SUFFIXES:
+        if n.endswith(suffix):
+            n = n[: -len(suffix)].strip()
+    return n
+
 
 def _build_error_response(msg: str) -> dict:
     return AegisResponse(
@@ -50,7 +67,8 @@ def check_warnings(
     if not db.exists():
         return _build_error_response(f"Knowledge base not found at {db_path}")
 
-    conditions = conditions or []
+    drug_list = [str(drug) for drug in drug_list if drug is not None]
+    conditions = [str(condition) for condition in (conditions or []) if condition is not None]
     flags: list[Flag] = []
     citations: list[Citation] = []
     defer = False
@@ -81,9 +99,12 @@ def check_warnings(
                 continue
             cur.execute(
                 """
-                SELECT name, rxcui, category, drug_class
-                FROM drugs
-                WHERE LOWER(name) = ?
+                SELECT d.drug_name AS name, d.rxcui,
+                       '' AS drug_class,
+                       COALESCE(r.category, 'Rx') AS category
+                FROM drugs d
+                LEFT JOIN rxnorm_lookup r ON r.rxcui = d.rxcui
+                WHERE LOWER(d.drug_name) = ?
                 LIMIT 1
                 """,
                 (cleaned,),
@@ -95,7 +116,8 @@ def check_warnings(
                 # Try rxnorm_lookup for brand names
                 cur.execute(
                     """
-                    SELECT generic_name, rxcui, category
+                    SELECT generic_name, rxcui,
+                           COALESCE(category, 'Rx') AS category
                     FROM rxnorm_lookup
                     WHERE LOWER(brand_name) = ? OR LOWER(generic_name) = ?
                     LIMIT 1
@@ -185,6 +207,7 @@ def check_warnings(
 
         # --- Drug x Drug interactions ---
         resolved_names = list(drug_records.keys())
+        pair_had_direct: set[frozenset[str]] = set()
         for i, drug_a in enumerate(resolved_names):
             for drug_b in resolved_names[i + 1:]:
                 rxcui_a = drug_records[drug_a].get("rxcui", "")
@@ -192,12 +215,12 @@ def check_warnings(
 
                 cur.execute(
                     """
-                    SELECT severity, description, citation
+                    SELECT severity, description, source AS citation
                     FROM interactions
-                    WHERE (LOWER(drug_a) = ? AND LOWER(drug_b) = ?)
-                       OR (LOWER(drug_a) = ? AND LOWER(drug_b) = ?)
-                       OR (rxcui_a = ? AND rxcui_b = ?)
-                       OR (rxcui_a = ? AND rxcui_b = ?)
+                    WHERE (LOWER(drug_name_1) = ? AND LOWER(drug_name_2) = ?)
+                       OR (LOWER(drug_name_1) = ? AND LOWER(drug_name_2) = ?)
+                       OR (drug_rxcui_1 = ? AND drug_rxcui_2 = ?)
+                       OR (drug_rxcui_1 = ? AND drug_rxcui_2 = ?)
                     """,
                     (
                         drug_a, drug_b,
@@ -206,7 +229,10 @@ def check_warnings(
                         rxcui_b, rxcui_a,
                     ),
                 )
-                for row in cur.fetchall():
+                direct_rows = cur.fetchall()
+                if direct_rows:
+                    pair_had_direct.add(frozenset({drug_a, drug_b}))
+                for row in direct_rows:
                     sev = min(max(int(row["severity"]), 1), 5)
                     flags.append(Flag(
                         severity=sev,
@@ -216,20 +242,86 @@ def check_warnings(
                     if sev >= 4:
                         defer = True
 
+        # --- Class-level interactions (fills gaps in pairwise table) ---
+        # Fetch class memberships per drug (one query each) then match any
+        # unchecked pair against curated class_interactions rules.
+        classes_by_drug: dict[str, set[str]] = {}
+        try:
+            for dname, rec in drug_records.items():
+                rxcui = rec.get("rxcui", "")
+                if not rxcui:
+                    continue
+                cur.execute(
+                    "SELECT class_id FROM drug_classes WHERE rxcui = ?",
+                    (rxcui,),
+                )
+                classes_by_drug[dname] = {r["class_id"] for r in cur.fetchall()}
+        except sqlite3.OperationalError:
+            classes_by_drug = {}
+
+        if classes_by_drug:
+            for i, drug_a in enumerate(resolved_names):
+                for drug_b in resolved_names[i + 1:]:
+                    if frozenset({drug_a, drug_b}) in pair_had_direct:
+                        continue
+                    class_ids_a = classes_by_drug.get(drug_a, set())
+                    class_ids_b = classes_by_drug.get(drug_b, set())
+                    if not class_ids_a or not class_ids_b:
+                        continue
+                    ph_a = ",".join("?" * len(class_ids_a))
+                    ph_b = ",".join("?" * len(class_ids_b))
+                    try:
+                        cur.execute(
+                            f"""
+                            SELECT DISTINCT severity, description, source AS citation
+                            FROM class_interactions
+                            WHERE (class_id_1 IN ({ph_a}) AND class_id_2 IN ({ph_b}))
+                               OR (class_id_2 IN ({ph_a}) AND class_id_1 IN ({ph_b}))
+                            """,
+                            (*class_ids_a, *class_ids_b, *class_ids_a, *class_ids_b),
+                        )
+                        class_rows = cur.fetchall()
+                    except sqlite3.OperationalError:
+                        class_rows = []
+                    seen_descs: set[str] = set()
+                    name_a = drug_records[drug_a]["name"]
+                    name_b = drug_records[drug_b]["name"]
+                    for row in class_rows:
+                        desc = row["description"]
+                        if desc in seen_descs:
+                            continue
+                        seen_descs.add(desc)
+                        sev = min(max(int(row["severity"]), 1), 5)
+                        flags.append(Flag(
+                            severity=sev,
+                            description=f"{name_a} + {name_b}: {desc}",
+                            citation=row["citation"],
+                        ))
+                        if sev >= 4:
+                            defer = True
+
         # --- Drug x Condition contraindications ---
+        # Historical KBs had a dedicated `contraindications` table; current
+        # builds fold these into `warnings WHERE warning_type='contraindication'`.
+        # Wrap each query so a missing table doesn't crash the whole function
+        # (matches the defensive pattern used for supplements below).
         for dname, rec in drug_records.items():
             for cond in conditions:
                 cond_lower = cond.strip().lower()
-                cur.execute(
-                    """
-                    SELECT severity, description, citation
-                    FROM contraindications
-                    WHERE (LOWER(drug_name) = ? OR rxcui = ?)
-                      AND LOWER(condition) = ?
-                    """,
-                    (dname, rec.get("rxcui", ""), cond_lower),
-                )
-                for row in cur.fetchall():
+                try:
+                    cur.execute(
+                        """
+                        SELECT severity, description, citation
+                        FROM contraindications
+                        WHERE (LOWER(drug_name) = ? OR rxcui = ?)
+                          AND LOWER(condition) = ?
+                        """,
+                        (dname, rec.get("rxcui", ""), cond_lower),
+                    )
+                    direct_rows = cur.fetchall()
+                except sqlite3.OperationalError:
+                    direct_rows = []
+                for row in direct_rows:
                     sev = min(max(int(row["severity"]), 1), 5)
                     flags.append(Flag(
                         severity=sev,
@@ -238,6 +330,75 @@ def check_warnings(
                     ))
                     if sev >= 4:
                         defer = True
+
+                # Fallback path: warnings table with warning_type='contraindication'.
+                try:
+                    cur.execute(
+                        """
+                        SELECT severity, description, source AS citation
+                        FROM warnings
+                        WHERE warning_type = 'contraindication'
+                          AND (LOWER(drug_name) = ? OR drug_rxcui = ?)
+                          AND LOWER(COALESCE(population, '')) LIKE ?
+                        """,
+                        (dname, rec.get("rxcui", ""), f"%{cond_lower}%"),
+                    )
+                    warn_rows = cur.fetchall()
+                except sqlite3.OperationalError:
+                    warn_rows = []
+                for row in warn_rows:
+                    sev_val = row["severity"] if row["severity"] is not None else 3
+                    sev = min(max(int(sev_val), 1), 5)
+                    flags.append(Flag(
+                        severity=sev,
+                        description=row["description"],
+                        citation=row["citation"],
+                    ))
+                    if sev >= 4:
+                        defer = True
+
+        # --- Supplement x Drug interactions ---
+        # Check every input name against the supplements table, which stores
+        # botanical/dietary supplement interactions keyed by common name.
+        # Matching is Python-side to handle name variants ("st john's wort"
+        # vs "St. John's Wort") without requiring exact SQL equality.
+        all_input_norms = {
+            _normalise_supplement_name(n): n.strip().lower()
+            for n in drug_list if n.strip()
+        }
+        try:
+            cur.execute(
+                "SELECT supplement_name, interacting_drug, severity, description, source "
+                "FROM supplements"
+            )
+            suppl_rows = cur.fetchall()
+        except sqlite3.OperationalError:
+            suppl_rows = []
+        for row in suppl_rows:
+            supp_norm = _normalise_supplement_name(row["supplement_name"])
+            if supp_norm not in all_input_norms:
+                continue
+            supp_input_lower = all_input_norms[supp_norm]
+            # Does the interacting_drug match any *other* drug in the list?
+            interacting_lower = row["interacting_drug"].strip().lower()
+            matched = any(
+                interacting_lower in n or n in interacting_lower
+                for n in all_input_norms.values()
+                if n != supp_input_lower
+            ) or any(
+                interacting_lower in rec["name"].lower()
+                for rec in drug_records.values()
+            )
+            if not matched:
+                continue
+            sev = min(max(int(row["severity"]), 1), 5)
+            flags.append(Flag(
+                severity=sev,
+                description=row["description"],
+                citation=row["source"],
+            ))
+            if sev >= 4:
+                defer = True
 
         conn.close()
 

@@ -21,10 +21,12 @@ The model must demonstrate how the prevention checklist updates when a new condi
 4. Explain why {{ new_condition }} triggers these changes.
 5. Produce an AegisResponse with updated flags.
 
+{% include "_final_turn_contract.j2" %}
+
 ## Output format
 Return a JSON object with a single key "conversation" whose value is a list of turns.
 Each turn has "role" (system | user | model) and "content".
-Tool calls: <tool_call>{"name": "get_guideline", "arguments": {...}}</tool_call>
-Tool results: <tool_result>{"name": "get_guideline", "result": {...}}</tool_result>
+Tool calls: <|tool_call>{"name": "get_guideline", "arguments": {...}}<tool_call|>
+Tool results: <|tool_result>{"name": "get_guideline", "result": {...}}<tool_result|>
 
 The user should mention they were recently diagnosed with {{ new_condition }} and want to know if their prevention plan needs updating.

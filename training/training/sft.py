@@ -54,8 +54,14 @@ def train(config: dict, data_path: Path, resume_from: str | None = None) -> None
     from unsloth import FastLanguageModel
     from trl import SFTConfig, SFTTrainer
 
-    from training.training.data_loader import load_dataset_from_jsonl
-    from training.training.eval_callback import AegisEvalCallback
+    try:  # Colab/repo-root layout
+        from training.training.collator import AssistantOnlyCollator, resolve_text_tokenizer
+        from training.training.data_loader import load_dataset_from_jsonl
+        from training.training.eval_callback import AegisEvalCallback
+    except ModuleNotFoundError:  # Local editable package layout
+        from training.collator import AssistantOnlyCollator, resolve_text_tokenizer
+        from training.data_loader import load_dataset_from_jsonl
+        from training.eval_callback import AegisEvalCallback
 
     model_name = config["model_name"]
     max_seq_length = config["max_seq_length"]
@@ -87,8 +93,11 @@ def train(config: dict, data_path: Path, resume_from: str | None = None) -> None
     logger.info("Loading training data from %s...", data_path)
     train_dataset, val_dataset = load_dataset_from_jsonl(
         path=str(data_path),
+        chat_template_tokenizer=tokenizer,
         max_seq_length=max_seq_length,
     )
+    text_tokenizer = resolve_text_tokenizer(tokenizer)
+    data_collator = AssistantOnlyCollator(text_tokenizer)
 
     train_cfg = config["training"]
     eval_cfg = config.get("eval", {})
@@ -137,6 +146,7 @@ def train(config: dict, data_path: Path, resume_from: str | None = None) -> None
         tokenizer=tokenizer,
         train_dataset=train_dataset,
         eval_dataset=val_dataset,
+        data_collator=data_collator,
         args=sft_args,
         callbacks=callbacks,
     )

@@ -15,14 +15,29 @@ from lxml import etree
 
 log = logging.getLogger(__name__)
 
-HEALTH_TOPICS_URL = "https://medlineplus.gov/xml/mplus_topics_2025-01-04.xml"
-HEALTH_TOPICS_FALLBACK = "https://medlineplus.gov/xml/mplus_topics.xml"
+HEALTH_TOPICS_LISTING = "https://medlineplus.gov/xml.html"
 REQUEST_TIMEOUT = 60
 RETRY_COUNT = 3
 RETRY_BACKOFF = 3.0
 MAX_TERMS = 1200
 
-TOPIC_NS = {"mt": "https://medlineplus.gov/xml/mplustopics.xsd"}
+
+def _find_xml_url() -> str | None:
+    """Scrape the MedlinePlus XML listing page to find the current topics file URL."""
+    import re
+    try:
+        resp = requests.get(HEALTH_TOPICS_LISTING, timeout=REQUEST_TIMEOUT)
+        resp.raise_for_status()
+        matches = re.findall(r'href="([^"]*mplus_topics_\d{4}-\d{2}-\d{2}\.xml)"', resp.text)
+        if matches:
+            url = matches[0]
+            if not url.startswith("http"):
+                url = "https://medlineplus.gov" + url
+            log.info("MedlinePlus: found current XML at %s", url)
+            return url
+    except requests.RequestException as exc:
+        log.warning("MedlinePlus: could not fetch listing page: %s", exc)
+    return None
 
 
 def _download_xml(url: str) -> etree._Element | None:
@@ -54,7 +69,7 @@ def _extract_topics(root: etree._Element) -> list[dict]:
     topics: list[dict] = []
 
     # The XML uses a default namespace or bare elements depending on vintage
-    for topic_el in root.iter("health-topic"):
+    for topic_el in root.iter("{*}health-topic"):
         title = topic_el.get("title", "").strip()
         if not title:
             continue
@@ -62,15 +77,15 @@ def _extract_topics(root: etree._Element) -> list[dict]:
         url = topic_el.get("url", "")
 
         # Full summary sits in the <full-summary> child
-        summary_el = topic_el.find("full-summary")
+        summary_el = topic_el.find("{*}full-summary")
         summary = ""
         if summary_el is not None:
             summary = _clean_text(
                 etree.tostring(summary_el, encoding="unicode", method="text")
             )
         if not summary:
-            # Fall back to mesh-heading or also-called
-            also = topic_el.find("also-called")
+            # Fall back to also-called
+            also = topic_el.find("{*}also-called")
             if also is not None and also.text:
                 summary = also.text.strip()
 
@@ -79,7 +94,7 @@ def _extract_topics(root: etree._Element) -> list[dict]:
 
         # Determine a broad category from the group elements
         category = None
-        group_el = topic_el.find(".//group")
+        group_el = topic_el.find(".//{*}group")
         if group_el is not None:
             category = group_el.get("url", "").rstrip("/").rsplit("/", 1)[-1]
 
@@ -100,10 +115,8 @@ def build(db_path: str) -> int:
     """Populate the terms table. Returns number of rows inserted."""
     log.info("MedlinePlus: downloading health topics XML")
 
-    root = _download_xml(HEALTH_TOPICS_URL)
-    if root is None:
-        log.info("MedlinePlus: primary URL failed, trying fallback")
-        root = _download_xml(HEALTH_TOPICS_FALLBACK)
+    url = _find_xml_url()
+    root = _download_xml(url) if url else None
     if root is None:
         log.error("MedlinePlus: could not download health topics XML")
         return 0

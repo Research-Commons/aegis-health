@@ -42,8 +42,12 @@ object GetGuideline {
                 title = row["title"] ?: "",
                 grade = row["grade"] ?: "",
                 description = row["description"] ?: "",
-                population = row["population"] ?: "",
-                citation = row["citation"] ?: "USPSTF",
+                population = synthesizePopulation(
+                    row["population_age_min"],
+                    row["population_age_max"],
+                    row["population_sex"],
+                ),
+                citation = row["source"] ?: "USPSTF",
             )
         }
 
@@ -53,6 +57,29 @@ object GetGuideline {
             recommendations = recommendations,
             gaps = gaps,
         )
+    }
+
+    /**
+     * Turn the three population_* columns into a human-readable label such as
+     * "Men 65+", "Women 50-74", or "Children 0-5". NULL bounds are treated as
+     * "any" on that side.
+     */
+    private fun synthesizePopulation(ageMin: String?, ageMax: String?, sex: String?): String {
+        val min = ageMin?.toIntOrNull()
+        val max = ageMax?.toIntOrNull()
+        val s = (sex ?: "all").trim().lowercase()
+        val pediatric = max != null && max <= 18
+        val noun = when {
+            s == "male" -> if (pediatric) "Boys" else "Men"
+            s == "female" -> if (pediatric) "Girls" else "Women"
+            else -> if (pediatric) "Children" else "Adults"
+        }
+        return when {
+            min != null && max != null -> "$noun $min-$max"
+            min != null -> "$noun $min+"
+            max != null -> "$noun under ${max + 1}"
+            else -> "All ${noun.lowercase()}"
+        }
     }
 
     private fun buildGapsList(age: Int, sex: String, conditions: List<String>?): List<String> {

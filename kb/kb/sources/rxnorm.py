@@ -59,6 +59,135 @@ SEED_DRUGS: list[str] = [
     "Terazosin", "Enalapril", "Ramipril", "Valsartan", "Irbesartan",
     "Olmesartan", "Telmisartan", "Sacubitril / Valsartan",
     "Digoxin", "Amiodarone", "Sotalol", "Flecainide",
+    # ── Pain / opioids ─────────────────────────────────────────────
+    "Morphine", "Hydromorphone", "Fentanyl", "Methadone",
+    "Hydrocodone / Acetaminophen", "Buprenorphine", "Buprenorphine / Naloxone",
+    "Codeine", "Naloxone", "Naltrexone",
+    # ── Anti-seizure / neuro ───────────────────────────────────────
+    "Carbamazepine", "Oxcarbazepine", "Valproic Acid", "Divalproex",
+    "Phenytoin", "Lacosamide", "Zonisamide", "Brivaracetam",
+    "Perampanel", "Rufinamide",
+    # ── Parkinson's / Alzheimer's ──────────────────────────────────
+    "Carbidopa / Levodopa", "Pramipexole", "Ropinirole", "Selegiline",
+    "Rasagiline", "Amantadine", "Entacapone", "Donepezil", "Memantine",
+    "Rivastigmine", "Galantamine",
+    # ── Migraine ───────────────────────────────────────────────────
+    "Zolmitriptan", "Eletriptan", "Naratriptan", "Rimegepant",
+    "Ubrogepant", "Erenumab", "Galcanezumab", "Fremanezumab",
+    # ── Multiple sclerosis ─────────────────────────────────────────
+    "Dimethyl Fumarate", "Teriflunomide", "Fingolimod", "Ocrelizumab",
+    "Natalizumab", "Glatiramer Acetate", "Interferon Beta-1a",
+    # ── Gout ───────────────────────────────────────────────────────
+    "Allopurinol", "Febuxostat", "Colchicine", "Probenecid",
+    # ── Osteoporosis ───────────────────────────────────────────────
+    "Alendronate", "Risedronate", "Ibandronate", "Zoledronic Acid",
+    "Denosumab", "Teriparatide", "Romosozumab",
+    # ── Thyroid / endocrine ────────────────────────────────────────
+    "Methimazole", "Propylthiouracil", "Liothyronine", "Prednisolone",
+    "Dexamethasone", "Methylprednisolone", "Fludrocortisone",
+    # ── Contraceptives / hormonal ──────────────────────────────────
+    "Ethinyl Estradiol / Norethindrone", "Ethinyl Estradiol / Norgestimate",
+    "Ethinyl Estradiol / Drospirenone", "Levonorgestrel",
+    "Medroxyprogesterone", "Estradiol", "Conjugated Estrogens",
+    "Testosterone",
+    # ── Biologics / immunology ─────────────────────────────────────
+    "Infliximab", "Certolizumab Pegol", "Golimumab", "Ustekinumab",
+    "Secukinumab", "Ixekizumab", "Risankizumab", "Guselkumab",
+    "Tofacitinib", "Baricitinib", "Upadacitinib", "Abatacept",
+    "Rituximab", "Tocilizumab", "Sarilumab",
+    # ── IBD / GI ───────────────────────────────────────────────────
+    "Mesalamine", "Sulfasalazine", "Budesonide Oral", "Vedolizumab",
+    "Ursodiol", "Lubiprostone", "Linaclotide", "Plecanatide",
+    "Rifaximin", "Ondansetron ODT",
+    # ── Oncology (common oral & targeted) ──────────────────────────
+    "Tamoxifen", "Letrozole", "Anastrozole", "Exemestane", "Fulvestrant",
+    "Palbociclib", "Ribociclib", "Abemaciclib",
+    "Imatinib", "Dasatinib", "Nilotinib",
+    "Erlotinib", "Osimertinib", "Gefitinib",
+    "Ibrutinib", "Venetoclax",
+    "Olaparib", "Rucaparib", "Niraparib",
+    "Enzalutamide", "Abiraterone", "Apalutamide",
+    "Leuprolide", "Goserelin",
+    "Methotrexate Oncology",
+    # ── HIV / ART ──────────────────────────────────────────────────
+    "Tenofovir Disoproxil Fumarate", "Tenofovir Alafenamide",
+    "Emtricitabine", "Dolutegravir", "Bictegravir",
+    "Darunavir", "Ritonavir",
+    "Bictegravir / Emtricitabine / Tenofovir Alafenamide",
+    "Emtricitabine / Tenofovir Disoproxil Fumarate",
+    # ── Hepatitis C / B ────────────────────────────────────────────
+    "Ledipasvir / Sofosbuvir", "Sofosbuvir / Velpatasvir",
+    "Glecaprevir / Pibrentasvir", "Entecavir",
+    # ── Anticoagulants / antiplatelets ─────────────────────────────
+    "Heparin", "Enoxaparin", "Dalteparin", "Fondaparinux",
+    "Dabigatran", "Edoxaban", "Argatroban", "Bivalirudin",
+    "Prasugrel", "Ticagrelor", "Cangrelor",
+    # ── Vasopressors / critical care ───────────────────────────────
+    "Norepinephrine", "Epinephrine", "Dopamine", "Dobutamine",
+    "Vasopressin", "Milrinone",
+    # ── Transplant immunosuppressants ──────────────────────────────
+    "Tacrolimus", "Cyclosporine", "Mycophenolate Mofetil", "Sirolimus",
+    "Everolimus", "Azathioprine",
+    # ── Respiratory biologics ──────────────────────────────────────
+    "Omalizumab", "Mepolizumab", "Benralizumab", "Dupilumab", "Tezepelumab",
+    # ── Insulins (additional) ──────────────────────────────────────
+    "Insulin Detemir", "Insulin Degludec", "Insulin NPH", "Insulin Regular",
+    # ── Kidney / electrolyte ───────────────────────────────────────
+    "Tolvaptan", "Patiromer", "Sodium Polystyrene Sulfonate",
+    "Sevelamer", "Calcitriol", "Cinacalcet",
+    # ── Antiemetics additional ─────────────────────────────────────
+    "Granisetron", "Aprepitant", "Palonosetron", "Prochlorperazine",
+    # ── Eye drops additional ───────────────────────────────────────
+    "Travoprost", "Bimatoprost", "Cyclosporine Ophthalmic", "Pilocarpine",
+    # ── Pediatric & specialty ──────────────────────────────────────
+    "Epinephrine Auto-Injector", "Epinephrine / Lidocaine",
+    "Levalbuterol", "Ipratropium / Albuterol",
+    "Fluticasone / Salmeterol", "Budesonide / Formoterol",
+    "Tiotropium / Olodaterol",
+    # ── Antifungals ────────────────────────────────────────────────
+    "Itraconazole", "Voriconazole", "Posaconazole", "Nystatin",
+    "Griseofulvin",
+    # ── Antivirals (non-HIV/HCV) ───────────────────────────────────
+    "Valganciclovir", "Ganciclovir", "Famciclovir", "Remdesivir",
+    # ── Miscellaneous high-use ─────────────────────────────────────
+    "Methotrexate Rheumatology", "Leflunomide", "Hydroxyurea",
+    "Mesna", "Allopurinol Pediatric", "Pyridoxine",
+    "Calcium Gluconate IV", "Magnesium Sulfate",
+    "Potassium Chloride IV", "Flumazenil",
+    # ── Coverage-gap additions (PIM / LactMed / anchor cases) ──────
+    # Tricyclic antidepressants
+    "Amitriptyline", "Nortriptyline", "Doxepin", "Imipramine",
+    "Clomipramine", "Desipramine",
+    # Typical antipsychotics (PIM-relevant)
+    "Haloperidol", "Chlorpromazine", "Fluphenazine", "Perphenazine",
+    "Thioridazine",
+    # More benzodiazepines
+    "Diazepam", "Lorazepam", "Temazepam", "Oxazepam", "Triazolam",
+    "Midazolam", "Chlordiazepoxide",
+    # Z-drugs + melatonin agonist
+    "Eszopiclone", "Zaleplon", "Ramelteon",
+    # Other psychiatric
+    "Mirtazapine", "Paroxetine", "Phenelzine", "Tranylcypromine",
+    # Muscle relaxants
+    "Carisoprodol", "Methocarbamol", "Orphenadrine",
+    # Antihistamines (first-gen, PIM-relevant)
+    "Hydroxyzine", "Chlorpheniramine",
+    # NSAIDs (additional)
+    "Celecoxib", "Diclofenac", "Indomethacin", "Ketorolac",
+    # Antibiotics (additional)
+    "Ampicillin", "Trimethoprim / Sulfamethoxazole",
+    # Cardiovascular (additional)
+    "Atenolol", "Nadolol", "Betaxolol", "Captopril",
+    "Nifedipine", "Disopyramide", "Gemfibrozil",
+    "Chlorothiazide", "Indapamide", "Eplerenone",
+    # Antidiabetic (older)
+    "Glyburide", "Chlorpropamide",
+    # GU anticholinergics (PIM-relevant)
+    "Oxybutynin", "Tolterodine", "Hyoscyamine", "Dicyclomine",
+    # Opioids (additional)
+    "Meperidine", "Pentazocine",
+    # Other
+    "Desmopressin", "Isotretinoin",
     # ── Top 80 OTC ──────────────────────────────────────────────────
     "Acetaminophen", "Ibuprofen", "Aspirin", "Naproxen", "Diphenhydramine",
     "Loratadine", "Fexofenadine", "Loperamide", "Bismuth Subsalicylate",
@@ -96,6 +225,155 @@ SEED_DRUGS: list[str] = [
     "Quercetin", "Bromelain", "Devil's Claw",
 ]
 # fmt: on
+
+# ---------------------------------------------------------------------------
+# Drug category classification
+# Sources: DEA Controlled Substances Act schedules; FDA OTC monograph system;
+#          NIH Office of Dietary Supplements categorization.
+# Used when inserting into rxnorm_lookup.category and when migrating existing KBs.
+# ---------------------------------------------------------------------------
+
+# Schedule II–V controlled substances present in the seed list.
+# Only includes those with clear DEA scheduling in the US.
+CONTROLLED_GENERICS: frozenset[str] = frozenset([
+    # Schedule II opioids
+    "oxycodone", "morphine", "hydromorphone", "fentanyl",
+    "methadone", "hydrocodone", "hydrocodone / acetaminophen",
+    "codeine",  # sched II alone; III-V in combinations
+    # Schedule II stimulants
+    "amphetamine", "dextroamphetamine", "lisdexamfetamine",
+    "methylphenidate",
+    # Schedule III
+    "buprenorphine", "buprenorphine / naloxone", "testosterone",
+    # Schedule IV opioid
+    "tramadol",
+    # Schedule IV benzodiazepines / Z-drugs
+    "alprazolam", "clonazepam", "zolpidem",
+    "diazepam", "lorazepam", "temazepam",
+    "oxazepam", "triazolam", "midazolam", "chlordiazepoxide",
+    "eszopiclone", "zaleplon",
+    # Schedule V
+    "pregabalin",
+])
+
+# Over-the-counter drugs (FDA OTC approval; no Rx required).
+OTC_GENERICS: frozenset[str] = frozenset([
+    "acetaminophen", "ibuprofen", "aspirin", "naproxen",
+    "diphenhydramine", "loratadine", "fexofenadine", "cetirizine",
+    "levocetirizine", "loperamide", "bismuth subsalicylate",
+    "calcium carbonate", "magnesium hydroxide", "simethicone",
+    "pseudoephedrine", "phenylephrine", "oxymetazoline",
+    "docusate", "polyethylene glycol 3350", "bisacodyl", "sennosides",
+    "psyllium", "guaifenesin",
+    "omeprazole", "famotidine", "ranitidine", "lansoprazole", "esomeprazole",
+    "meclizine", "dimenhydrinate",
+    "miconazole", "clotrimazole", "tolnaftate",
+    "bacitracin", "benzoyl peroxide", "permethrin",
+    "minoxidil", "nicotine", "levocetirizine",
+    "pyrantel", "benzocaine", "lidocaine topical", "capsaicin",
+    "methyl salicylate", "hydrogen peroxide", "povidone-iodine",
+    "witch hazel", "calamine", "dyclonine", "phenazopyridine",
+    "sodium bicarbonate", "activated charcoal",
+    "chlorhexidine",
+])
+
+# Dietary supplements (not FDA-approved drugs; sold OTC as supplements).
+SUPPLEMENT_GENERICS: frozenset[str] = frozenset([
+    "melatonin", "vitamin d3", "cholecalciferol",
+    "ascorbic acid",   # vitamin C
+    "cyanocobalamin",  # vitamin B12
+    "folic acid", "biotin", "niacin",
+    "zinc", "magnesium oxide", "calcium citrate", "potassium gluconate",
+    "ferrous sulfate", "iron sulfate",
+    "collagen", "glucosamine", "chondroitin",
+    "ubidecarenone",   # coenzyme Q10
+    "thioctic acid",   # alpha-lipoic acid
+    "lutein", "omega-3 fatty acids", "fish oils", "cranberry preparation",
+    "bromelains", "spirulina", "quercetin", "resveratrol",
+    "st. john's wort extract", "ginkgo biloba extract",
+    "ginseng preparation", "echinacea preparation",
+    "saw palmetto extract", "valerian root extract",
+    "licorice root extract", "devil's claw preparation",
+    "astragalus preparation", "sedum roseum root extract",  # rhodiola
+    "milk thistle seed extract", "evening primrose oil",
+    "green tea extract", "elderberry preparation",
+    "garlic preparation", "ginger extract",
+    "hawthorn berry", "fenugreek seed meal",
+    "black cohosh extract", "berberine",
+])
+
+
+def _matches_any(name_lower: str, candidate_set: frozenset[str]) -> bool:
+    """True if any candidate is exactly name_lower, or appears as a
+    whitespace-bounded substring (e.g., 'morphine' matches 'morphine sulfate').
+    """
+    if name_lower in candidate_set:
+        return True
+    tokens = set(name_lower.split())
+    return any(
+        c in tokens or f" {c} " in f" {name_lower} " or name_lower.startswith(f"{c} ")
+        for c in candidate_set
+    )
+
+
+def infer_category(generic_name: str) -> str:
+    """Return 'Controlled', 'OTC', 'Supplement', or 'Rx' for a generic drug name.
+
+    Handles suffixed formulations (e.g., "morphine hydrochloride",
+    "oxycodone / acetaminophen") by matching canonical base names as
+    whitespace-bounded substrings.
+    """
+    name_lower = generic_name.strip().lower()
+    if _matches_any(name_lower, CONTROLLED_GENERICS):
+        return "Controlled"
+    if _matches_any(name_lower, SUPPLEMENT_GENERICS):
+        return "Supplement"
+    if _matches_any(name_lower, OTC_GENERICS):
+        return "OTC"
+    return "Rx"
+
+
+def populate_categories(db_path: str) -> int:
+    """Add category column to rxnorm_lookup (if missing) and populate it.
+
+    Safe to run on an existing KB: uses ALTER TABLE IF NOT EXISTS equivalent,
+    then updates all rows from the classification sets above.
+    Returns the number of rows updated.
+    """
+    conn = sqlite3.connect(db_path)
+    updated = 0
+    try:
+        # Add column if it doesn't exist yet
+        existing_cols = {r[1] for r in conn.execute("PRAGMA table_info(rxnorm_lookup)")}
+        if "category" not in existing_cols:
+            conn.execute(
+                "ALTER TABLE rxnorm_lookup ADD COLUMN category TEXT NOT NULL DEFAULT 'Rx'"
+            )
+            log.info("RxNorm: added category column to rxnorm_lookup")
+
+        # Apply overrides for Controlled, Supplement, OTC
+        for category, name_set in [
+            ("Controlled", CONTROLLED_GENERICS),
+            ("Supplement", SUPPLEMENT_GENERICS),
+            ("OTC",        OTC_GENERICS),
+        ]:
+            for name in name_set:
+                conn.execute(
+                    "UPDATE rxnorm_lookup SET category = ? "
+                    "WHERE LOWER(generic_name) = ? AND category != ?",
+                    (category, name, category),
+                )
+                updated += conn.total_changes
+
+        conn.commit()
+        log.info("RxNorm: category column populated, %d rows updated", updated)
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+    return updated
+
 
 FALLBACK_MAPPINGS: dict[str, tuple[str, str]] = {
     # brand_name -> (rxcui, generic_name)
@@ -149,6 +427,49 @@ FALLBACK_MAPPINGS: dict[str, tuple[str, str]] = {
     "Adderall":     ("725",    "Amphetamine"),
     "Vyvanse":      ("854838", "Lisdexamfetamine"),
     "Ritalin":      ("6901",   "Methylphenidate"),
+    # ── Common OTC brand names (user queries often use these) ─────────
+    "Sudafed":      ("8896",   "Pseudoephedrine"),
+    "Sudafed PE":   ("8163",   "Phenylephrine"),
+    "Tylenol":      ("161",    "Acetaminophen"),
+    "Advil":        ("5640",   "Ibuprofen"),
+    "Motrin":       ("5640",   "Ibuprofen"),
+    "Aleve":        ("7258",   "Naproxen"),
+    "Bayer":        ("1191",   "Aspirin"),
+    "Benadryl":     ("3498",   "Diphenhydramine"),
+    "Claritin":     ("28889",  "Loratadine"),
+    "Zyrtec":       ("20610",  "Cetirizine"),
+    "Allegra":      ("82675",  "Fexofenadine"),
+    "Xyzal":        ("1011724","Levocetirizine"),
+    "Afrin":        ("8163",   "Oxymetazoline"),
+    "Mucinex":      ("5032",   "Guaifenesin"),
+    "Robitussin DM":("214488", "Dextromethorphan / Guaifenesin"),
+    "NyQuil":       ("705258", "Acetaminophen / Dextromethorphan / Doxylamine"),
+    "DayQuil":      ("214488", "Dextromethorphan / Guaifenesin"),
+    "Imodium":      ("17091",  "Loperamide"),
+    "Pepto-Bismol": ("1326",   "Bismuth Subsalicylate"),
+    "Tums":         ("1898",   "Calcium Carbonate"),
+    "Rolaids":      ("1898",   "Calcium Carbonate"),
+    "Pepcid":       ("4278",   "Famotidine"),
+    "Zantac":       ("9143",   "Ranitidine"),
+    "Prilosec OTC": ("7646",   "Omeprazole"),
+    "Dramamine":    ("3423",   "Dimenhydrinate"),
+    "Bonine":       ("6660",   "Meclizine"),
+    "MiraLAX":      ("27084",  "Polyethylene Glycol 3350"),
+    "Dulcolax":     ("1549",   "Bisacodyl"),
+    "Senokot":      ("9718",   "Sennosides"),
+    "Metamucil":    ("8777",   "Psyllium"),
+    "Colace":       ("3407",   "Docusate"),
+    "Flonase":      ("41126",  "Fluticasone"),
+    "Nasonex":      ("6960",   "Mometasone"),
+    "Visine":       ("3638",   "Tetrahydrozoline"),
+    "Cortizone":    ("5492",   "Hydrocortisone"),
+    "Neosporin":    ("1191088","Bacitracin / Neomycin / Polymyxin B"),
+    "Bactine":      ("6387",   "Lidocaine Topical"),
+    "Orajel":       ("1292",   "Benzocaine"),
+    "Preparation H":("21246",  "Witch Hazel"),
+    "Desitin":      ("38605",  "Zinc"),
+    "Gas-X":        ("9456",   "Simethicone"),
+    "Beano":        ("80583",  "Alpha Galactosidase"),
 }
 
 
@@ -199,12 +520,13 @@ def build(db_path: str) -> int:
             result = _lookup_drug(drug)
             if result:
                 rxcui, brand, generic, tty = result
+                category = infer_category(generic)
                 try:
                     conn.execute(
                         "INSERT OR IGNORE INTO rxnorm_lookup "
-                        "(rxcui, brand_name, generic_name, tty, source) "
-                        "VALUES (?, ?, ?, ?, 'rxnorm_api')",
-                        (rxcui, brand, generic, tty),
+                        "(rxcui, brand_name, generic_name, tty, category, source) "
+                        "VALUES (?, ?, ?, ?, ?, 'rxnorm_api')",
+                        (rxcui, brand, generic, tty, category),
                     )
                     inserted += conn.total_changes - inserted
                 except sqlite3.IntegrityError:
@@ -218,12 +540,13 @@ def build(db_path: str) -> int:
 
         # Fallback hardcoded mappings
         for brand, (rxcui, generic) in FALLBACK_MAPPINGS.items():
+            category = infer_category(generic)
             try:
                 conn.execute(
                     "INSERT OR IGNORE INTO rxnorm_lookup "
-                    "(rxcui, brand_name, generic_name, tty, source) "
-                    "VALUES (?, ?, ?, 'SBD', 'rxnorm_fallback')",
-                    (rxcui, brand, generic),
+                    "(rxcui, brand_name, generic_name, tty, category, source) "
+                    "VALUES (?, ?, ?, 'SBD', ?, 'rxnorm_fallback')",
+                    (rxcui, brand, generic, category),
                 )
                 inserted += conn.total_changes - inserted
             except sqlite3.IntegrityError:

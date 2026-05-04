@@ -47,9 +47,9 @@ android {
         }
     }
 
-    // Keep .task model files uncompressed so LiteRT can mmap them
+    // Keep model/DB files uncompressed so they can be mmap'd
     androidResources {
-        noCompress += listOf("task", "tflite", "sqlite", "db")
+        noCompress += listOf("gguf", "litertlm", "tflite", "sqlite", "db")
     }
 }
 
@@ -74,10 +74,10 @@ dependencies {
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
-    // LiteRT-LM — on-device Gemma inference
-    // Versions are placeholders; update to latest published artifacts
-    implementation("com.google.ai.edge.litert:litert-lm:1.0.0")          // placeholder version
-    implementation("com.google.ai.edge.litert:litert-lm-gpu:1.0.0")      // placeholder version
+    // LiteRT-LM on-device inference with GPU acceleration on Adreno/Mali/
+    // Xclipse. 0.10.2 is required for the .litertlm artifact on-device;
+    // 0.10.0 initializes the bundle but crashes natively during first prefill.
+    implementation("com.google.ai.edge.litertlm:litertlm-android:0.10.2")
 
     // CameraX
     val cameraXVersion = "1.3.1"
@@ -89,9 +89,9 @@ dependencies {
     // ML Kit — text recognition (offline, bundled model)
     implementation("com.google.mlkit:text-recognition:16.0.0")
 
-    // SQLCipher — encrypted local database
-    implementation("net.zetetic:android-database-sqlcipher:4.5.6")
-    implementation("androidx.sqlite:sqlite:2.4.0")
+    // Stock Android SQLite is used directly — no SQLCipher wrapper.
+    // The KB contains only public-domain FDA/NLM data; encryption adds
+    // no real security since the passphrase would have to ship in the APK.
 
     // Kotlinx Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")

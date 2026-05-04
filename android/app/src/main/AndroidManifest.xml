@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Camera for OCR scanning -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <!-- NO internet permission — proves fully-offline operation -->
+    <!-- Offline guarantee: strip permissions injected by transitive deps.
+         - INTERNET is added by com.google.android.datatransport:transport-backend-cct
+           (ML Kit's optional telemetry backend). We never make network calls.
+         - ACCESS_NETWORK_STATE is added by androidx.core. Harmless on its own,
+           but removed for consistency with the zero-network posture.
+         Verify after each dependency bump with:
+             adb shell dumpsys package com.aegis.health | grep permission -->
+    <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove" />
 
     <application
         android:name=".AegisApp"
@@ -16,6 +25,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AegisHealth"
         android:largeHeap="true">
+
+        <!-- LiteRT-LM native deps: OpenCL for Adreno/Mali GPU backend,
+             vndksupport for runtime loader, cdsprpc for Hexagon NPU.
+             All optional so the APK installs on devices missing any of them. -->
+        <uses-native-library android:name="libvndksupport.so" android:required="false" />
+        <uses-native-library android:name="libOpenCL.so" android:required="false" />
+        <uses-native-library android:name="libcdsprpc.so" android:required="false" />
+
+        <!-- Strip Google datatransport (CCT) telemetry backend. ML Kit text
+             recognition uses bundled offline models; CCT is telemetry-only
+             and would try to upload detection metrics if initialized. -->
+        <service
+            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+            tools:node="remove" />
+        <service
+            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+            tools:node="remove" />
+        <receiver
+            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+            tools:node="remove" />
 
         <activity
             android:name=".MainActivity"

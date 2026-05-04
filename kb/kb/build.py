@@ -15,7 +15,11 @@ import sys
 import time
 from pathlib import Path
 
-from kb.sources import rxnorm, openfda, dailymed, nih_dsld, medlineplus, uspstf
+from kb.sources import (
+    rxnorm, openfda, dailymed, nih_dsld, medlineplus, uspstf,
+    curated_ddi, lactmed, ods_supplements, geriatric_pim, rxclass, acip,
+    food_interactions, pharmacogenomics,
+)
 
 log = logging.getLogger(__name__)
 
@@ -24,6 +28,8 @@ SCHEMA_PATH = os.path.join(os.path.dirname(__file__), "schema.sql")
 
 # Sources in dependency order – rxnorm must run first because other
 # sources look up rxcui values from rxnorm_lookup.
+# curated_ddi runs last so it can fill gaps left by the openFDA parser
+# and is never overwritten by earlier sources (INSERT OR IGNORE).
 SOURCES: list[tuple[str, object]] = [
     ("rxnorm",      rxnorm),
     ("openfda",     openfda),
@@ -31,6 +37,14 @@ SOURCES: list[tuple[str, object]] = [
     ("nih_dsld",    nih_dsld),
     ("medlineplus", medlineplus),
     ("uspstf",      uspstf),
+    ("acip",        acip),
+    ("lactmed",     lactmed),
+    ("ods_supplements", ods_supplements),
+    ("geriatric_pim",   geriatric_pim),
+    ("rxclass",     rxclass),
+    ("food_interactions", food_interactions),
+    ("pharmacogenomics",  pharmacogenomics),
+    ("curated_ddi", curated_ddi),
 ]
 
 

@@ -1,0 +1,88 @@
+{
+  "source": "C:\\ResearchCommons\\aegis-health\\datagen\\output\\combined_sft.jsonl",
+  "total": 1518,
+  "clean": 0,
+  "regen": 1518,
+  "clean_pct": 0.0,
+  "by_template": {
+    "consent_binding": {
+      "clean": 0,
+      "regen": 86,
+      "clean_pct": 0.0
+    },
+    "consent_simplify": {
+      "clean": 0,
+      "regen": 86,
+      "clean_pct": 0.0
+    },
+    "consent_tool_use": {
+      "clean": 0,
+      "regen": 56,
+      "clean_pct": 0.0
+    },
+    "drugsafe_class_interaction": {
+      "clean": 0,
+      "regen": 116,
+      "clean_pct": 0.0
+    },
+    "drugsafe_deferral": {
+      "clean": 0,
+      "regen": 115,
+      "clean_pct": 0.0
+    },
+    "drugsafe_food": {
+      "clean": 0,
+      "regen": 109,
+      "clean_pct": 0.0
+    },
+    "drugsafe_lactation": {
+      "clean": 0,
+      "regen": 97,
+      "clean_pct": 0.0
+    },
+    "drugsafe_otc": {
+      "clean": 0,
+      "regen": 104,
+      "clean_pct": 0.0
+    },
+    "drugsafe_pharmacogenomic": {
+      "clean": 0,
+      "regen": 117,
+      "clean_pct": 0.0
+    },
+    "drugsafe_polypharmacy": {
+      "clean": 0,
+      "regen": 117,
+      "clean_pct": 0.0
+    },
+    "drugsafe_tool_use": {
+      "clean": 0,
+      "regen": 117,
+      "clean_pct": 0.0
+    },
+    "healthpartner_dialog": {
+      "clean": 0,
+      "regen": 96,
+      "clean_pct": 0.0
+    },
+    "healthpartner_immunization": {
+      "clean": 0,
+      "regen": 101,
+      "clean_pct": 0.0
+    },
+    "healthpartner_tool_use": {
+      "clean": 0,
+      "regen": 99,
+      "clean_pct": 0.0
+    },
+    "healthpartner_update": {
+      "clean": 0,
+      "regen": 102,
+      "clean_pct": 0.0
+    }
+  },
+  "rejection_reasons": {
+    "final turn is not valid JSON (likely prose)": 1361,
+    "final turn JSON failed AegisResponse schema": 157
+  }
+}

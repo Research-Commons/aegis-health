@@ -1,0 +1,122 @@
+{
+  "records": 1446,
+  "modes": {
+    "drugsafe": 900,
+    "consent": 128,
+    "healthpartner": 418
+  },
+  "tool_calls": {
+    "normalize_drug": 1784,
+    "decompose_product": 327,
+    "check_warnings": 702,
+    "get_drug_info": 239,
+    "lookup_term": 283,
+    "get_guideline": 418
+  },
+  "tool_results": {
+    "normalize_drug": 1780,
+    "decompose_product": 327,
+    "check_warnings": 704,
+    "get_drug_info": 239,
+    "lookup_term": 283,
+    "get_guideline": 418
+  },
+  "call_result_mismatch_count": 4,
+  "duplicate_same_tool_args_count": 0,
+  "missing_final_count": 0,
+  "final_parse_error_count": 0,
+  "empty_citations_count": 0,
+  "noncanonical_citations_count": 0,
+  "noncanonical_flags_count": 0,
+  "bad_confidence_count": 0,
+  "bad_defer_count": 0,
+  "bad_flag_severity_count": 0,
+  "code_fence_count": 0,
+  "non_ascii_count": 0,
+  "long_case_count": 0,
+  "key_orders": {
+    "('flags', 'citations', 'confidence', 'defer_to_professional', 'explanation')": 1446
+  },
+  "samples": {
+    "call_result_mismatch": [
+      [
+        39,
+        "drugsafe",
+        "drugsafe_deferral",
+        2,
+        1,
+        [
+          "normalize_drug",
+          "check_warnings"
+        ],
+        [
+          "check_warnings"
+        ]
+      ],
+      [
+        45,
+        "drugsafe",
+        "drugsafe_deferral",
+        4,
+        1,
+        [
+          "normalize_drug",
+          "normalize_drug",
+          "normalize_drug",
+          "check_warnings"
+        ],
+        [
+          "check_warnings"
+        ]
+      ],
+      [
+        1358,
+        "drugsafe",
+        "drugsafe_polypharmacy",
+        4,
+        5,
+        [
+          "normalize_drug",
+          "normalize_drug",
+          "normalize_drug",
+          "check_warnings"
+        ],
+        [
+          "normalize_drug",
+          "normalize_drug",
+          "normalize_drug",
+          "check_warnings",
+          "check_warnings"
+        ]
+      ],
+      [
+        1367,
+        "drugsafe",
+        "drugsafe_deferral",
+        4,
+        5,
+        [
+          "normalize_drug",
+          "normalize_drug",
+          "normalize_drug",
+          "check_warnings"
+        ],
+        [
+          "normalize_drug",
+          "normalize_drug",
+          "normalize_drug",
+          "check_warnings",
+          "check_warnings"
+        ]
+      ]
+    ],
+    "duplicate_same_tool_args": [],
+    "final_parse_errors": [],
+    "empty_citations": [],
+    "noncanonical_citations": [],
+    "bad_flag_severity": [],
+    "code_fence_cases": [],
+    "non_ascii_cases": [],
+    "long_cases": []
+  }
+}

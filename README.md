@@ -168,68 +168,129 @@ make assemble-android
 make demo
 ```
 
-### Split across team members
 
-Because each module publishes a well-defined artifact, three people can work in parallel:
+## Run on Your Android Device
 
-| Member | Owns | Needs from others |
-|--------|------|-------------------|
-| **Product** | `kb/`, `tools/`, `android/`, `demo/` | `aegis_model.task` at integration time |
-| **SFT** | `datagen/`, `training/` | `aegis_kb.sqlite` (day 5), `anchor_cases.json` |
-| **RL** | `rl/rewards/`, `rl/grpo.py` | `aegis-sft-merged/` (day 12), `anchor_cases.json` |
+This walks through getting Aegis Health installed and running on a fresh Android device — useful for evaluation, demos, or onboarding contributors. The shipping path is a fine-tuned Gemma 4 E4B model in LiteRT-LM `.litertlm` format, sideloaded into the app's external files directory.
 
-Reward functions in `rl/rewards/` can be developed and unit-tested in isolation on day 1 -- they don't require any model checkpoint.
+### Hardware requirements
 
----
+| Resource | Minimum | Recommended |
+|---|---|---|
+| Android | API 26 (8.0 Oreo) | API 33 (13)+ |
+| RAM | 8 GB | 12+ GB |
+| Free storage | 9 GB | 16+ GB |
+| SoC | Snapdragon 7+ Gen 2 / Dimensity 8000 / Tensor G2 | Snapdragon 8 Gen 2+ / Dimensity 9000+ / Tensor G3+ |
+| GPU | OpenCL-capable Adreno / Mali / Xclipse (currently CPU-only path; reserved for future use) | Same |
 
-## Running on Kaggle / Colab
+Validated on Samsung Galaxy S23 (Snapdragon 8 Gen 2). The current shipping path uses CPU inference (`Backend.CPU`, 6 threads). End-to-end response latency on the validated device is ~90 seconds for a typical DrugSafe prompt; lower-tier devices will be slower. See [ON-DEVICE-DEPLOYMENT-ANALYSIS.md](ON-DEVICE-DEPLOYMENT-ANALYSIS.md) for the full constraints write-up.
 
-The training and RL notebooks are designed for free-tier GPUs.
+### Prerequisites
 
-- **SFT:** [`training/notebooks/sft_colab.ipynb`](training/notebooks/sft_colab.ipynb)
-  1. Upload `datagen/output/combined_sft.jsonl` and `eval/eval/anchor_cases.json`
-  2. Set `HF_TOKEN` in Kaggle/Colab secrets
-  3. Run all cells
-  4. Download the merged checkpoint
+- JDK 17
+- Android Studio Hedgehog (2023.1.1) or newer, **or** the Android command-line tools (`adb`, `gradle`)
+- [Hugging Face CLI](https://huggingface.co/docs/huggingface_hub/main/en/guides/cli): `pip install huggingface_hub` then `huggingface-cli login` with a token that has access to the model repo
+- USB debugging enabled on the target device, with a working USB cable
 
-- **GRPO:** [`rl/notebooks/grpo_colab.ipynb`](rl/notebooks/grpo_colab.ipynb)
-  1. Upload the SFT-merged checkpoint
-  2. Upload `anchor_cases.json`
-  3. Run all cells
-  4. Download the GRPO-merged checkpoint
+### Step-by-step (bash / macOS / Linux)
 
----
+```bash
+# 1. Clone the repo
+git clone https://github.com/<your-org>/aegis-health.git
+cd aegis-health
 
-## Evaluation
+# 2. Build the knowledge base (~2-5 min; needs internet for FDA / NLM data)
+make kb
 
-All training/RL/export stages evaluate against the same 50 anchor cases in [`eval/eval/anchor_cases.json`](eval/eval/anchor_cases.json):
+# 3. Copy the KB into Android assets
+cp kb/output/aegis_kb.sqlite android/app/src/main/assets/
 
-- **15 severity anchors** — high/low severity drug pairs with known ground truth
-- **20 deferral cases** — controlled substances, pregnancy, pediatric, unknown drugs, polypharmacy
-- **15 safety boundaries** — adversarial probes that must be refused
+# 4. Download the .litertlm model from Hugging Face (~7.7 GB)
+huggingface-cli download V1rtucious/gemma4-e4b-toolcalling-litertlm-v2 \
+  model.litertlm \
+  --local-dir ./downloads
 
-The eval produces four headline metrics:
+# 5. Build the APK
+cd android
+./gradlew assembleDebug
+cd ..
 
-| Metric | Target |
-|--------|--------|
-| JSON validity | ≥ 95 % |
-| Deferral accuracy | ≥ 98 % |
-| Citation presence | ≥ 90 % |
-| Safety boundary | 100 % |
+# 6. Install the APK on the connected device
+adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 
-Run `make eval-sft` or `make eval-rl` to produce a report at `eval/reports/`.
+# 7. Sideload the model. Local filename is model.litertlm; on the device
+# it must land as aegis_model.litertlm — adb push handles the rename.
+adb shell am force-stop com.aegis.health
+adb push downloads/model.litertlm \
+  /sdcard/Android/data/com.aegis.health/files/aegis_model.litertlm
 
----
+# 8. Launch
+adb shell am start -n com.aegis.health/.MainActivity
+```
 
-## Android deployment checklist
+### PowerShell variant (Windows)
 
-Before cutting the demo APK, confirm:
+```powershell
+huggingface-cli download V1rtucious/gemma4-e4b-toolcalling-litertlm-v2 `
+  model.litertlm `
+  --local-dir .\downloads
 
-- [ ] `android/app/src/main/assets/aegis_model.task` exists (from `make export`)
-- [ ] `android/app/src/main/assets/aegis_kb.sqlite` exists (from `make kb`)
-- [ ] `AndroidManifest.xml` has **no `INTERNET` permission** (this is the offline proof)
+Copy-Item kb\output\aegis_kb.sqlite android\app\src\main\assets\
+
+cd android
+.\gradlew.bat assembleDebug
+cd ..
+
+adb install -r .\android\app\build\outputs\apk\debug\app-debug.apk
+adb shell am force-stop com.aegis.health
+adb push .\downloads\model.litertlm `
+  /sdcard/Android/data/com.aegis.health/files/aegis_model.litertlm
+adb shell am start -n com.aegis.health/.MainActivity
+```
+
+### Verify the install
+
+Engine init takes ~5–20 seconds on first launch (one-time shader/buffer setup), faster on subsequent launches. Watch the log to confirm the model loaded:
+
+```bash
+adb logcat -s LiteRtLmEngine ToolDispatcher EngineRouter
+```
+
+Expected lines after the app starts:
+
+```
+EngineRouter: Selecting LiteRtLmEngine (8202600448 bytes at aegis_model.litertlm)
+LiteRtLmEngine: Engine initialized in <ms> ms (CPU x6 threads, ctx=2048) ...
+```
+
+### Smoke test prompts
+
+After init, run one prompt per mode to confirm everything is wired:
+
+| Mode | Prompt | Expected |
+|---|---|---|
+| DrugSafe | `warfarin and ibuprofen, 65 year old` | High-severity bleeding-risk flag, AGS Beers + FDA citations, `defer_to_professional=true` |
+| ConsentReader | Paste any short medical consent paragraph | Plain-language rewrite; `defer_to_professional=false` unless asked whether to sign |
+| HealthPartner | `55 year old male, what preventive screenings should I get?` | USPSTF Grade A/B recommendations |
+
+### Verification checklist
+
+Before declaring the install good:
+
+- [ ] `adb shell ls /sdcard/Android/data/com.aegis.health/files/aegis_model.litertlm` lists the file (~7.7 GB)
+- [ ] `android/app/src/main/assets/aegis_kb.sqlite` exists in the APK build
+- [ ] `AndroidManifest.xml` has **no `INTERNET` permission** (this is the offline guarantee)
 - [ ] Airplane-mode smoke test passes on a physical device
+- [ ] DrugSafe responses include real citations (e.g., "AGS Beers Criteria", FDA labels) rather than only the generic "Aegis local safety KB" fallback
 - [ ] All three modes produce a cited response for at least one canonical demo prompt
+
+### Troubleshooting
+
+**`Model not found at ...`** — model wasn't pushed, or it landed at the wrong path. The app reads from `getExternalFilesDir(null)`, which is `/sdcard/Android/data/com.aegis.health/files/` and only exists once the app has been installed and launched at least once. Install the APK first, launch it (it'll fail to find the model, that's fine), then run the `adb push` step.
+
+**Engine init succeeds but the first prompt crashes (SIGSEGV)** — likely the wrong `.litertlm` bundle. Confirm you downloaded `model.litertlm` from `V1rtucious/gemma4-e4b-toolcalling-litertlm-v2` (the W8 build); other variants exist on the user's HF account that hit known runtime bugs (see [ON-DEVICE-DEPLOYMENT-ANALYSIS.md](ON-DEVICE-DEPLOYMENT-ANALYSIS.md)).
+
+**Responses take longer than ~3 minutes** — confirm the device has at least 8 GB RAM free and isn't thermal-throttling. Background-killing other apps (`adb shell am kill-all`) before each smoke test helps. Also confirm `NUM_THREADS = 6` in [`LiteRtLmEngine.kt`](android/app/src/main/java/com/aegis/health/inference/LiteRtLmEngine.kt) is appropriate for your SoC — going above 6 may spill onto slower small cores.
 
 ---
 

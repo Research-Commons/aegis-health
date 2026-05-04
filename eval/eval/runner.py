@@ -17,32 +17,126 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from eval.agentic_loop import run_agentic_loop
 from eval.metrics import compute_all_metrics
 
-CASES_PATH = Path(__file__).parent / "anchor_cases.json"
+DEFAULT_CASES_PATH = Path(__file__).parent / "anchor_cases.json"
 REPORTS_DIR = Path(__file__).resolve().parent.parent / "reports"
 
 
-def load_cases() -> list[dict[str, Any]]:
-    with open(CASES_PATH) as f:
+def load_cases(cases_path: Path) -> list[dict[str, Any]]:
+    with open(cases_path) as f:
         return json.load(f)
 
 
-def infer_checkpoint(model_path: str, prompt: str) -> str:
-    """Run inference on a local HuggingFace checkpoint."""
+_CACHED_MODEL: tuple[str, Any, Any] | None = None
+
+
+def _load_tokenizer(model_path: str) -> Any:
+    """Load tokenizer with the Mistral regex fix when supported."""
+    from transformers import AutoTokenizer
+
     try:
+        return AutoTokenizer.from_pretrained(model_path, fix_mistral_regex=True)
+    except AttributeError as exc:
+        if "backend_tokenizer" not in str(exc):
+            raise
+        print(
+            "WARNING: Transformers failed while applying fix_mistral_regex=True "
+            f"({exc}). Falling back to tokenizer load without that flag.",
+            file=sys.stderr,
+        )
+        return AutoTokenizer.from_pretrained(model_path)
+
+
+def _generate_one(model: Any, tokenizer: Any, prompt_str: str, raw: bool = False) -> str:
+    """One greedy generation pass. Returns ONLY the new tokens (no echo)."""
+    import torch
+    from transformers import StoppingCriteria, StoppingCriteriaList
+
+    class _StopOnToolResponse(StoppingCriteria):
+        """Stop after the model starts fabricating a second dispatcher response."""
+
+        def __init__(self, prompt_len: int) -> None:
+            self.prompt_len = prompt_len
+            self.seen_closed_tool_call = False
+            self.tool_response_count = 0
+
+        def __call__(self, input_ids: Any, scores: Any, **kwargs: Any) -> bool:
+            generated = input_ids[0][self.prompt_len:]
+            if generated.numel() == 0:
+                return False
+            tail = generated[-128:]
+            text = tokenizer.decode(tail, skip_special_tokens=False)
+            if "<tool_call|>" in text:
+                self.seen_closed_tool_call = True
+            self.tool_response_count = max(
+                self.tool_response_count,
+                tokenizer.decode(generated, skip_special_tokens=False).count("<|tool_response>"),
+            )
+            return self.seen_closed_tool_call and self.tool_response_count >= 2
+
+    inputs = tokenizer(prompt_str, return_tensors="pt", truncation=True, max_length=4096).to(model.device)
+    input_len = inputs["input_ids"].shape[1]
+    stopping_criteria = None
+    if raw:
+        stopping_criteria = StoppingCriteriaList([_StopOnToolResponse(input_len)])
+    with torch.no_grad():
+        generation_kwargs = {
+            **inputs,
+            "max_new_tokens": 1024,
+            "do_sample": False,
+            "pad_token_id": tokenizer.eos_token_id,
+        }
+        if stopping_criteria is not None:
+            generation_kwargs["stopping_criteria"] = stopping_criteria
+        outputs = model.generate(**generation_kwargs)
+    new_tokens = outputs[0][input_len:]
+    return tokenizer.decode(new_tokens, skip_special_tokens=not raw)
+
+
+def infer_checkpoint(model_path: str, prompt: str, dispatcher: Any = None) -> str:
+    """Run inference on a local HuggingFace checkpoint.
+
+    Applies the tokenizer's chat template when available — Gemma 4 is chat-tuned
+    and scores much worse on raw prompts without the <start_of_turn> framing.
+    Model+tokenizer are cached across calls so we don't reload per case.
+
+    When `dispatcher` is provided, runs the multi-turn agentic loop. When None,
+    falls back to single-shot generation (preserves original behaviour).
+    """
+    try:
+        import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
     except ImportError:
-        print("ERROR: transformers library required for checkpoint mode.", file=sys.stderr)
-        print("Install with: pip install transformers torch", file=sys.stderr)
+        print("ERROR: transformers + torch required for checkpoint mode.", file=sys.stderr)
         sys.exit(1)
 
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
-    model = AutoModelForCausalLM.from_pretrained(model_path)
+    global _CACHED_MODEL
+    if _CACHED_MODEL is None or _CACHED_MODEL[0] != model_path:
+        tokenizer = _load_tokenizer(model_path)
+        dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
+        model = AutoModelForCausalLM.from_pretrained(
+            model_path, torch_dtype=dtype, device_map="auto",
+        )
+        model.eval()
+        _CACHED_MODEL = (model_path, model, tokenizer)
+    _, model, tokenizer = _CACHED_MODEL
 
-    inputs = tokenizer(prompt, return_tensors="pt")
-    outputs = model.generate(**inputs, max_new_tokens=1024, do_sample=False)
-    return tokenizer.decode(outputs[0], skip_special_tokens=True)
+    if getattr(tokenizer, "chat_template", None):
+        formatted = tokenizer.apply_chat_template(
+            [{"role": "user", "content": prompt}],
+            tokenize=False, add_generation_prompt=True,
+        )
+    else:
+        formatted = prompt
+
+    if dispatcher is not None:
+        return run_agentic_loop(
+            lambda p: _generate_one(model, tokenizer, p, raw=True),
+            formatted, dispatcher, max_turns=6,
+        )
+    return _generate_one(model, tokenizer, formatted)
 
 
 def infer_api(api_url: str, prompt: str, mode: str) -> str:
@@ -67,9 +161,18 @@ def run_eval(
     cases: list[dict[str, Any]],
     checkpoint: str | None = None,
     api_url: str | None = None,
+    enable_tools: bool = False,
 ) -> list[dict[str, Any]]:
     """Run evaluation on all cases and return per-case results."""
     results: list[dict[str, Any]] = []
+
+    dispatcher = None
+    if enable_tools and checkpoint:
+        from tools.tools.dispatcher import ToolDispatcher
+        import os
+        kb_path = os.environ.get("AEGIS_KB_PATH", "kb/output/aegis_kb.sqlite")
+        dispatcher = ToolDispatcher(db_path=kb_path)
+        print(f"Tool dispatch ENABLED (kb={kb_path}, max_turns=6)")
 
     for i, case in enumerate(cases, 1):
         case_id = case["id"]
@@ -80,7 +183,7 @@ def run_eval(
 
         try:
             if checkpoint:
-                output = infer_checkpoint(checkpoint, prompt)
+                output = infer_checkpoint(checkpoint, prompt, dispatcher=dispatcher)
             elif api_url:
                 output = infer_api(api_url, prompt, mode)
             else:
@@ -181,12 +284,29 @@ def main() -> None:
         default="run",
         help="Tag for the results file (default: 'run')",
     )
+    parser.add_argument(
+        "--anchor-path",
+        type=Path,
+        default=DEFAULT_CASES_PATH,
+        help="Path to anchor_cases JSON (default: dev anchor_cases.json)",
+    )
+    parser.add_argument(
+        "--enable-tools",
+        action="store_true",
+        help="Run with multi-turn agentic loop (tool dispatch). Checkpoint mode only; "
+             "API mode does its own dispatch.",
+    )
     args = parser.parse_args()
 
-    cases = load_cases()
-    print(f"Loaded {len(cases)} anchor cases from {CASES_PATH}\n")
+    cases = load_cases(args.anchor_path)
+    print(f"Loaded {len(cases)} anchor cases from {args.anchor_path}\n")
 
-    results = run_eval(cases, checkpoint=args.checkpoint, api_url=args.api_url)
+    results = run_eval(
+        cases,
+        checkpoint=args.checkpoint,
+        api_url=args.api_url,
+        enable_tools=args.enable_tools,
+    )
     results_path = save_results(results, tag=args.tag)
 
     from eval.report import generate_report

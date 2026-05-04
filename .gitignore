@@ -14,11 +14,16 @@ build/
 venv/
 env/
 
-# IDE
+# IDE & tooling caches
 .idea/
 .vscode/
+.claude/
 *.swp
 *.swo
+
+# Scratch notebooks at repo root (not part of the pipeline)
+/Gemma4_*.ipynb
+/gemma4-*.ipynb
 
 # Generated outputs
 kb/output/*.sqlite
@@ -40,6 +45,7 @@ Thumbs.db
 
 # Android
 android/.gradle/
+android/.kotlin/
 android/build/
 android/app/build/
 android/local.properties
@@ -60,9 +66,43 @@ demo/frontend/.next/
 *.safetensors
 *.gguf
 *.tflite
+*.litertlm
+*.task
+models/
+kb/output/*.bak
+kb/output/*.sqlite-shm
+kb/output/*.sqlite-wal
 
 # Jupyter
 .ipynb_checkpoints/
 
 # W&B
 wandb/
+
+# Local model downloads (.litertlm covered above; this also catches
+# extracted sections, community/aegis subdirs, configs, README)
+downloads/
+
+# On-device debug captures
+*-logcat*.txt
+*-logcat.utf8.txt
+*.tombstone
+tombstones/
+crash.txt
+tensor-diff.txt
+android/*-logcat*.txt
+android/tombstones/
+
+# Splice/extraction intermediates
+*.pbtext
+*.zlib
+*.spiece
+*.toml.bak
+
+# Stale session docs (handovers / plans / step trackers).
+# ON-DEVICE-DEPLOYMENT-ANALYSIS.md is intentionally NOT ignored — it's
+# the current canonical doc on why the app ships LiteRT-LM CPU.
+HANDOVER.md
+HANDOVER-LITERTLM-DEBUG.md
+PLAN.md
+remaining_steps.md

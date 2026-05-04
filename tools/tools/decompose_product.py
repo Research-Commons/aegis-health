@@ -15,7 +15,8 @@ def decompose_product(product_name: str, db_path: str = DEFAULT_DB) -> dict:
 
     Returns a dict with keys: product, ingredients (list of {name, rxcui}), citation.
     """
-    if not product_name or not product_name.strip():
+    product_name = "" if product_name is None else str(product_name)
+    if not product_name.strip():
         return {"error": "Empty product name provided"}
 
     db = Path(db_path)

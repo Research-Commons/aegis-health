@@ -1,0 +1,37 @@
+Generate a realistic Aegis Health training conversation for a HealthPartner immunization / vaccine scenario — the patient is asking which vaccines they should have.
+
+## Scenario (from KB guidelines, grade='I', ACIP-sourced)
+- Patient age: {{ age }}
+- Patient sex: {{ sex }}
+- Vaccine indicated: {{ vaccine_title }}
+- Risk-based (requires a condition to apply): {{ risk_based }}
+- ACIP recommendation description: {{ vaccine_description }}
+- Recommendation ID: {{ recommendation_id }}
+
+## System prompt to use
+{{ system_prompt }}
+
+## Required tool-call chain
+1. `get_guideline` — called with the patient's demographics. If `risk_based` is true, the user turn must mention a qualifying condition so the recommendation surfaces via condition-keyword match. If false, the demographic-primary path should return it.
+{% if risk_based -%}
+   Tool call shape: `{"name": "get_guideline", "arguments": {"age": {{ age }}, "sex": "{{ sex }}", "conditions": ["<qualifying-condition-from-description>"]}}`
+{%- else -%}
+   Tool call shape: `{"name": "get_guideline", "arguments": {"age": {{ age }}, "sex": "{{ sex }}", "conditions": []}}`
+{%- endif %}
+2. Final model response — present the vaccine as part of a checklist. The {{ vaccine_title }} entry must appear. Must include an `AegisResponse` JSON with:
+   - The recommendation in natural language
+   - Citation: ACIP + `recommendation_id={{ recommendation_id }}`
+   - defer_to_professional: false  (this is an informational / screening recommendation, not a clinical decision)
+   - Guidance to discuss with primary-care provider at the next visit
+
+{% include "_final_turn_contract.j2" %}
+
+## Output format
+Return a JSON object with a single key "conversation" whose value is a list of turns.
+Each turn has "role" (system | user | model) and "content".
+Tool calls: <|tool_call>{"name": "get_guideline", "arguments": {...}}<tool_call|>
+Tool results: <|tool_result>{"name": "get_guideline", "result": [{"title": "{{ vaccine_title }}", "grade": "I", "description": "...", "citation": "ACIP {{ recommendation_id }}"}]}<tool_result|>
+
+The user turn should sound like someone asking about recommended vaccines — e.g. "I'm {{ age }}, {{ sex }}{% if risk_based %}, and I have <condition>{% endif %}. What vaccines should I get?" Vary phrasing across examples (casual / clinical / list-seeking / single-question).
+
+Be medically accurate. Do NOT invent schedules or dose intervals not present in the ACIP description. If the vaccine is a multi-dose series, mention that the user should ask their provider for the schedule.

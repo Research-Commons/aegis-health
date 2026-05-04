@@ -18,12 +18,14 @@ The model must:
 - Explain WHY the clause is binding or informational
 - If binding, explain what the patient is agreeing to in plain language
 - Use `lookup_term` if the clause contains medical terminology
-- Produce an AegisResponse with confidence and explanation
+- Produce an AegisResponse with confidence and explanation. The classification ("BINDING" or "INFORMATIONAL") and reasoning go inside the `explanation` field — see FINAL TURN OUTPUT CONTRACT.
+
+{% include "_final_turn_contract.j2" %}
 
 ## Output format
 Return a JSON object with a single key "conversation" whose value is a list of turns.
 Each turn has "role" (system | user | model) and "content".
-Tool calls: <tool_call>{"name": "lookup_term", "arguments": {"term": "..."}}</tool_call>
-Tool results: <tool_result>{"name": "lookup_term", "result": {...}}</tool_result>
+Tool calls: <|tool_call>{"name": "lookup_term", "arguments": {"term": "..."}}<tool_call|>
+Tool results: <|tool_result>{"name": "lookup_term", "result": {...}}<tool_result|>
 
 The user asks whether a specific clause is legally binding or just informational.

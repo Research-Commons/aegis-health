@@ -1,0 +1,2235 @@
+2026-04-25 19:47:29,153 [INFO] Loaded 1348 filtered+deduped examples
+2026-04-25 19:47:29,155 [INFO] Existing user-turn hashes: 1348
+2026-04-25 19:47:29,156 [INFO] === Top-up template=drugsafe_tool_use (want 8, mode=drugsafe) ===
+2026-04-25 19:47:29,157 [INFO] ContaminationGuard: loaded 67 drug-pairs, 32 singletons, 10 consent texts from 2 anchor file(s).
+[92m19:47:29 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:47:29,198 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:47:53 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:47:53,877 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:47:54,107 [INFO]   [1/32] OK  (1/8, $0.0077 total)
+[92m19:47:54 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:47:54,674 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:48:04 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:48:04,779 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:48:04,844 [INFO]   [2/32] OK  (2/8, $0.0152 total)
+[92m19:48:05 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:48:05,373 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:48:17 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:48:17,479 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:48:17,614 [INFO]   [3/32] OK  (3/8, $0.0232 total)
+[92m19:48:18 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:48:18,178 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:48:34 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:48:34,159 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:48:34,205 [INFO]   [4/32] OK  (4/8, $0.0314 total)
+[92m19:48:34 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:48:34,773 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:48:46 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:48:46,218 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:48:46,293 [WARNING] Attempt 1/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m19:48:46 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:48:46,293 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:48:58 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:48:58,918 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:48:59,013 [INFO]   [5/32] OK  (5/8, $0.0390 total)
+[92m19:48:59 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:48:59,572 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:49:10 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:49:10,568 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:49:10,668 [INFO]   [6/32] OK  (6/8, $0.0467 total)
+[92m19:49:11 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:49:11,234 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:49:22 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:49:22,914 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:49:22,976 [INFO]   [7/32] OK  (7/8, $0.0543 total)
+[92m19:49:23 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:49:23,511 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:49:36 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:49:36,158 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:49:36,224 [INFO]   [8/32] OK  (8/8, $0.0625 total)
+2026-04-25 19:49:36,731 [INFO] === Top-up template=drugsafe_polypharmacy (want 8, mode=drugsafe) ===
+[92m19:49:36 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:49:36,741 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:49:48 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:49:48,581 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:49:48,859 [INFO]   [1/32] OK  (1/8, $0.0710 total)
+[92m19:49:49 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:49:49,379 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:49:58 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:49:58,625 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:49:58,708 [INFO]   [2/32] OK  (2/8, $0.0771 total)
+[92m19:49:59 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:49:59,229 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:50:11 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:50:11,396 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:50:11,455 [INFO]   [3/32] OK  (3/8, $0.0854 total)
+[92m19:50:11 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:50:11,978 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:50:26 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:50:26,392 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:50:26,393 [INFO]   [4/32] OK  (4/8, $0.0946 total)
+[92m19:50:26 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:50:26,907 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:50:41 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:50:41,114 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:50:41,426 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['levothyroxine', 'losartan', 'sertraline'], 'age': 60, 'conditions': ['hypertension', 'asthma', 'anxiety', 'GERD']})
+2026-04-25 19:50:41,427 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:50:41 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:50:41,428 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:50:55 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:50:55,396 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:50:55,705 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['levothyroxine', 'losartan', 'sertraline'], 'age': 60, 'conditions': ['hypertension', 'asthma', 'anxiety', 'GERD']})
+2026-04-25 19:50:55,706 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:50:55 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:50:55,707 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:51:10 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:51:10,231 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:51:10,525 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['levothyroxine', 'losartan', 'sertraline'], 'age': 60, 'conditions': ['hypertension', 'asthma', 'anxiety', 'GERD']})
+2026-04-25 19:51:10,526 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 19:51:10,527 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:51:11 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:51:11,050 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:51:25 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:51:25,299 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:51:25,799 [INFO]   [6/32] OK  (5/8, $0.1037 total)
+[92m19:51:26 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:51:26,322 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:51:40 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:51:40,173 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:51:40,658 [INFO]   [7/32] OK  (6/8, $0.1133 total)
+[92m19:51:41 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:51:41,182 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:51:49 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:51:49,162 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:51:49,445 [INFO]   [8/32] OK  (7/8, $0.1186 total)
+[92m19:51:49 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:51:49,966 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:52:05 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:52:05,068 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:52:05,846 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['metoprolol', 'levothyroxine', 'sertraline', 'hydrochlorothiazide', 'amlodipine'], 'age': 60, 'conditions': ['heart failure', 'diabetes type 2', 'depression', 'GERD']})
+2026-04-25 19:52:05,846 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:52:05 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:52:05,849 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:52:19 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:52:19,385 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:52:20,083 [INFO]   [9/32] OK  (8/8, $0.1279 total)
+2026-04-25 19:52:20,586 [INFO] === Top-up template=drugsafe_deferral (want 8, mode=drugsafe) ===
+[92m19:52:20 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:52:20,597 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:52:34 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:52:34,298 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:52:34,486 [INFO]   [1/32] OK  (1/8, $0.1364 total)
+[92m19:52:35 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:52:35,000 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:52:46 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:52:46,795 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:52:46,828 [INFO]   [2/32] OK  (2/8, $0.1438 total)
+[92m19:52:47 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:52:47,347 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:52:58 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:52:58,564 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:52:58,582 [INFO]   [3/32] OK  (3/8, $0.1505 total)
+[92m19:52:59 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:52:59,090 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:53:11 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:53:11,278 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:53:11,294 [INFO]   [4/32] OK  (4/8, $0.1591 total)
+[92m19:53:11 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:53:11,816 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:53:23 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:53:23,475 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:53:23,513 [INFO]   [5/32] OK  (5/8, $0.1668 total)
+[92m19:53:24 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:53:24,038 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:53:36 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:53:36,072 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:53:36,177 [INFO]   [6/32] OK  (6/8, $0.1749 total)
+[92m19:53:36 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:53:36,702 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:53:48 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:53:48,186 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:53:48,200 [INFO]   [7/32] OK  (7/8, $0.1820 total)
+[92m19:53:48 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:53:48,714 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:54:01 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:54:01,006 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:54:01,113 [INFO]   [8/32] OK  (8/8, $0.1897 total)
+2026-04-25 19:54:01,623 [INFO] === Top-up template=drugsafe_otc (want 7, mode=drugsafe) ===
+[92m19:54:01 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:54:01,631 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:54:13 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:54:13,707 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:54:13,750 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['Dextromethorphan', 'Acetaminophen', 'Doxylamine'], 'age': 37})
+2026-04-25 19:54:13,750 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:54:13 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:54:13,751 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:54:27 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:54:27,176 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:54:27,219 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['Dextromethorphan', 'Acetaminophen', 'Doxylamine'], 'age': 37})
+2026-04-25 19:54:27,219 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:54:27 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:54:27,221 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:54:37 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:54:37,185 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:54:37,223 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['Dextromethorphan', 'Acetaminophen', 'Doxylamine'], 'age': 37})
+2026-04-25 19:54:37,223 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 19:54:37,226 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:54:37 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:54:37,733 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:54:53 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:54:53,864 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:54:54,065 [INFO]   [2/28] OK  (1/7, $0.2000 total)
+[92m19:54:54 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:54:54,580 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:55:11 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:55:11,347 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:55:11,661 [INFO]   [3/28] OK  (2/7, $0.2100 total)
+[92m19:55:12 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:55:12,181 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:55:25 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:55:25,082 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:55:25,193 [INFO]   [4/28] OK  (3/7, $0.2179 total)
+[92m19:55:25 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:55:25,715 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:55:42 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:55:42,768 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:55:43,030 [INFO]   [5/28] OK  (4/7, $0.2286 total)
+[92m19:55:43 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:55:43,545 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:55:56 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:55:56,873 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:55:57,089 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['Acetaminophen', 'Dextromethorphan', 'Guaifenesin', 'Phenylephrine', 'Diphenhydramine'], 'age': 44})
+2026-04-25 19:55:57,089 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:55:57 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:55:57,090 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:56:11 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:56:11,397 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:56:11,722 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['acetaminophen', 'dextromethorphan', 'guaifenesin', 'phenylephrine', 'diphenhydramine'], 'age': 44})
+2026-04-25 19:56:11,722 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:56:11 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:56:11,723 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:56:21 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:56:21,676 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:56:21,796 [INFO]   [6/28] OK  (5/7, $0.2354 total)
+[92m19:56:22 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:56:22,310 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:56:36 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:56:36,845 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:56:37,187 [INFO]   [7/28] OK  (6/7, $0.2453 total)
+[92m19:56:37 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:56:37,709 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:56:54 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:56:54,549 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:56:54,820 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['acetaminophen', 'diphenhydramine', 'dextromethorphan', 'phenylephrine', 'bismuth subsalicylate'], 'age': 21})
+2026-04-25 19:56:54,820 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:56:54 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:56:54,822 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:57:13 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:57:13,205 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:57:13,424 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['acetaminophen', 'diphenhydramine', 'dextromethorphan', 'phenylephrine', 'bismuth subsalicylate'], 'age': 21})
+2026-04-25 19:57:13,424 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:57:13 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:57:13,425 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:57:30 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:57:30,407 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:57:30,698 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['Acetaminophen', 'Diphenhydramine', 'Dextromethorphan', 'Phenylephrine', 'Bismuth Subsalicylate'], 'age': 21})
+2026-04-25 19:57:30,698 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 19:57:30,700 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:57:31 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:57:31,220 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:57:47 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:57:47,172 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:57:47,504 [INFO]   [9/28] OK  (7/7, $0.2554 total)
+2026-04-25 19:57:48,007 [INFO] === Top-up template=drugsafe_class_interaction (want 6, mode=drugsafe) ===
+[92m19:57:48 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:57:48,017 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:57:59 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:57:59,414 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:57:59,450 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['lisinopril', 'spironolactone']})
+2026-04-25 19:57:59,451 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:57:59 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:57:59,452 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:58:10 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:58:10,335 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:58:10,358 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['lisinopril', 'spironolactone']})
+2026-04-25 19:58:10,358 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:58:10 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:58:10,359 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:58:22 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:58:22,240 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:58:22,275 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['lisinopril', 'spironolactone']})
+2026-04-25 19:58:22,276 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 19:58:22,278 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:58:22 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:58:22,796 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:58:33 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:58:33,621 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:58:33,669 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['escitalopram', 'rizatriptan']})
+2026-04-25 19:58:33,669 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:58:33 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:58:33,670 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:58:45 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:58:45,399 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:58:45,434 [INFO]   [2/24] OK  (1/6, $0.2627 total)
+[92m19:58:45 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:58:45,943 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:58:58 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:58:58,008 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:58:58,031 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'escitalopram']})
+2026-04-25 19:58:58,031 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:58:58 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:58:58,033 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:59:09 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:59:09,004 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:59:09,025 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'escitalopram']})
+2026-04-25 19:59:09,025 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:59:09 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:59:09,026 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:59:21 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:59:21,502 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:59:21,545 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'escitalopram']})
+2026-04-25 19:59:21,545 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 19:59:21,546 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:59:22 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:59:22,060 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:59:33 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:59:33,092 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:59:33,107 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'tetrahydrozoline']})
+2026-04-25 19:59:33,107 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:59:33 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:59:33,107 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:59:44 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:59:44,722 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:59:44,785 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'tetrahydrozoline']})
+2026-04-25 19:59:44,785 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:59:44 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:59:44,788 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m19:59:55 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 19:59:55,791 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 19:59:55,832 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'tetrahydrozoline']})
+2026-04-25 19:59:55,833 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 19:59:55,833 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m19:59:56 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 19:59:56,357 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:00:06 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:00:06,702 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:00:06,746 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'phenylephrine']})
+2026-04-25 20:00:06,746 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:00:06 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:00:06,747 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:00:16 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:00:16,979 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:00:17,015 [INFO]   [5/24] OK  (2/6, $0.2702 total)
+[92m20:00:17 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:00:17,530 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:00:28 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:00:28,188 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:00:28,216 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'paroxetine hydrochloride']})
+2026-04-25 20:00:28,216 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:00:28 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:00:28,217 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:00:37 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:00:37,258 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:00:37,292 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'paroxetine hydrochloride']})
+2026-04-25 20:00:37,292 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:00:37 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:00:37,293 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:00:47 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:00:47,599 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:00:47,630 [INFO]   [6/24] OK  (3/6, $0.2777 total)
+[92m20:00:48 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:00:48,146 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:00:54 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:00:54,433 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:00:54,453 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['paroxetine', 'rizatriptan']})
+2026-04-25 20:00:54,453 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:00:54 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:00:54,454 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:01:05 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:01:05,991 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:01:06,024 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['paroxetine', 'rizatriptan']})
+2026-04-25 20:01:06,024 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:01:06 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:01:06,027 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:01:17 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:01:17,193 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:01:17,230 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['paroxetine hydrochloride', 'rizatriptan benzoate']})
+2026-04-25 20:01:17,230 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 20:01:17,232 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:01:17 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:01:17,743 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:01:29 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:01:29,585 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:01:29,622 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['rosuvastatin', 'azithromycin']})
+2026-04-25 20:01:29,623 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:01:29 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:01:29,623 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:01:41 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:01:41,517 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:01:41,550 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['rosuvastatin', 'azithromycin']})
+2026-04-25 20:01:41,550 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:01:41 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:01:41,551 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:01:53 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:01:53,902 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:01:53,939 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['rosuvastatin', 'azithromycin']})
+2026-04-25 20:01:53,939 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 20:01:53,941 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:01:54 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:01:54,462 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:02:04 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:02:04,996 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:02:05,038 [WARNING] Attempt 1/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m20:02:05 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:02:05,040 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:02:15 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:02:15,921 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:02:15,959 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['pravastatin', 'azithromycin']})
+2026-04-25 20:02:15,959 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:02:15 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:02:15,961 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:02:26 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:02:26,421 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:02:26,481 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['pravastatin', 'azithromycin']})
+2026-04-25 20:02:26,482 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 20:02:26,485 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:02:27 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:02:27,008 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:02:38 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:02:38,445 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:02:38,476 [INFO]   [10/24] OK  (4/6, $0.2849 total)
+[92m20:02:38 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:02:38,989 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:02:50 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:02:50,228 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:02:50,280 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['simvastatin', 'azithromycin monohydrate']})
+2026-04-25 20:02:50,280 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:02:50 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:02:50,281 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:03:01 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:03:01,413 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:03:01,454 [WARNING] Attempt 2/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m20:03:01 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:03:01,456 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:03:11 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:03:11,968 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:03:12,006 [WARNING] Attempt 3/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+2026-04-25 20:03:12,007 [WARNING] Rejected example: Failed after 3 attempts. Last error: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m20:03:12 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:03:12,526 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:03:25 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:03:25,047 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:03:25,070 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'amitriptyline']})
+2026-04-25 20:03:25,070 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:03:25 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:03:25,070 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:03:37 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:03:37,408 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:03:37,447 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'amitriptyline hydrochloride']})
+2026-04-25 20:03:37,447 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:03:37 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:03:37,448 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:03:48 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:03:48,550 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:03:48,565 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'amitriptyline hydrochloride']})
+2026-04-25 20:03:48,565 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 20:03:48,565 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:03:49 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:03:49,082 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:04:01 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:04:01,608 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:04:01,658 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['rosuvastatin', 'azithromycin']})
+2026-04-25 20:04:01,660 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:04:01 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:04:01,661 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:04:12 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:04:12,411 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:04:12,437 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['rosuvastatin', 'azithromycin']})
+2026-04-25 20:04:12,437 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:04:12 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:04:12,438 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:04:24 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:04:24,592 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:04:24,632 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['rosuvastatin', 'azithromycin']})
+2026-04-25 20:04:24,632 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 20:04:24,634 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:04:25 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:04:25,156 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:04:36 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:04:36,434 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:04:36,461 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['simvastatin', 'azithromycin']})
+2026-04-25 20:04:36,461 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:04:36 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:04:36,462 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:04:46 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:04:46,778 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:04:46,816 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['simvastatin', 'azithromycin monohydrate']})
+2026-04-25 20:04:46,816 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:04:46 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:04:46,817 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:04:57 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:04:57,465 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:04:57,497 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['simvastatin', 'azithromycin monohydrate']})
+2026-04-25 20:04:57,497 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 20:04:57,499 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:04:58 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:04:58,014 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:05:09 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:05:09,953 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:05:09,970 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'clomipramine']})
+2026-04-25 20:05:09,970 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:05:09 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:05:09,972 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:05:20 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:05:20,651 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:05:20,685 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'clomipramine']})
+2026-04-25 20:05:20,685 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:05:20 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:05:20,686 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:05:32 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:05:32,779 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:05:32,812 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'clomipramine']})
+2026-04-25 20:05:32,813 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 20:05:32,815 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:05:33 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:05:33,339 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:05:43 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:05:43,313 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:05:43,352 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'clomipramine']})
+2026-04-25 20:05:43,352 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:05:43 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:05:43,354 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:05:54 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:05:54,844 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:05:54,884 [INFO]   [16/24] OK  (5/6, $0.2925 total)
+[92m20:05:55 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:05:55,400 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:06:08 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:08,221 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:08,245 [INFO]   [17/24] OK  (6/6, $0.3000 total)
+2026-04-25 20:06:08,750 [INFO] === Top-up template=drugsafe_food (want 7, mode=drugsafe) ===
+[92m20:06:08 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:06:08,770 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:06:14 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:14,510 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:14,511 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:06:14 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:06:14,513 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:06:20 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:20,522 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:20,523 [WARNING] Attempt 2/3: Chat format validation failed
+[92m20:06:20 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:06:20,524 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:06:26 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:26,069 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:26,070 [WARNING] Attempt 3/3: Chat format validation failed
+2026-04-25 20:06:26,072 [WARNING] Rejected example: Failed after 3 attempts. Last error: Chat format validation failed
+[92m20:06:26 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:06:26,608 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:06:32 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:32,381 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:32,382 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:06:32 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:06:32,383 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:06:37 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:37,886 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:37,887 [INFO]   [2/28] OK  (1/7, $0.3037 total)
+[92m20:06:38 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:06:38,421 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:06:43 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:43,517 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:43,517 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:06:43 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:06:43,519 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:06:53 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:53,765 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:06:53,766 [INFO]   [3/28] OK  (2/7, $0.3106 total)
+[92m20:06:54 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:06:54,308 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:07:03 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:03,467 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:03,471 [INFO]   [4/28] dup, skipped
+[92m20:07:04 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:07:04,003 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:07:09 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:09,978 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:09,979 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:07:09 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:07:09,981 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:07:15 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:15,933 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:15,936 [WARNING] Attempt 2/3: Chat format validation failed
+[92m20:07:15 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:07:15,937 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:07:20 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:20,729 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:20,729 [WARNING] Attempt 3/3: Chat format validation failed
+2026-04-25 20:07:20,731 [WARNING] Rejected example: Failed after 3 attempts. Last error: Chat format validation failed
+[92m20:07:21 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:07:21,267 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:07:26 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:26,654 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:26,655 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:07:26 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:07:26,655 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:07:31 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:31,955 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:31,956 [WARNING] Attempt 2/3: Chat format validation failed
+[92m20:07:31 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:07:31,958 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:07:37 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:37,474 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:37,476 [WARNING] Attempt 3/3: Chat format validation failed
+2026-04-25 20:07:37,477 [WARNING] Rejected example: Failed after 3 attempts. Last error: Chat format validation failed
+[92m20:07:38 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:07:38,013 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:07:43 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:43,336 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:43,337 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:07:43 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:07:43,339 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:07:48 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:48,172 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:48,173 [WARNING] Attempt 2/3: Chat format validation failed
+[92m20:07:48 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:07:48,174 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:07:53 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:53,726 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:07:53,726 [WARNING] Attempt 3/3: Chat format validation failed
+2026-04-25 20:07:53,729 [WARNING] Rejected example: Failed after 3 attempts. Last error: Chat format validation failed
+[92m20:07:54 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:07:54,238 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:08:00 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:00,259 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:00,260 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:08:00 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:08:00,261 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:08:10 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:10,495 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:10,497 [INFO]   [8/28] OK  (3/7, $0.3175 total)
+[92m20:08:11 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:08:11,031 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:08:22 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:22,002 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:22,002 [INFO]   [9/28] dup, skipped
+[92m20:08:22 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:08:22,537 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:08:27 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:27,773 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:27,773 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:08:27 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:08:27,776 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:08:33 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:33,843 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:33,843 [WARNING] Attempt 2/3: Chat format validation failed
+[92m20:08:33 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:08:33,844 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:08:39 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:39,666 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:39,666 [WARNING] Attempt 3/3: Chat format validation failed
+2026-04-25 20:08:39,667 [WARNING] Rejected example: Failed after 3 attempts. Last error: Chat format validation failed
+[92m20:08:40 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:08:40,211 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:08:50 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:50,054 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:50,056 [INFO]   [11/28] OK  (4/7, $0.3244 total)
+[92m20:08:50 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:08:50,594 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:08:59 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:59,892 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:08:59,893 [WARNING] Attempt 1/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m20:08:59 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:08:59,895 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:09:10 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:10,591 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:10,592 [INFO]   [12/28] OK  (5/7, $0.3313 total)
+[92m20:09:11 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:09:11,123 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:09:16 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:16,820 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:16,821 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:09:16 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:09:16,822 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:09:22 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:22,485 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:22,486 [WARNING] Attempt 2/3: Chat format validation failed
+[92m20:09:22 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:09:22,488 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:09:28 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:28,125 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:28,126 [WARNING] Attempt 3/3: Chat format validation failed
+2026-04-25 20:09:28,130 [WARNING] Rejected example: Failed after 3 attempts. Last error: Chat format validation failed
+[92m20:09:28 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:09:28,662 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:09:38 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:38,593 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:38,594 [INFO]   [14/28] dup, skipped
+[92m20:09:39 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:09:39,125 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:09:48 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:48,923 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:48,925 [INFO]   [15/28] OK  (6/7, $0.3381 total)
+[92m20:09:49 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:09:49,457 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:09:59 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:59,614 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:09:59,615 [INFO]   [16/28] OK  (7/7, $0.3451 total)
+2026-04-25 20:10:00,123 [INFO] === Top-up template=drugsafe_pharmacogenomic (want 11, mode=drugsafe) ===
+[92m20:10:00 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:10:00,140 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:10:12 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:10:12,434 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:10:12,435 [INFO]   [1/44] OK  (1/11, $0.3524 total)
+[92m20:10:12 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:10:12,975 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:10:23 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:10:23,654 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:10:23,655 [INFO]   [2/44] OK  (2/11, $0.3598 total)
+[92m20:10:24 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:10:24,185 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:10:36 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:10:36,539 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:10:36,540 [INFO]   [3/44] OK  (3/11, $0.3670 total)
+[92m20:10:37 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:10:37,073 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:10:48 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:10:48,955 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:10:48,956 [INFO]   [4/44] OK  (4/11, $0.3744 total)
+[92m20:10:49 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:10:49,482 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:11:00 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:11:00,975 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:11:00,977 [INFO]   [5/44] OK  (5/11, $0.3816 total)
+[92m20:11:01 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:11:01,511 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:11:11 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:11:11,908 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:11:11,909 [INFO]   [6/44] OK  (6/11, $0.3880 total)
+[92m20:11:12 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:11:12,449 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:11:22 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:11:22,489 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:11:22,490 [WARNING] Attempt 1/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m20:11:22 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:11:22,491 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:11:34 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:11:34,192 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:11:34,194 [INFO]   [7/44] OK  (7/11, $0.3955 total)
+[92m20:11:34 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:11:34,749 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:11:46 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:11:46,734 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:11:46,736 [INFO]   [8/44] OK  (8/11, $0.4026 total)
+[92m20:11:47 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:11:47,265 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:11:59 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:11:59,220 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:11:59,221 [INFO]   [9/44] OK  (9/11, $0.4099 total)
+[92m20:11:59 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:11:59,744 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:12:10 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:12:10,432 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:12:10,433 [INFO]   [10/44] OK  (10/11, $0.4174 total)
+[92m20:12:10 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:12:10,984 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:12:21 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:12:21,796 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:12:21,797 [INFO]   [11/44] OK  (11/11, $0.4245 total)
+2026-04-25 20:12:22,309 [INFO] === Top-up template=drugsafe_lactation (want 7, mode=drugsafe) ===
+[92m20:12:22 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:12:22,325 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:12:33 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:12:33,645 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:12:33,669 [INFO]   [1/28] OK  (1/7, $0.4317 total)
+[92m20:12:34 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:12:34,209 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:12:45 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:12:45,335 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:12:45,359 [INFO]   [2/28] OK  (2/7, $0.4387 total)
+[92m20:12:45 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:12:45,890 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:12:55 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:12:55,684 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:12:55,702 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['amoxicillin trihydrate'], 'age': 0, 'conditions': ['breastfeeding']})
+2026-04-25 20:12:55,704 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:12:55 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:12:55,705 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:13:05 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:13:05,432 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:13:05,465 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['amoxicillin trihydrate'], 'age': 0, 'conditions': ['breastfeeding']})
+2026-04-25 20:13:05,465 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:13:05 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:13:05,467 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:13:15 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:13:15,662 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:13:15,673 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['amoxicillin trihydrate'], 'age': 0, 'conditions': ['breastfeeding']})
+2026-04-25 20:13:15,673 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 20:13:15,674 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:13:16 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:13:16,205 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:13:27 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:13:27,655 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:13:27,680 [INFO]   [4/28] OK  (3/7, $0.4460 total)
+[92m20:13:28 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:13:28,214 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:13:39 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:13:39,513 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:13:39,549 [INFO]   [5/28] OK  (4/7, $0.4533 total)
+[92m20:13:40 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:13:40,084 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:13:51 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:13:51,558 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:13:51,592 [INFO]   [6/28] OK  (5/7, $0.4606 total)
+[92m20:13:52 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:13:52,131 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:14:02 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:14:02,170 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:14:02,183 [INFO]   [7/28] OK  (6/7, $0.4679 total)
+[92m20:14:02 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:14:02,709 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:14:12 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:14:12,944 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:14:12,962 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['diclofenac'], 'age': 0, 'conditions': ['breastfeeding']})
+2026-04-25 20:14:12,962 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:14:12 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:14:12,963 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:14:19 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:14:19,864 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:14:19,886 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['diclofenac'], 'age': 1, 'conditions': ['breastfeeding']})
+2026-04-25 20:14:19,886 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:14:19 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:14:19,888 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:14:30 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:14:30,521 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:14:30,545 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['diclofenac'], 'age': 0, 'conditions': ['breastfeeding']})
+2026-04-25 20:14:30,545 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 20:14:30,548 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m20:14:31 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:14:31,094 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:14:47 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:14:47,396 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:14:47,422 [INFO]   [9/28] OK  (7/7, $0.4752 total)
+2026-04-25 20:14:47,935 [INFO] === Top-up template=consent_simplify (want 2, mode=consent) ===
+[92m20:14:47 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:14:47,942 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:14:59 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:14:59,843 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:14:59,845 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:14:59 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:14:59,846 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:15:11 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:15:11,388 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:15:11,390 [INFO]   [1/8] dup, skipped
+[92m20:15:11 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:15:11,904 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:15:18 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:15:18,590 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:15:18,592 [INFO]   [2/8] dup, skipped
+[92m20:15:19 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:15:19,109 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:15:31 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:15:31,005 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:15:31,005 [INFO]   [3/8] dup, skipped
+[92m20:15:31 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:15:31,515 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:15:43 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:15:43,679 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:15:43,680 [INFO]   [4/8] OK  (1/2, $0.4827 total)
+[92m20:15:44 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:15:44,197 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:15:56 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:15:56,243 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:15:56,244 [WARNING] Attempt 1/3: Final-turn validation failed: flag #0 has weak/missing citation: 'Common Legal Practice / Patient Rights'
+[92m20:15:56 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:15:56,246 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:16:07 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:16:07,573 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:16:07,573 [INFO]   [5/8] OK  (2/2, $0.4902 total)
+2026-04-25 20:16:08,082 [INFO] === Top-up template=consent_tool_use (want 3, mode=consent) ===
+[92m20:16:08 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:16:08,090 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:16:20 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:16:20,462 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:16:20,462 [INFO]   [1/12] dup, skipped
+[92m20:16:20 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:16:20,969 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:16:32 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:16:32,934 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:16:32,935 [INFO]   [2/12] OK  (1/3, $0.4980 total)
+[92m20:16:33 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:16:33,445 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:16:45 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:16:45,222 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:16:45,223 [WARNING] Attempt 1/3: Final-turn validation failed: flag #0 has weak/missing citation: 'Aegis ConsentReader Analysis'
+[92m20:16:45 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:16:45,224 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:16:56 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:16:56,694 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:16:56,696 [WARNING] Attempt 2/3: Final-turn validation failed: flag #0 has weak/missing citation: 'Internal Policy: Legal/Binding Clause Identification'
+[92m20:16:56 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:16:56,699 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:17:08 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:17:08,069 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:17:08,071 [INFO]   [3/12] OK  (2/3, $0.5055 total)
+[92m20:17:08 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:17:08,585 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:17:19 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:17:19,215 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:17:19,216 [INFO]   [4/12] dup, skipped
+[92m20:17:19 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:17:19,726 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:17:27 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:17:27,402 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:17:27,403 [INFO]   [5/12] dup, skipped
+[92m20:17:27 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:17:27,911 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:17:38 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:17:38,953 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:17:38,954 [INFO]   [6/12] OK  (3/3, $0.5131 total)
+2026-04-25 20:17:39,460 [INFO] === Top-up template=consent_binding (want 4, mode=consent) ===
+[92m20:17:39 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:17:39,467 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:17:49 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:17:49,332 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:17:49,333 [INFO]   [1/16] dup, skipped
+[92m20:17:49 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:17:49,845 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:17:58 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:17:58,649 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:17:58,651 [INFO]   [2/16] dup, skipped
+[92m20:17:59 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:17:59,156 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:18:07 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:18:07,912 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:18:07,914 [INFO]   [3/16] dup, skipped
+[92m20:18:08 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:18:08,437 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:18:17 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:18:17,512 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:18:17,514 [INFO]   [4/16] dup, skipped
+[92m20:18:18 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:18:18,034 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:18:27 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:18:27,099 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:18:27,100 [INFO]   [5/16] OK  (1/4, $0.5191 total)
+[92m20:18:27 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:18:27,617 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:18:36 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:18:36,664 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:18:36,666 [INFO]   [6/16] OK  (2/4, $0.5254 total)
+[92m20:18:37 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:18:37,173 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:18:46 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:18:46,330 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:18:46,330 [INFO]   [7/16] dup, skipped
+[92m20:18:46 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:18:46,846 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:18:57 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:18:57,538 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:18:57,539 [INFO]   [8/16] OK  (3/4, $0.5315 total)
+[92m20:18:58 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:18:58,051 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:19:07 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:07,074 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:07,076 [INFO]   [9/16] OK  (4/4, $0.5375 total)
+2026-04-25 20:19:07,583 [INFO] === Top-up template=healthpartner_dialog (want 7, mode=healthpartner) ===
+[92m20:19:07 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:19:07,606 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:19:14 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:14,746 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:14,747 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:19:14 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:19:14,748 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:19:22 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:22,256 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:22,257 [WARNING] Attempt 2/3: Chat format validation failed
+[92m20:19:22 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:19:22,259 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:19:29 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:29,886 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:29,887 [WARNING] Attempt 3/3: Chat format validation failed
+2026-04-25 20:19:29,888 [WARNING] Rejected example: Failed after 3 attempts. Last error: Chat format validation failed
+[92m20:19:30 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:19:30,406 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:19:37 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:37,953 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:37,954 [INFO]   [2/28] OK  (1/7, $0.5421 total)
+[92m20:19:38 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:19:38,477 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:19:45 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:45,961 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:45,962 [INFO]   [3/28] OK  (2/7, $0.5465 total)
+[92m20:19:46 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:19:46,478 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:19:59 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:59,341 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:19:59,382 [INFO]   [4/28] OK  (3/7, $0.5546 total)
+[92m20:19:59 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:19:59,913 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:20:07 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:20:07,409 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:20:07,479 [INFO]   [5/28] OK  (4/7, $0.5594 total)
+[92m20:20:08 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:20:08,003 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:20:16 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:20:16,351 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:20:16,353 [INFO]   [6/28] OK  (5/7, $0.5636 total)
+[92m20:20:16 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:20:16,875 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:20:24 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:20:24,495 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:20:24,496 [INFO]   [7/28] OK  (6/7, $0.5679 total)
+[92m20:20:25 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:20:25,023 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:20:39 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:20:39,261 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:20:39,262 [INFO]   [8/28] OK  (7/7, $0.5760 total)
+2026-04-25 20:20:39,778 [INFO] === Top-up template=healthpartner_update (want 8, mode=healthpartner) ===
+[92m20:20:39 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:20:39,787 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:20:46 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:20:46,435 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:20:46,436 [INFO]   [1/32] OK  (1/8, $0.5797 total)
+[92m20:20:46 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:20:46,955 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:20:53 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:20:53,758 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:20:53,758 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:20:53 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:20:53,759 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:21:00 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:00,414 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:00,415 [INFO]   [2/32] OK  (2/8, $0.5836 total)
+[92m20:21:00 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:21:00,939 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:21:08 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:08,057 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:08,058 [INFO]   [3/32] OK  (3/8, $0.5875 total)
+[92m20:21:08 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:21:08,571 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:21:19 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:19,816 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:19,817 [INFO]   [4/32] OK  (4/8, $0.5948 total)
+[92m20:21:20 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:21:20,329 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:21:27 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:27,364 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:27,365 [INFO]   [5/32] OK  (5/8, $0.5989 total)
+[92m20:21:27 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:21:27,877 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:21:34 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:34,383 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:34,383 [INFO]   [6/32] OK  (6/8, $0.6027 total)
+[92m20:21:34 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:21:34,904 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:21:47 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:47,080 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:47,081 [INFO]   [7/32] OK  (7/8, $0.6098 total)
+[92m20:21:47 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:21:47,604 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:21:54 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:54,292 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:21:54,293 [INFO]   [8/32] OK  (8/8, $0.6133 total)
+2026-04-25 20:21:54,807 [INFO] === Top-up template=healthpartner_tool_use (want 7, mode=healthpartner) ===
+[92m20:21:54 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:21:54,816 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:22:01 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:22:01,220 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:22:01,221 [INFO]   [1/28] OK  (1/7, $0.6171 total)
+[92m20:22:01 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:22:01,733 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:22:14 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:22:14,002 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:22:14,003 [WARNING] Attempt 1/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m20:22:14 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:22:14,005 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:22:25 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:22:25,658 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:22:25,659 [INFO]   [2/28] OK  (2/7, $0.6249 total)
+[92m20:22:26 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:22:26,184 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:22:37 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:22:37,558 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:22:37,559 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:22:37 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:22:37,560 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:22:49 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:22:49,385 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:22:49,386 [WARNING] Attempt 2/3: Chat format validation failed
+[92m20:22:49 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:22:49,389 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:23:01 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:23:01,378 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:23:01,379 [INFO]   [3/28] OK  (3/7, $0.6325 total)
+[92m20:23:01 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:23:01,895 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:23:12 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:23:12,518 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:23:12,518 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:23:12 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:23:12,520 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:23:24 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:23:24,289 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:23:24,290 [INFO]   [4/28] OK  (4/7, $0.6402 total)
+[92m20:23:24 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:23:24,805 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:23:49 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:23:49,867 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:23:49,869 [INFO]   [5/28] OK  (5/7, $0.6479 total)
+[92m20:23:50 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:23:50,380 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:24:04 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:24:04,765 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:24:04,783 [INFO]   [6/28] OK  (6/7, $0.6563 total)
+[92m20:24:05 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:24:05,307 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:24:11 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:24:11,344 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:24:11,345 [INFO]   [7/28] OK  (7/7, $0.6602 total)
+2026-04-25 20:24:11,855 [INFO] === Top-up template=healthpartner_immunization (want 7, mode=healthpartner) ===
+[92m20:24:11 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:24:11,867 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:24:16 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:24:16,524 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:24:16,525 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:24:16 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:24:16,527 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:24:26 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:24:26,197 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:24:26,198 [INFO]   [1/28] OK  (1/7, $0.6672 total)
+[92m20:24:26 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:24:26,711 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:24:37 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:24:37,234 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:24:37,235 [INFO]   [2/28] OK  (2/7, $0.6739 total)
+[92m20:24:37 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:24:37,749 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:24:48 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:24:48,949 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:24:48,950 [INFO]   [3/28] OK  (3/7, $0.6805 total)
+[92m20:24:49 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:24:49,474 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:25:02 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:02,961 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:02,961 [INFO]   [4/28] OK  (4/7, $0.6874 total)
+[92m20:25:03 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:25:03,489 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:25:14 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:14,515 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:14,516 [INFO]   [5/28] OK  (5/7, $0.6941 total)
+[92m20:25:15 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:25:15,024 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:25:25 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:25,116 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:25,118 [INFO]   [6/28] OK  (6/7, $0.7009 total)
+[92m20:25:25 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:25:25,631 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:25:30 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:30,845 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:30,846 [WARNING] Attempt 1/3: Chat format validation failed
+[92m20:25:30 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:25:30,847 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:25:36 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:36,509 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:36,510 [WARNING] Attempt 2/3: Chat format validation failed
+[92m20:25:36 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:25:36,512 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:25:41 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:41,145 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:41,146 [WARNING] Attempt 3/3: Chat format validation failed
+2026-04-25 20:25:41,148 [WARNING] Rejected example: Failed after 3 attempts. Last error: Chat format validation failed
+[92m20:25:41 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 20:25:41,667 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m20:25:50 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:50,193 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 20:25:50,195 [INFO]   [8/28] OK  (7/7, $0.7073 total)
+
+Top-up budget per template:
+  consent_binding                  +4
+  consent_simplify                 +2
+  consent_tool_use                 +3
+  drugsafe_class_interaction       +6
+  drugsafe_deferral                +8
+  drugsafe_food                    +7
+  drugsafe_lactation               +7
+  drugsafe_otc                     +7
+  drugsafe_pharmacogenomic         +11
+  drugsafe_polypharmacy            +8
+  drugsafe_tool_use                +8
+  healthpartner_dialog             +7
+  healthpartner_immunization       +7
+  healthpartner_tool_use           +7
+  healthpartner_update             +8
+  Total target: 100
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+=== Top-up Summary ===
+Total new examples written: 100
+Total spend: $0.7073
+
+Template                          Want   Got   Dup  Fail
+  consent_binding                    4     4     5     0
+  consent_simplify                   2     2     3     0
+  consent_tool_use                   3     3     3     0
+  drugsafe_class_interaction         6     6     0    11
+  drugsafe_deferral                  8     8     0     0
+  drugsafe_food                      7     7     3     6
+  drugsafe_lactation                 7     7     0     2
+  drugsafe_otc                       7     7     0     2
+  drugsafe_pharmacogenomic          11    11     0     0
+  drugsafe_polypharmacy              8     8     0     1
+  drugsafe_tool_use                  8     8     0     0
+  healthpartner_dialog               7     7     0     1
+  healthpartner_immunization         7     7     0     1
+  healthpartner_tool_use             7     7     0     0
+  healthpartner_update               8     8     0     0

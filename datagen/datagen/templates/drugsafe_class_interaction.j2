@@ -1,0 +1,34 @@
+Generate a realistic multi-turn Aegis Health training conversation for a DrugSafe CLASS-LEVEL interaction — the two drugs are not listed as an explicit pair in the KB, but belong to pharmacologic classes that are known to interact.
+
+## Scenario (from KB class_interactions + drug_classes)
+- Drug A: {{ drug_a }}  (class: {{ class_name_a }})
+- Drug B: {{ drug_b }}  (class: {{ class_name_b }})
+- Class-pair severity: {{ severity }}  (1=mild, 5=contraindicated)
+- Mechanism: {{ mechanism }}
+- Clinical description: {{ description }}
+
+## System prompt to use
+{{ system_prompt }}
+
+## Required tool-call chain
+The class-interaction pathway is what makes this example valuable — the model cannot rely on a direct hit in `interactions`, it must recognise the class match from `check_warnings` output.
+
+1. `normalize_drug` — called once for "{{ drug_a }}" and once for "{{ drug_b }}".
+2. `check_warnings` — called with both resolved drugs. The KB ground truth will surface a CLASS-level interaction (severity {{ severity }}). The model must NOT downgrade this because no direct pair row exists.
+3. Final model response — must cite the class mechanism ("{{ mechanism }}" or equivalent plain-language paraphrase) and flag the interaction at severity {{ severity }}. Must include an `AegisResponse` JSON with:
+   - flags: [{"severity": {{ severity }}, "type": "drug_interaction", "description": "...", "citation": "FDA prescribing info — {{ class_name_a }} / {{ class_name_b }} class label"}]
+   - EVERY flag MUST carry an inline `citation` field naming a real source (FDA / NLM / CPIC / USPSTF / ACIP / AGS Beers / NIH ODS). No flag without a citation.
+   - citations: a top-level citations array mirroring the sources referenced in flags
+   - defer_to_professional: true (class-level severity {{ severity }} warrants clinical review)
+
+{% include "_final_turn_contract.j2" %}
+
+## Output format
+Return a JSON object with a single key "conversation" whose value is a list of turns.
+Each turn has "role" (system | user | model) and "content".
+Tool calls: <|tool_call>{"name": "...", "arguments": {...}}<tool_call|>
+Tool results: <|tool_result>{"name": "...", "result": {...}}<tool_result|>
+
+The user turn should be natural — someone mentioning they take {{ drug_a }} for an existing condition and asking whether {{ drug_b }} is safe to add. Do NOT name the drug classes in the user turn — a real user wouldn't know them. The class reasoning emerges in the model response.
+
+Be medically accurate. Use the KB description and mechanism above as the factual ground truth.

@@ -14,7 +14,8 @@ def lookup_term(term: str, db_path: str = DEFAULT_DB) -> dict:
     Uses exact match first, then fuzzy LIKE-based matching.
     Returns a dict with keys: term, plain_language_definition, citation.
     """
-    if not term or not term.strip():
+    term = "" if term is None else str(term)
+    if not term.strip():
         return {"error": "Empty term provided"}
 
     db = Path(db_path)

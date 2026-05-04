@@ -24,10 +24,14 @@ The model must simplify the medical/legal text so a patient with no medical trai
    - defer_to_professional: true if the document contains clauses the model cannot fully interpret
    - flags: any concerning clauses (e.g., broad liability waivers)
 
+The simplified text with [TERM: ...] and [BINDING: ...] annotations and the plain-language summary all go INSIDE the `explanation` field of the AegisResponse JSON envelope.
+
+{% include "_final_turn_contract.j2" %}
+
 ## Output format
 Return a JSON object with a single key "conversation" whose value is a list of turns.
 Each turn has "role" (system | user | model) and "content".
-Tool calls: <tool_call>{"name": "lookup_term", "arguments": {"term": "..."}}</tool_call>
-Tool results: <tool_result>{"name": "lookup_term", "result": {...}}</tool_result>
+Tool calls: <|tool_call>{"name": "lookup_term", "arguments": {"term": "..."}}<tool_call|>
+Tool results: <|tool_result>{"name": "lookup_term", "result": {...}}<tool_result|>
 
 The user turn should present the medical text and ask for help understanding it.

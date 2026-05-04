@@ -187,6 +187,104 @@ def validate(db_path: str) -> ValidationResult:
         else:
             vr.info("All guideline grades valid")
 
+        # ── 10. No USPSTF error-message rows ───────────────────
+        bad_uspstf = conn.execute(
+            "SELECT COUNT(*) FROM guidelines "
+            "WHERE title LIKE '%API key%' OR title LIKE '%Please contact%' "
+            "OR description LIKE '%API key%'"
+        ).fetchone()[0]
+        if bad_uspstf:
+            vr.error(f"guidelines: {bad_uspstf} rows contain USPSTF API-error text")
+        else:
+            vr.info("No USPSTF error-message rows in guidelines")
+
+        # ── 11. LactMed lactation coverage ─────────────────────
+        lactmed_rows = conn.execute(
+            "SELECT COUNT(*) FROM warnings WHERE warning_type = 'lactation'"
+        ).fetchone()[0]
+        if lactmed_rows < 50:
+            vr.warn(f"warnings: only {lactmed_rows} lactation rows (expected >=50)")
+        else:
+            vr.info(f"LactMed lactation rows: {lactmed_rows}")
+
+        # ── 12. Geriatric PIM coverage ─────────────────────────
+        geri_rows = conn.execute(
+            "SELECT COUNT(*) FROM warnings WHERE warning_type = 'geriatric'"
+        ).fetchone()[0]
+        if geri_rows < 245:
+            vr.warn(f"warnings: only {geri_rows} geriatric rows (baseline 245)")
+        else:
+            vr.info(f"Geriatric warning rows: {geri_rows}")
+
+        # ── 13. Supplement coverage (distinct supplement names) ─
+        distinct_suppl = conn.execute(
+            "SELECT COUNT(DISTINCT supplement_name) FROM supplements"
+        ).fetchone()[0]
+        if distinct_suppl < 30:
+            vr.warn(f"supplements: only {distinct_suppl} distinct supplements (expected >=30)")
+        else:
+            vr.info(f"Distinct supplements covered: {distinct_suppl}")
+
+        # ── 14. pharm_class fill rate on drugs ─────────────────
+        drugs_cols = {r[1] for r in conn.execute("PRAGMA table_info(drugs)")}
+        if "pharm_class" in drugs_cols:
+            total_drugs = conn.execute("SELECT COUNT(*) FROM drugs").fetchone()[0]
+            with_class = conn.execute(
+                "SELECT COUNT(*) FROM drugs WHERE pharm_class IS NOT NULL AND pharm_class != ''"
+            ).fetchone()[0]
+            pct = (with_class / total_drugs * 100) if total_drugs else 0
+            if pct < 40:
+                vr.warn(f"drugs.pharm_class populated on only {pct:.1f}% of rows (expected >=40%)")
+            else:
+                vr.info(f"drugs.pharm_class populated on {pct:.1f}% of rows")
+        else:
+            vr.warn("drugs.pharm_class column missing - migration not run")
+
+        # ── 15. USPSTF guideline count ─────────────────────────
+        uspstf_rows = conn.execute(
+            "SELECT COUNT(*) FROM guidelines "
+            "WHERE source LIKE 'USPSTF%' OR source LIKE 'uspstf%'"
+        ).fetchone()[0]
+        if uspstf_rows < 48:
+            vr.warn(f"guidelines: only {uspstf_rows} USPSTF rows (baseline 48)")
+        else:
+            vr.info(f"USPSTF guideline rows: {uspstf_rows}")
+
+        # ── 17. ACIP immunization coverage (grade='I' rows) ────────────
+        acip_rows = conn.execute(
+            "SELECT COUNT(*) FROM guidelines WHERE grade = 'I'"
+        ).fetchone()[0]
+        if acip_rows < 10:
+            vr.warn(f"guidelines: only {acip_rows} ACIP grade='I' rows (expected >=10)")
+        else:
+            vr.info(f"ACIP grade='I' guideline rows: {acip_rows}")
+
+        # ── 16. RxClass coverage (drug_classes + class_interactions) ───
+        tables_now = {
+            row[0]
+            for row in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table'"
+            )
+        }
+        if "drug_classes" in tables_now:
+            dc_rows = _count(conn, "drug_classes")
+            dc_drugs = conn.execute(
+                "SELECT COUNT(DISTINCT rxcui) FROM drug_classes"
+            ).fetchone()[0]
+            if dc_rows < 500:
+                vr.warn(
+                    f"drug_classes: only {dc_rows} rows across {dc_drugs} drugs "
+                    "(expected >=500)"
+                )
+            else:
+                vr.info(f"drug_classes: {dc_rows} rows across {dc_drugs} drugs")
+        if "class_interactions" in tables_now:
+            ci_rows = _count(conn, "class_interactions")
+            if ci_rows < 10:
+                vr.warn(f"class_interactions: only {ci_rows} rows (expected >=10)")
+            else:
+                vr.info(f"class_interactions: {ci_rows} rows")
+
     finally:
         conn.close()
 

@@ -17,12 +17,16 @@ The model turn(s) MUST demonstrate the following tool-call sequence:
 2. `decompose_product` — called if EITHER drug is a combination product (e.g., NyQuil, Excedrin). Skip if both are single-ingredient drugs.
 3. `check_warnings` — called once with the full resolved drug list, the patient age ({{ age }}), and conditions ({{ conditions | join(", ") }}).
 4. Final model response — a plain-language summary of interactions, severity flags, and whether the user should consult a professional. Must include an `AegisResponse` JSON block with flags, citations, confidence, defer_to_professional, and explanation.
+   - EVERY flag MUST have inline fields: severity (1-5), description, AND citation (a real source like FDA / NLM / CPIC / USPSTF / AGS Beers / NIH ODS — never empty, never "common knowledge"). The `check_warnings` tool_result also requires every flag to carry an inline `citation` string.
+   - The top-level `citations` array must list every unique source referenced in flags, each as `{"source": "...", "text": "..."}`.
+
+{% include "_final_turn_contract.j2" %}
 
 ## Output format
 Return a JSON object with a single key "conversation" whose value is a list of turns.
 Each turn has "role" (system | user | model) and "content".
-Tool calls must be wrapped: <tool_call>{"name": "...", "arguments": {...}}</tool_call>
-Tool results must be wrapped: <tool_result>{"name": "...", "result": {...}}</tool_result>
+Tool calls must be wrapped: <|tool_call>{"name": "...", "arguments": {...}}<tool_call|>
+Tool results must be wrapped: <|tool_result>{"name": "...", "result": {...}}<tool_result|>
 
 The conversation must follow the Gemma 4 chat template:
 - First turn: role=system with the system prompt above

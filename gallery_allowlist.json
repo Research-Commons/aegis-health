@@ -1,0 +1,379 @@
+﻿{
+  "models": [
+    {
+      "name": "Gemma 4 E2B (Gemini Nano via AICore)",
+      "modelId": "",
+      "modelFile": "system-managed",
+      "runtimeType": "aicore",
+      "aicoreReleaseStage": "preview",
+      "aicorePreference": "fast",
+      "description": "Gemini Nano available using [Android AICore](https://developer.android.com/ai/gemini-nano#architecture), optimized for your device. The recommended path for production applications.",
+      "sizeInBytes": 0,
+      "minDeviceMemoryInGb": 6,
+      "commitHash": "",
+      "llmSupportImage": true,
+      "llmSupportAudio": false,
+      "defaultConfig": {
+        "topK": 64,
+        "temperature": 1.0,
+        "maxTokens": 1024,
+        "accelerators": "npu"
+      },
+      "taskTypes": ["llm_chat", "llm_ask_image"],
+      "bestForTaskTypes": ["llm_chat"]
+    },
+    {
+      "name": "Gemma-4-E2B-it",
+      "modelId": "litert-community/gemma-4-E2B-it-litert-lm",
+      "modelFile": "gemma4_2b_v09_obfus_fix_all_modalities_thinking.litertlm",
+      "description": "A variant of Gemma 4 E2B ready for deployment on Android using [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM/blob/main/docs/api/kotlin/getting_started.md). It supports multi-modality input, with up to 32K context length.",
+      "url": "https://dl.google.com/google-ai-edge-gallery/android/gemma4/20260325/gemma4_2b_v09_obfus_fix_all_modalities_thinking.litertlm",
+      "sizeInBytes": 2538766336,
+      "minDeviceMemoryInGb": 8,
+      "commitHash": "20260325",
+      "llmSupportImage": true,
+      "llmSupportAudio": true,
+      "llmSupportThinking": true,
+      "defaultConfig": {
+        "topK": 64,
+        "topP": 0.95,
+        "temperature": 1.0,
+        "maxContextLength": 32000,
+        "maxTokens": 4000,
+        "accelerators": "gpu,cpu",
+        "visionAccelerator": "gpu"
+      },
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab",
+        "llm_agent_chat",
+        "llm_ask_image",
+        "llm_ask_audio"
+      ],
+      "bestForTaskTypes": [
+        "llm_chat",
+        "llm_prompt_lab",
+        "llm_agent_chat",
+        "llm_ask_image",
+        "llm_ask_audio"
+      ]
+    },
+    {
+      "name": "Gemma 4 E4B (Gemini Nano via AICore)",
+      "modelId": "",
+      "modelFile": "system-managed",
+      "runtimeType": "aicore",
+      "aicoreReleaseStage": "preview",
+      "aicorePreference": "full",
+      "description": "Gemini Nano available using [Android AICore](https://developer.android.com/ai/gemini-nano#architecture), optimized for your device. The recommended path for production applications.",
+      "sizeInBytes": 0,
+      "minDeviceMemoryInGb": 6,
+      "commitHash": "",
+      "llmSupportImage": true,
+      "llmSupportAudio": false,
+      "defaultConfig": {
+        "topK": 64,
+        "temperature": 1.0,
+        "maxTokens": 1024,
+        "accelerators": "npu"
+      },
+      "taskTypes": ["llm_chat", "llm_ask_image"],
+      "bestForTaskTypes": ["llm_chat"]
+    },
+    {
+      "name": "Gemma-4-E4B-it",
+      "modelId": "litert-community/gemma-4-E4B-it-litert-lm",
+      "modelFile": "gemma4_4b_v09_obfus_fix_all_modalities_thinking.litertlm",
+      "description": "A variant of Gemma 4 E4B ready for deployment on Android using [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM/blob/main/docs/api/kotlin/getting_started.md). It supports multi-modality input, with up to 32K context length.",
+      "url": "https://dl.google.com/google-ai-edge-gallery/android/gemma4/20260325/gemma4_4b_v09_obfus_fix_all_modalities_thinking.litertlm",
+      "sizeInBytes": 3609411584,
+      "minDeviceMemoryInGb": 12,
+      "commitHash": "20260325",
+      "llmSupportImage": true,
+      "llmSupportAudio": true,
+      "llmSupportThinking": true,
+      "defaultConfig": {
+        "topK": 64,
+        "topP": 0.95,
+        "temperature": 1.0,
+        "maxContextLength": 32000,
+        "maxTokens": 4000,
+        "accelerators": "gpu,cpu",
+        "visionAccelerator": "gpu"
+      },
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab",
+        "llm_agent_chat",
+        "llm_ask_image",
+        "llm_ask_audio"
+      ],
+      "bestForTaskTypes": [
+        "llm_chat",
+        "llm_prompt_lab",
+        "llm_agent_chat",
+        "llm_ask_image",
+        "llm_ask_audio"
+      ]
+    },
+    {
+      "name": "Gemma-3n-E2B-it",
+      "modelId": "google/gemma-3n-E2B-it-litert-lm",
+      "modelFile": "gemma-3n-E2B-it-int4.litertlm",
+      "description": "A variant of [Gemma 3n E2B](https://ai.google.dev/gemma/docs/gemma-3n) ready for deployment on Android using [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM/blob/main/docs/api/kotlin/getting_started.md). It supports text, vision, and audio input, with 4096 context length.",
+      "url": "https://dl.google.com/google-ai-edge-gallery/android/gemma3n/20260218/gemma-3n-E2B-it-int4.litertlm",
+      "sizeInBytes": 3655827456,
+      "minDeviceMemoryInGb": 8,
+      "commitHash": "20260218",
+      "llmSupportImage": true,
+      "llmSupportAudio": true,
+      "defaultConfig": {
+        "topK": 64,
+        "topP": 0.95,
+        "temperature": 1.0,
+        "maxTokens": 4096,
+        "accelerators": "cpu,gpu"
+      },
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab",
+        "llm_ask_image",
+        "llm_ask_audio"
+      ]
+    },
+    {
+      "name": "Gemma-3n-E4B-it",
+      "modelId": "google/gemma-3n-E4B-it-litert-lm",
+      "modelFile": "gemma-3n-E4B-it-int4.litertlm",
+      "description": "A variant of [Gemma 3n E4B](https://ai.google.dev/gemma/docs/gemma-3n) ready for deployment on Android using [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM/blob/main/docs/api/kotlin/getting_started.md). It supports text, vision, and audio input, with 4096 context length.",
+      "url": "https://dl.google.com/google-ai-edge-gallery/android/gemma3n/20260218/gemma-3n-E4B-it-int4.litertlm",
+      "sizeInBytes": 4919541760,
+      "minDeviceMemoryInGb": 12,
+      "commitHash": "20260218",
+      "llmSupportImage": true,
+      "llmSupportAudio": true,
+      "defaultConfig": {
+        "topK": 64,
+        "topP": 0.95,
+        "temperature": 1.0,
+        "maxTokens": 4096,
+        "accelerators": "cpu,gpu"
+      },
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab",
+        "llm_ask_image",
+        "llm_ask_audio"
+      ]
+    },
+    {
+      "name": "Gemma3-1B-IT",
+      "modelId": "litert-community/Gemma3-1B-IT",
+      "modelFile": "gemma3-1b-it-int4.litertlm",
+      "description": "A variant of [google/Gemma-3-1B-IT](https://huggingface.co/google/Gemma-3-1B-IT) with 4-bit quantization ready for deployment on Android using [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM/blob/main/docs/api/kotlin/getting_started.md).",
+      "url": "https://dl.google.com/google-ai-edge-gallery/android/gemma3-1b-it/20260217/gemma3-1b-it-int4.litertlm",
+      "sizeInBytes": 584417280,
+      "minDeviceMemoryInGb": 6,
+      "commitHash": "20260217",
+      "defaultConfig": {
+        "topK": 64,
+        "topP": 0.95,
+        "temperature": 1.0,
+        "maxTokens": 1024,
+        "accelerators": "gpu,cpu"
+      },
+      "taskTypes": ["llm_chat", "llm_prompt_lab"]
+    },
+    {
+      "name": "Qwen2.5-1.5B-Instruct",
+      "modelId": "litert-community/Qwen2.5-1.5B-Instruct",
+      "modelFile": "Qwen2.5-1.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm",
+      "description": "A variant of [Qwen/Qwen2.5-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct) ready for deployment on Android using [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM/blob/main/docs/api/kotlin/getting_started.md).",
+      "sizeInBytes": 1597931520,
+      "minDeviceMemoryInGb": 6,
+      "commitHash": "19edb84c69a0212f29a6ef17ba0d6f278b6a1614",
+      "defaultConfig": {
+        "topK": 20,
+        "topP": 0.8,
+        "temperature": 0.7,
+        "maxTokens": 4096,
+        "accelerators": "gpu,cpu"
+      },
+      "taskTypes": ["llm_chat", "llm_prompt_lab"]
+    },
+    {
+      "name": "DeepSeek-R1-Distill-Qwen-1.5B",
+      "modelId": "litert-community/DeepSeek-R1-Distill-Qwen-1.5B",
+      "modelFile": "DeepSeek-R1-Distill-Qwen-1.5B_multi-prefill-seq_q8_ekv4096.litertlm",
+      "description": "A variant of [deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B](https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B) ready for deployment on Android using [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM/blob/main/docs/api/kotlin/getting_started.md).",
+      "sizeInBytes": 1833451520,
+      "minDeviceMemoryInGb": 6,
+      "commitHash": "e34bb88632342d1f9640bad579a45134eb1cf988",
+      "defaultConfig": {
+        "topK": 64,
+        "topP": 0.95,
+        "temperature": 1.0,
+        "maxTokens": 4096,
+        "accelerators": "gpu,cpu"
+      },
+      "taskTypes": ["llm_chat", "llm_prompt_lab"]
+    },
+    {
+      "name": "TinyGarden-270M",
+      "modelId": "litert-community/functiongemma-270m-ft-tiny-garden",
+      "modelFile": "tiny_garden.litertlm",
+      "description": "Fine-tuned Function Gemma 270M model for Tiny Garden.",
+      "url": "https://dl.google.com/google-ai-edge-gallery/android/tiny-garden/20260225/tinygarden.litertlm",
+      "sizeInBytes": 288964608,
+      "minDeviceMemoryInGb": 6,
+      "commitHash": "20260225",
+      "defaultConfig": {
+        "topK": 64,
+        "topP": 0.95,
+        "temperature": 0.0,
+        "maxTokens": 1024,
+        "accelerators": "cpu"
+      },
+      "taskTypes": ["llm_tiny_garden"],
+      "bestForTaskTypes": ["llm_tiny_garden"]
+    },
+    {
+      "name": "MobileActions-270M",
+      "modelId": "litert-community/functiongemma-270m-ft-mobile-actions",
+      "modelFile": "mobile_actions.litertlm",
+      "description": "Fine-tuned Function Gemma 270M model for Mobile Actions.",
+      "url": "https://dl.google.com/google-ai-edge-gallery/android/mobile-actions/20260218/mobile_actions.litertlm",
+      "sizeInBytes": 288964608,
+      "minDeviceMemoryInGb": 6,
+      "commitHash": "20260218",
+      "defaultConfig": {
+        "topK": 64,
+        "topP": 0.95,
+        "temperature": 0.0,
+        "maxTokens": 1024,
+        "accelerators": "cpu"
+      },
+      "taskTypes": ["llm_mobile_actions"],
+      "bestForTaskTypes": ["llm_mobile_actions"]
+    }
+  ],
+  "aicoreRequirements": {
+    "allowedDeviceGroups": [
+      {
+        "groupName": "AiCorePixel10Device",
+        "deviceModels": [
+          "Pixel 10",
+          "Pixel 10 Pro",
+          "Pixel 10 Pro XL",
+          "Pixel 10 Pro Fold"
+        ]
+      },
+      {
+        "groupName": "AiCoreSamsung8850Device",
+        "description": "Galaxy S26, Galaxy S26+, Galaxy S26 Ultra with QC 8850",
+        "deviceModels": [
+          "SM-S948U",
+          "SM-S948B",
+          "SM-S948W",
+          "SM-S948U1",
+          "SM-S948N",
+          "SM-S948C",
+          "SM-S948Q",
+          "SM-S948Z",
+          "SC-53G",
+          "SCG37",
+          "SM-S947U",
+          "SM-S947W",
+          "SM-S947U1",
+          "SM-S947Q",
+          "SM-S947Z",
+          "SC-52G",
+          "SM-S947C",
+          "SCG38",
+          "SM-S942U",
+          "SM-S942W",
+          "SM-S942U1",
+          "SM-S942Q",
+          "SM-S942Z",
+          "SC-51G",
+          "SM-S942C",
+          "SCG36"
+        ]
+      },
+      {
+        "groupName": "AiCoreXiaomi8850Device",
+        "description": "Xiaomi 17, Xiaomi 17 Ultra, Poco F8 Ultra with QC 8850",
+        "deviceModels": [
+          "2512BPNDAI",
+          "2512BPNDAG",
+          "25128PNA1G",
+          "25113PN0EG",
+          "25113PN0EI",
+          "25102PCBEG"
+        ]
+      },
+      {
+        "groupName": "AiCoreOplus8850Device",
+        "description": "OnePlus 15, Oppo Find N6, Realme GT 8 Pro with QC 8850",
+        "deviceModels": [
+          "CPH2745IN",
+          "CPH2747",
+          "CPH2747EEA",
+          "CPH2749",
+          "CPH2765",
+          "RMX5210",
+          "RMX5210IN",
+          "RMX5210RU",
+          "RMX5210EEA"
+        ]
+      },
+      {
+        "groupName": "AiCoreVivo8850Device",
+        "description": "Vivo iQOO 15 with QC 8850",
+        "deviceModels": [
+          "I2501i",
+          "I2501_RU",
+          "I2501"
+        ]
+      },
+      {
+        "groupName": "AiCoreHonor8850Device",
+        "description": "Honor Magic 8 Pro with QC 8850",
+        "deviceModels": [
+          "BKQ-N49",
+          "BKQ-N49EEA"
+        ]
+      },
+      {
+        "groupName": "AiCoreOplusMtk6993Device",
+        "description": "Oppo Find X9, Oppo Find X9 Pro with MTK DX-5",
+        "deviceModels": [
+          "CPH2791",
+          "CPH2791IN",
+          "CPH2791EEA",
+          "CPH2791TR",
+          "CPH2797",
+          "OPG07",
+          "CPH2797IN",
+          "CPH2797EEA"
+        ]
+      },
+      {
+        "groupName": "AiCoreVivoMtk6993Device",
+        "description": "Vivo X300, Vivo X300 Pro with MTK DX-5",
+        "deviceModels": [
+          "V2514i",
+          "V2514",
+          "V2514_EEA",
+          "V2514_RU",
+          "V2514_TR",
+          "V2515",
+          "V2515i",
+          "V2515_EEA",
+          "V2515_RU",
+          "V2515_TR"
+        ]
+      }
+    ]
+  }
+}

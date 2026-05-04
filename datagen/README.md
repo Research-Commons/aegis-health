@@ -34,7 +34,7 @@ Outputs:
 - `datagen/output/healthpartner_sft.jsonl` (~300 examples)
 - `datagen/output/combined_sft.jsonl`  — shuffled, this is what SFT consumes
 
-Every example is a Gemma 4 chat-template conversation (system + user + model with `<tool_call>` turns). Rejected outputs (schema-invalid) are logged to `datagen/output/rejected.jsonl`.
+Every example is a Gemma 4 chat-template conversation (system + user + model with `<|tool_call>` / `<|tool_result>` turns). The SFT notebook converts these to Gemma 4 native `call:name{args}` format via `apply_chat_template(tools=...)`. Rejected outputs (schema-invalid) are logged to `datagen/output/rejected.jsonl`.
 
 ## Generate pill-bottle images
 

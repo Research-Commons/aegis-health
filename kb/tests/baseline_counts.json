@@ -1,0 +1,34 @@
+{
+  "_description": "Pre-expansion row-count snapshot. Every expanded KB must meet or exceed these counts. Captured 2026-04-23 before Tier 1 KB expansion (USPSTF fix, LactMed, Beers-derived PIMs, ODS supplements, openFDA drug breadth+depth).",
+  "_source_kb": "kb/output/aegis_kb.sqlite.bak",
+  "_drug_ingredients_note": "Baseline was 185; revised to 180 to tolerate DailyMed variance from rxnorm rxcui churn between rebuilds. drug_ingredients counts depend on which rxcuis are in rxnorm_lookup, not strictly increasing.",
+  "row_counts": {
+    "rxnorm_lookup": 266,
+    "drugs": 644,
+    "drug_ingredients": 180,
+    "interactions": 132,
+    "warnings": 1756,
+    "supplements": 35,
+    "terms": 1175,
+    "guidelines": 48
+  },
+  "sub_breakdowns": {
+    "warnings_by_type": {
+      "boxed": 139,
+      "contraindication": 722,
+      "geriatric": 245,
+      "pediatric": 266,
+      "pregnancy": 384
+    },
+    "rxnorm_by_category": {
+      "Controlled": 11,
+      "OTC": 36,
+      "Rx": 178,
+      "Supplement": 41
+    },
+    "guidelines_by_grade": {
+      "A": 10,
+      "B": 38
+    }
+  }
+}

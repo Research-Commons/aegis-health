@@ -21,11 +21,14 @@ This example MUST focus on one or more of the following common OTC dangers:
 2. `decompose_product` for EACH product — OTC products are almost always combinations.
 3. `check_warnings` with the full ingredient list.
 4. Final model response highlighting the specific OTC danger(s) found.
+5. EVERY flag in the AegisResponse — and in any `check_warnings` tool_result — MUST include an inline `citation` field naming a real source (FDA acetaminophen label, AGS Beers Criteria for anticholinergic burden, FDA NSAID class label, etc.). No flag without a citation.
+
+{% include "_final_turn_contract.j2" %}
 
 ## Output format
 Return a JSON object with a single key "conversation" whose value is a list of turns.
 Each turn has "role" (system | user | model) and "content".
-Tool calls: <tool_call>{"name": "...", "arguments": {...}}</tool_call>
-Tool results: <tool_result>{"name": "...", "result": {...}}</tool_result>
+Tool calls: <|tool_call>{"name": "...", "arguments": {...}}<tool_call|>
+Tool results: <|tool_result>{"name": "...", "result": {...}}<tool_result|>
 
 The user message should be casual — someone asking about taking common cold/pain products together, not expecting danger. Make the model's response educational and clear about the hidden risks.

@@ -46,6 +46,7 @@ _MISSPELLINGS: dict[str, str] = {
 
 
 def _correct_spelling(name: str) -> str:
+    name = "" if name is None else str(name)
     lowered = name.strip().lower()
     return _MISSPELLINGS.get(lowered, lowered)
 
@@ -56,7 +57,8 @@ def normalize_drug(name: str, db_path: str = DEFAULT_DB) -> dict:
     Returns a dict with keys: generic_name, rxcui, category.
     On lookup failure returns an error dict.
     """
-    if not name or not name.strip():
+    name = "" if name is None else str(name)
+    if not name.strip():
         return {"error": "Empty drug name provided"}
 
     db = Path(db_path)

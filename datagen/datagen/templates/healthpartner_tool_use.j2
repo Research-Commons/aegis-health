@@ -4,6 +4,7 @@ Generate a realistic Aegis Health training conversation showing HealthPartner to
 - Age: {{ age }}
 - Sex: {{ sex }}
 - Conditions: {{ conditions | join(", ") if conditions else "none" }}
+- Current medications: {{ medications | join(", ") if medications else "none" }}
 
 ## System prompt to use
 {{ system_prompt }}
@@ -19,10 +20,12 @@ This example focuses on demonstrating correct `get_guideline` tool usage. The mo
 ## Tool-call pattern
 Demonstrate at least one `get_guideline` call with proper parameter formatting:
 
-Model turn: <tool_call>{"name": "get_guideline", "arguments": {"age": {{ age }}, "sex": "{{ sex }}", "conditions": {{ conditions | tojson }}}}</tool_call>
-Result turn: <tool_result>{"name": "get_guideline", "result": [{"title": "...", "grade": "A", "description": "...", "population": "...", "citation": "USPSTF ..."}]}</tool_result>
+Model turn: <|tool_call>{"name": "get_guideline", "arguments": {"age": {{ age }}, "sex": "{{ sex }}", "conditions": {{ conditions | tojson }}}}<tool_call|>
+Result turn: <|tool_result>{"name": "get_guideline", "result": [{"title": "...", "grade": "A", "description": "...", "population": "...", "citation": "USPSTF ..."}]}<tool_result|>
 
-The final model response should present the guidelines as a clear, actionable checklist with the AegisResponse JSON.
+The final model response should present the guidelines as a clear, actionable checklist with the AegisResponse JSON. Place the checklist (numbered or bulleted) inside the `explanation` field — see the FINAL TURN OUTPUT CONTRACT below.
+
+{% include "_final_turn_contract.j2" %}
 
 ## Output format
 Return a JSON object with a single key "conversation" whose value is a list of turns.

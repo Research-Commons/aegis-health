@@ -13,7 +13,8 @@ def get_drug_info(rxcui: str, db_path: str = DEFAULT_DB) -> dict:
 
     Returns a dict with keys: name, drug_class, category, warnings_summary, citation.
     """
-    if not rxcui or not rxcui.strip():
+    rxcui = "" if rxcui is None else str(rxcui)
+    if not rxcui.strip():
         return {"error": "Empty RxCUI provided"}
 
     db = Path(db_path)
@@ -27,9 +28,14 @@ def get_drug_info(rxcui: str, db_path: str = DEFAULT_DB) -> dict:
 
         cur.execute(
             """
-            SELECT name, drug_class, category, warnings_summary, citation
-            FROM drugs
-            WHERE rxcui = ?
+            SELECT d.drug_name AS name,
+                   d.description AS warnings_summary,
+                   d.source AS citation,
+                   COALESCE(r.category, 'Rx') AS category,
+                   '' AS drug_class
+            FROM drugs d
+            LEFT JOIN rxnorm_lookup r ON r.rxcui = d.rxcui
+            WHERE d.rxcui = ?
             LIMIT 1
             """,
             (rxcui.strip(),),

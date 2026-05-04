@@ -41,11 +41,14 @@ The user asks about a drug or supplement the model cannot identify in its knowle
 2. The model MUST ultimately set defer_to_professional = true in the AegisResponse.
 3. The model must clearly explain WHY it is deferring.
 4. The model must NOT provide specific dosing, titration, or discontinuation advice.
+5. EVERY flag in the AegisResponse — and in any `check_warnings` tool_result — MUST include an inline `citation` field naming a real source (DEA Controlled Substances Act for controlled scenarios, FDA Pregnancy and Lactation Labeling for pregnancy, AAP Pediatric Prescribing for pediatric, Aegis safety policy for unknowns). No flag without a citation.
+
+{% include "_final_turn_contract.j2" %}
 
 ## Output format
 Return a JSON object with a single key "conversation" whose value is a list of turns.
 Each turn has "role" (system | user | model) and "content".
-Tool calls: <tool_call>{"name": "...", "arguments": {...}}</tool_call>
-Tool results: <tool_result>{"name": "...", "result": {...}}</tool_result>
+Tool calls: <|tool_call>{"name": "...", "arguments": {...}}<tool_call|>
+Tool results: <|tool_result>{"name": "...", "result": {...}}<tool_result|>
 
 Make the user message natural and realistic for the {{ scenario_type }} scenario.

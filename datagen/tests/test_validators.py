@@ -147,7 +147,7 @@ class TestValidateChatFormat:
 class TestValidateToolCalls:
     def test_valid_tool_call(self):
         conv = [
-            {"role": "model", "content": '<tool_call>{"name": "normalize_drug", "arguments": {"name": "advil"}}</tool_call>'},
+            {"role": "model", "content": '<|tool_call>{"name": "normalize_drug", "arguments": {"name": "advil"}}<tool_call|>'},
         ]
         assert validate_tool_calls(conv) is True
 
@@ -156,31 +156,31 @@ class TestValidateToolCalls:
         assert validate_tool_calls(conv) is True
 
     def test_invalid_json(self):
-        conv = [{"role": "model", "content": "<tool_call>{bad json}</tool_call>"}]
+        conv = [{"role": "model", "content": "<|tool_call>{bad json}<tool_call|>"}]
         assert validate_tool_calls(conv) is False
 
     def test_missing_name(self):
         conv = [
-            {"role": "model", "content": '<tool_call>{"arguments": {"x": 1}}</tool_call>'},
+            {"role": "model", "content": '<|tool_call>{"arguments": {"x": 1}}<tool_call|>'},
         ]
         assert validate_tool_calls(conv) is False
 
     def test_missing_arguments(self):
         conv = [
-            {"role": "model", "content": '<tool_call>{"name": "foo"}</tool_call>'},
+            {"role": "model", "content": '<|tool_call>{"name": "foo"}<tool_call|>'},
         ]
         assert validate_tool_calls(conv) is False
 
     def test_arguments_not_dict(self):
         conv = [
-            {"role": "model", "content": '<tool_call>{"name": "foo", "arguments": "bar"}</tool_call>'},
+            {"role": "model", "content": '<|tool_call>{"name": "foo", "arguments": "bar"}<tool_call|>'},
         ]
         assert validate_tool_calls(conv) is False
 
     def test_multiple_tool_calls(self):
         content = (
-            '<tool_call>{"name": "normalize_drug", "arguments": {"name": "aspirin"}}</tool_call>\n'
-            '<tool_call>{"name": "check_warnings", "arguments": {"drug_list": ["aspirin"]}}</tool_call>'
+            '<|tool_call>{"name": "normalize_drug", "arguments": {"name": "aspirin"}}<tool_call|>\n'
+            '<|tool_call>{"name": "check_warnings", "arguments": {"drug_list": ["aspirin"]}}<tool_call|>'
         )
         conv = [{"role": "model", "content": content}]
         assert validate_tool_calls(conv) is True

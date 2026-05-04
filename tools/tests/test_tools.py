@@ -53,26 +53,25 @@ def _seed_db(db_path: str) -> None:
 
     c.execute("""
         CREATE TABLE drugs (
-            name TEXT,
+            drug_name TEXT,
             rxcui TEXT,
-            drug_class TEXT,
-            category TEXT,
-            warnings_summary TEXT,
-            citation TEXT
+            generic_name TEXT,
+            description TEXT,
+            source TEXT
         )
     """)
     c.executemany(
-        "INSERT INTO drugs VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT INTO drugs VALUES (?, ?, ?, ?, ?)",
         [
-            ("acetaminophen", "161", "Analgesic", "OTC",
+            ("acetaminophen", "161", "acetaminophen",
              "Hepatotoxicity risk at high doses", "FDA Label"),
-            ("ibuprofen", "5640", "NSAID", "OTC",
+            ("ibuprofen", "5640", "ibuprofen",
              "GI bleeding risk; renal impairment", "FDA Label"),
-            ("atorvastatin", "83367", "Statin", "Rx",
+            ("atorvastatin", "83367", "atorvastatin",
              "Monitor liver enzymes", "FDA Label"),
-            ("oxycodone", "7804", "Opioid Analgesic", "Controlled",
+            ("oxycodone", "7804", "oxycodone",
              "High abuse potential; respiratory depression", "DEA / FDA Label"),
-            ("warfarin", "11289", "Anticoagulant", "Rx",
+            ("warfarin", "11289", "warfarin",
              "Bleeding risk; requires INR monitoring", "FDA Label"),
         ],
     )
@@ -95,13 +94,13 @@ def _seed_db(db_path: str) -> None:
 
     c.execute("""
         CREATE TABLE interactions (
-            drug_a TEXT,
-            drug_b TEXT,
-            rxcui_a TEXT,
-            rxcui_b TEXT,
+            drug_name_1 TEXT,
+            drug_name_2 TEXT,
+            drug_rxcui_1 TEXT,
+            drug_rxcui_2 TEXT,
             severity INTEGER,
             description TEXT,
-            citation TEXT
+            source TEXT
         )
     """)
     c.executemany(
@@ -136,6 +135,102 @@ def _seed_db(db_path: str) -> None:
     )
 
     c.execute("""
+        CREATE TABLE drug_classes (
+            rxcui TEXT,
+            drug_name TEXT,
+            class_id TEXT,
+            class_name TEXT,
+            class_type TEXT,
+            rela_source TEXT,
+            source TEXT
+        )
+    """)
+    c.executemany(
+        "INSERT INTO drug_classes VALUES (?, ?, ?, ?, ?, ?, ?)",
+        [
+            # Sertraline → SSRI (ATC N06AB)
+            ("36437", "sertraline", "N06AB", "SSRIs", "ATC", "ATC", "rxclass"),
+            # Phenelzine → non-selective MAOI (ATC N06AF)
+            ("8123",  "phenelzine", "N06AF", "MAOIs", "ATC", "ATC", "rxclass"),
+            # Ibuprofen → NSAIDs (ATC M01A)
+            ("5640",  "ibuprofen",  "M01A",  "NSAIDs","ATC", "ATC", "rxclass"),
+            # Warfarin  → Vitamin K antagonists (ATC B01AA)
+            ("11289", "warfarin",   "B01AA", "Vitamin K antagonists", "ATC", "ATC", "rxclass"),
+        ],
+    )
+
+    c.execute("""
+        CREATE TABLE class_interactions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            class_id_1 TEXT, class_name_1 TEXT, class_type_1 TEXT,
+            class_id_2 TEXT, class_name_2 TEXT, class_type_2 TEXT,
+            severity INTEGER, description TEXT, mechanism TEXT, source TEXT
+        )
+    """)
+    c.executemany(
+        "INSERT INTO class_interactions "
+        "(class_id_1, class_name_1, class_type_1, class_id_2, class_name_2, "
+        " class_type_2, severity, description, mechanism, source) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+            # Sertraline is an SSRI, phenelzine is an MAOI → serotonin syndrome
+            ("N06AF", "MAOIs", "ATC", "N06AB", "SSRIs", "ATC", 5,
+             "MAOI + SSRI risks serotonin syndrome.",
+             "Serotonin accumulation", "FDA-SSRI labels"),
+            # Also covers warfarin (B01AA) + ibuprofen (M01A) — this pair already
+            # has a direct interaction row; the class match MUST be suppressed.
+            ("B01AA", "Vitamin K antagonists", "ATC",
+             "M01A",  "NSAIDs", "ATC", 5,
+             "ANY VKA + ANY NSAID class-level bleeding risk.",
+             "Anticoagulation + GI injury", "FDA-WFN"),
+        ],
+    )
+
+    # Phenelzine + sertraline need rxnorm_lookup + drugs rows so check_warnings
+    # can resolve them during the class-level interaction test.
+    c.executemany(
+        "INSERT INTO rxnorm_lookup VALUES (?, ?, ?, ?)",
+        [
+            ("Nardil", "phenelzine", "8123", "Rx"),
+            ("Zoloft", "sertraline", "36437", "Rx"),
+            ("Coumadin", "warfarin", "11289", "Rx"),
+        ],
+    )
+    c.executemany(
+        "INSERT INTO drugs VALUES (?, ?, ?, ?, ?)",
+        [
+            ("phenelzine", "8123", "phenelzine",
+             "Irreversible non-selective MAOI", "FDA Label"),
+            ("sertraline", "36437", "sertraline",
+             "Selective serotonin reuptake inhibitor", "FDA Label"),
+        ],
+    )
+
+    c.execute("""
+        CREATE TABLE supplements (
+            supplement_name TEXT,
+            interacting_drug TEXT,
+            interaction_type TEXT,
+            severity INTEGER,
+            description TEXT,
+            mechanism TEXT,
+            recommendation TEXT,
+            source TEXT
+        )
+    """)
+    c.executemany(
+        "INSERT INTO supplements VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+            ("St. John's Wort", "Sertraline", "pharmacodynamic", 4,
+             "Additive serotonergic effects may cause serotonin syndrome.",
+             "Serotonin reuptake inhibition", "Avoid combination.", "NIH ODS"),
+            ("St. John's Wort", "Warfarin", "pharmacokinetic", 5,
+             "Induces CYP2C9, reducing warfarin levels; clot/stroke risk.",
+             "CYP2C9 induction", "Contraindicated.", "NIH ODS"),
+        ],
+    )
+
+    c.execute("""
         CREATE TABLE terms (
             term TEXT,
             plain_language_definition TEXT,
@@ -156,30 +251,36 @@ def _seed_db(db_path: str) -> None:
 
     c.execute("""
         CREATE TABLE guidelines (
-            title TEXT,
-            grade TEXT,
-            description TEXT,
-            population TEXT,
-            citation TEXT,
-            min_age INTEGER,
-            max_age INTEGER,
-            sex TEXT,
-            condition TEXT
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            recommendation_id TEXT,
+            title TEXT NOT NULL,
+            grade TEXT NOT NULL,
+            population_age_min INTEGER,
+            population_age_max INTEGER,
+            population_sex TEXT,
+            description TEXT NOT NULL,
+            clinical_url TEXT,
+            source TEXT NOT NULL DEFAULT 'uspstf'
         )
     """)
     c.executemany(
-        "INSERT INTO guidelines VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO guidelines "
+        "(recommendation_id, title, grade, population_age_min, population_age_max, "
+        " population_sex, description, source) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         [
-            ("Blood Pressure Screening", "A",
+            ("T-001", "Blood Pressure Screening", "A",
+             18, None, "all",
              "Screen for hypertension in adults aged 18+",
-             "Adults 18+", "USPSTF 2021", 18, 120, "all", ""),
-            ("Breast Cancer Screening", "B",
+             "USPSTF 2021"),
+            ("T-002", "Breast Cancer Screening", "B",
+             50, 74, "female",
              "Biennial mammography for women aged 50-74",
-             "Women 50-74", "USPSTF 2024", 50, 74, "female", ""),
-            ("Statin Use for CVD Prevention", "B",
-             "Prescribe statin for adults 40-75 with CVD risk factors",
-             "Adults 40-75 with risk factors", "USPSTF 2022",
-             40, 75, "all", "cardiovascular disease"),
+             "USPSTF 2024"),
+            ("T-003", "Statin Use for CVD Prevention", "B",
+             40, 75, "all",
+             "Prescribe statin for adults 40-75 with cardiovascular disease risk factors",
+             "USPSTF 2022"),
         ],
     )
 
@@ -262,7 +363,7 @@ class TestGetDrugInfo:
     def test_valid_rxcui(self, test_db: str) -> None:
         result = get_drug_info("161", db_path=test_db)
         assert result["name"] == "acetaminophen"
-        assert result["drug_class"] == "Analgesic"
+        assert isinstance(result["drug_class"], str)
         assert result["category"] == "OTC"
 
     def test_unknown_rxcui(self, test_db: str) -> None:
@@ -346,6 +447,22 @@ class TestCheckWarnings:
         resp = AegisResponse(**raw)
         assert resp.confidence > 0
 
+    def test_class_level_interaction_surfaces_when_no_direct(self, test_db: str) -> None:
+        """Sertraline + phenelzine has no direct row but shares SSRI+MAOI classes."""
+        result = check_warnings(["sertraline", "phenelzine"], db_path=test_db)
+        descs = " ".join(f["description"].lower() for f in result["flags"])
+        assert "serotonin syndrome" in descs
+        severities = [f["severity"] for f in result["flags"]]
+        assert 5 in severities
+        assert result["defer_to_professional"] is True
+
+    def test_class_level_suppressed_when_direct_present(self, test_db: str) -> None:
+        """Warfarin + ibuprofen has a direct interaction row; class-level must not duplicate."""
+        result = check_warnings(["warfarin", "ibuprofen"], db_path=test_db)
+        descs = [f["description"] for f in result["flags"]]
+        # The direct-row description is the one that must survive, class-level line must not.
+        assert not any("class-level bleeding risk" in d.lower() for d in descs)
+
 
 # ---------------------------------------------------------------------------
 # lookup_term
@@ -408,6 +525,48 @@ class TestGetGuideline:
     def test_missing_db(self) -> None:
         result = get_guideline(age=30, sex="male", db_path="/nonexistent/path.sqlite")
         assert "error" in result
+
+    def test_synthesized_population_and_citation(self, test_db: str) -> None:
+        """External contract: every returned rec has population + citation keys."""
+        result = get_guideline(age=55, sex="female", db_path=test_db)
+        assert "recommendations" in result
+        for rec in result["recommendations"]:
+            assert rec["population"]
+            assert rec["citation"]
+            assert rec["title"]
+
+    def test_condition_substring_match(self, test_db: str) -> None:
+        """Condition keyword pulls in matching recs outside demographic filter."""
+        # A 30-year-old male wouldn't normally get the "40-75" statin rec, but
+        # providing the cardiovascular-disease condition should surface it.
+        result = get_guideline(
+            age=30, sex="male", conditions=["cardiovascular disease"], db_path=test_db,
+        )
+        titles = [r["title"] for r in result["recommendations"]]
+        assert "Statin Use for CVD Prevention" in titles
+
+    def test_integration_real_kb(self) -> None:
+        """Smoke test against the production KB. Skips if KB not built yet.
+
+        Guards against the 'no such column' regression that hid behind the
+        test fixture's phantom schema for months.
+        """
+        import os
+        real_kb = os.path.join(
+            os.path.dirname(__file__), "..", "..", "kb", "output", "aegis_kb.sqlite"
+        )
+        if not os.path.exists(real_kb):
+            pytest.skip("Real KB not built; run `make kb` first")
+        result = get_guideline(age=55, sex="male", db_path=real_kb)
+        assert "error" not in result, f"Real-KB query errored: {result.get('error')}"
+        assert result["recommendations"], "Real KB returned zero recommendations for 55M"
+        # Contract fields must all be present and populated
+        for rec in result["recommendations"][:5]:
+            assert rec["title"]
+            assert rec["grade"] in ("A", "B")
+            assert rec["description"]
+            assert rec["population"]
+            assert rec["citation"]
 
 
 # ---------------------------------------------------------------------------

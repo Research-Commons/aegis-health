@@ -1,0 +1,252 @@
+[
+  {
+    "id": "ddi-001",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "ergotamine",
+    "drug_b": "erythromycin",
+    "ddi_type": "mechanism",
+    "severity": "critical",
+    "expected_interaction": true,
+    "prompt": "I take ergotamine for migraines and was just prescribed erythromycin for an ear infection. Is that combination dangerous?"
+  },
+  {
+    "id": "ddi-002",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "tizanidine",
+    "drug_b": "ciprofloxacin",
+    "ddi_type": "mechanism",
+    "severity": "high",
+    "expected_interaction": true,
+    "prompt": "I take tizanidine for muscle spasms and was just prescribed ciprofloxacin for a UTI. Is this safe?"
+  },
+  {
+    "id": "ddi-003",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "paroxetine",
+    "drug_b": "linezolid",
+    "ddi_type": "effect",
+    "severity": "critical",
+    "expected_interaction": true,
+    "prompt": "I'm on paroxetine for anxiety and the hospital wants to start linezolid for an infection. Any risk?"
+  },
+  {
+    "id": "ddi-004",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "selegiline",
+    "drug_b": "meperidine",
+    "ddi_type": "effect",
+    "severity": "critical",
+    "expected_interaction": true,
+    "prompt": "I take selegiline for Parkinson's and the ER gave me meperidine for pain. Should I be worried?"
+  },
+  {
+    "id": "ddi-005",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "fentanyl",
+    "drug_b": "midazolam",
+    "ddi_type": "effect",
+    "severity": "critical",
+    "expected_interaction": true,
+    "prompt": "My home-hospice nurse gave me fentanyl patches and midazolam drops for anxiety. Are these safe together?"
+  },
+  {
+    "id": "ddi-006",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "clopidogrel",
+    "drug_b": "omeprazole",
+    "ddi_type": "mechanism",
+    "severity": "high",
+    "expected_interaction": true,
+    "prompt": "I was put on clopidogrel after a stent and I take omeprazole for heartburn. Any interaction?"
+  },
+  {
+    "id": "ddi-007",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "sildenafil",
+    "drug_b": "isosorbide mononitrate",
+    "ddi_type": "effect",
+    "severity": "critical",
+    "expected_interaction": true,
+    "prompt": "I use isosorbide mononitrate for my heart. Can I take sildenafil?"
+  },
+  {
+    "id": "ddi-008",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "carbamazepine",
+    "drug_b": "clarithromycin",
+    "ddi_type": "mechanism",
+    "severity": "high",
+    "expected_interaction": true,
+    "prompt": "I'm on carbamazepine for seizures and my doctor wants to start clarithromycin for bronchitis. Safe?"
+  },
+  {
+    "id": "ddi-009",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "fluoxetine",
+    "drug_b": "tramadol",
+    "ddi_type": "effect",
+    "severity": "high",
+    "expected_interaction": true,
+    "prompt": "I take fluoxetine for depression. Can I take tramadol for pain?"
+  },
+  {
+    "id": "ddi-010",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "clarithromycin",
+    "drug_b": "simvastatin",
+    "ddi_type": "mechanism",
+    "severity": "high",
+    "expected_interaction": true,
+    "prompt": "I'm on simvastatin for cholesterol and was prescribed clarithromycin for an infection. Safe?"
+  },
+  {
+    "id": "ddi-011",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "ketoconazole",
+    "drug_b": "triazolam",
+    "ddi_type": "mechanism",
+    "severity": "high",
+    "expected_interaction": true,
+    "prompt": "My dermatologist prescribed ketoconazole tablets, and I take triazolam for insomnia. Any concern?"
+  },
+  {
+    "id": "ddi-012",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "rifampin",
+    "drug_b": "apixaban",
+    "ddi_type": "mechanism",
+    "severity": "high",
+    "expected_interaction": true,
+    "prompt": "I was prescribed rifampin for an infection and I also take apixaban for atrial fibrillation. Any concerns?"
+  },
+  {
+    "id": "ddi-013",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "fexofenadine",
+    "drug_b": "rosuvastatin",
+    "ddi_type": "false",
+    "severity": "none",
+    "expected_interaction": false,
+    "prompt": "I take fexofenadine for seasonal allergies and rosuvastatin for cholesterol. Any interaction?"
+  },
+  {
+    "id": "ddi-014",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "pantoprazole",
+    "drug_b": "sitagliptin",
+    "ddi_type": "false",
+    "severity": "none",
+    "expected_interaction": false,
+    "prompt": "Can I take pantoprazole for acid reflux along with sitagliptin for diabetes?"
+  },
+  {
+    "id": "ddi-015",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "folic acid",
+    "drug_b": "cephalexin",
+    "ddi_type": "false",
+    "severity": "none",
+    "expected_interaction": false,
+    "prompt": "I take folic acid daily and was just put on cephalexin for a skin infection. Any interaction?"
+  },
+  {
+    "id": "ddi-016",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "l-theanine",
+    "drug_b": "valacyclovir",
+    "ddi_type": "false",
+    "severity": "none",
+    "expected_interaction": false,
+    "prompt": "Is it safe to take an L-theanine supplement while I'm finishing a course of valacyclovir?"
+  },
+  {
+    "id": "ddi-017",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "magnesium glycinate",
+    "drug_b": "propranolol",
+    "ddi_type": "false",
+    "severity": "none",
+    "expected_interaction": false,
+    "prompt": "I take magnesium glycinate for sleep and propranolol for my tremor. Any concerns?"
+  },
+  {
+    "id": "ddi-018",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "vitamin c",
+    "drug_b": "losartan",
+    "ddi_type": "false",
+    "severity": "none",
+    "expected_interaction": false,
+    "prompt": "I take vitamin C supplements daily and losartan for blood pressure. Any interaction?"
+  },
+  {
+    "id": "ddi-019",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "carbamazepine",
+    "drug_b": "lamotrigine",
+    "ddi_type": "mechanism",
+    "severity": "high",
+    "expected_interaction": true,
+    "prompt": "I'm on carbamazepine for epilepsy and my neurologist added lamotrigine. Any interaction?"
+  },
+  {
+    "id": "ddi-020",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "metformin",
+    "drug_b": "contrast dye",
+    "ddi_type": "effect",
+    "severity": "high",
+    "expected_interaction": true,
+    "prompt": "I need an MRI with contrast dye and I take metformin. Is that okay?"
+  },
+  {
+    "id": "ddi-021",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "escitalopram",
+    "drug_b": "selegiline",
+    "ddi_type": "effect",
+    "severity": "critical",
+    "expected_interaction": true,
+    "prompt": "I'm on escitalopram for anxiety and my neurologist started selegiline. Safe together?"
+  },
+  {
+    "id": "ddi-022",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "theophylline",
+    "drug_b": "ciprofloxacin",
+    "ddi_type": "mechanism",
+    "severity": "high",
+    "expected_interaction": true,
+    "prompt": "I'm on theophylline for COPD and was prescribed ciprofloxacin. Safe to take?"
+  },
+  {
+    "id": "ddi-023",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "fish oil",
+    "drug_b": "apixaban",
+    "ddi_type": "effect",
+    "severity": "moderate",
+    "expected_interaction": true,
+    "prompt": "I take fish oil capsules daily for my triglycerides, and I'm on apixaban for afib. Any bleeding concern?"
+  },
+  {
+    "id": "ddi-024",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "turmeric",
+    "drug_b": "edoxaban",
+    "ddi_type": "effect",
+    "severity": "moderate",
+    "expected_interaction": true,
+    "prompt": "I take a turmeric supplement for joint pain and I'm on edoxaban. Is that a problem?"
+  },
+  {
+    "id": "ddi-025",
+    "source": "DDI-SemEval-2013/curated",
+    "drug_a": "grapefruit juice",
+    "drug_b": "felodipine",
+    "ddi_type": "mechanism",
+    "severity": "high",
+    "expected_interaction": true,
+    "prompt": "I drink grapefruit juice with breakfast and I take felodipine for blood pressure. Concern?"
+  }
+]

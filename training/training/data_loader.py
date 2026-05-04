@@ -13,6 +13,11 @@ from typing import Any
 
 from datasets import Dataset
 
+try:  # Colab/repo-root layout
+    from datagen.datagen.sft_contract import load_tool_defs, render_record_for_sft
+except ModuleNotFoundError:  # Local editable package layout
+    from datagen.sft_contract import load_tool_defs, render_record_for_sft
+
 logger = logging.getLogger(__name__)
 
 GEMMA_CHAT_TEMPLATE = (
@@ -28,7 +33,7 @@ def _format_chat(example: dict[str, Any]) -> str:
       - ``messages``: list of {role, content} dicts (multi-turn), or
       - ``input`` / ``output`` top-level keys (single-turn).
     """
-    messages = example.get("messages")
+    messages = example.get("messages") or example.get("conversation")
     if messages:
         parts: list[str] = []
         for msg in messages:
@@ -50,6 +55,8 @@ def _format_chat(example: dict[str, Any]) -> str:
 def load_dataset_from_jsonl(
     path: str,
     tokenizer: Any | None = None,
+    chat_template_tokenizer: Any | None = None,
+    tool_defs_path: str | Path | None = None,
     max_seq_length: int = 2048,
     val_ratio: float = 0.1,
     seed: int = 42,
@@ -64,6 +71,11 @@ def load_dataset_from_jsonl(
         HuggingFace-compatible tokenizer. When ``None`` the raw text column is
         returned without tokenisation (useful for ``SFTTrainer`` which can
         accept a text column directly).
+    chat_template_tokenizer:
+        Tokenizer or processor used to render Gemma 4 native chat-template
+        training text. When omitted, the legacy manual formatter is used.
+    tool_defs_path:
+        Optional path to ``tool_defs.json`` used when rendering tool examples.
     max_seq_length:
         Maximum token sequence length for truncation.
     val_ratio:
@@ -95,7 +107,18 @@ def load_dataset_from_jsonl(
 
     logger.info("Loaded %d examples from %s", len(records), jsonl_path)
 
-    formatted_texts = [_format_chat(r) for r in records]
+    if chat_template_tokenizer is not None:
+        tool_defs = load_tool_defs(tool_defs_path)
+        formatted_texts = [
+            render_record_for_sft(r, chat_template_tokenizer, tool_defs)
+            for r in records
+        ]
+    else:
+        logger.warning(
+            "Using legacy manual chat formatter. Pass chat_template_tokenizer "
+            "for Gemma 4 native tool-role SFT formatting."
+        )
+        formatted_texts = [_format_chat(r) for r in records]
     dataset = Dataset.from_dict({"text": formatted_texts})
 
     if tokenizer is not None:

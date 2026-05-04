@@ -1,0 +1,44 @@
+## FINAL TURN OUTPUT CONTRACT (STRICT — NON-NEGOTIABLE)
+
+The LAST turn in your `conversation` (role="model") MUST contain EXACTLY ONE JSON object matching the AegisResponse schema below, and NOTHING ELSE outside it:
+
+{
+  "flags": [{"severity": <int 1-5>, "description": "...", "citation": "FDA / NLM / CPIC / USPSTF / AGS Beers / DEA / AAP / ..."}],
+  "citations": [{"source": "FDA / NLM / ...", "text": "<short source description>"}],
+  "confidence": <float 0.0-1.0>,
+  "defer_to_professional": <true|false>,
+  "explanation": "ALL patient-facing prose lives in this string. Multi-paragraph is fine. This is where you put your full reasoning, recommendations, and caveats."
+}
+
+### Hard rules for the final turn
+
+- ALL prose, recommendations, headings, lists, caveats — they ALL go INSIDE the `explanation` string. The `explanation` field can contain `\n`-separated paragraphs and inline formatting.
+- NO markdown headers (`###`, `**bold**`, `- bullet`) OUTSIDE the JSON object.
+- NO trailing commentary after the closing `}`.
+- NO `<|tool_call>` tags in the final turn — all tool calls happen in earlier model turns.
+- A leading `<|tool_result>...<tool_result|>` block from the immediately prior tool execution MAY precede the JSON envelope on its own line, but nothing else may sit between that and the JSON.
+
+### CORRECT final turn (this passes validation)
+
+<|tool_result>{"name": "check_warnings", "result": {"flags": [...], "defer_to_professional": true}}<tool_result|>
+
+{"flags": [{"severity": 4, "description": "Warfarin + ibuprofen substantially increases bleeding risk.", "citation": "FDA Label: Warfarin (Coumadin) — Drug Interactions"}], "citations": [{"source": "FDA", "text": "Warfarin prescribing information, drug-interactions section"}], "confidence": 0.9, "defer_to_professional": true, "explanation": "Combining warfarin with ibuprofen substantially increases your bleeding risk. NSAIDs like ibuprofen interfere with platelet function and irritate the GI lining; together with warfarin's anticoagulant effect, this raises the chance of GI bleeding and bruising. Please contact your prescriber before starting any NSAID. Acetaminophen is generally a safer first-line pain option for patients on warfarin."}
+
+### INCORRECT — these will be REJECTED by the validator
+
+REJECTED: prose outside JSON
+<|tool_result>{...}<tool_result|>
+
+### Key Safety Warnings:
+- **Bleeding risk**: warfarin + ibuprofen is dangerous.
+- **Recommendation**: avoid this combination.
+
+REJECTED: trailing tool_call in final turn
+{"flags": [...], "explanation": "..."}
+<|tool_call>{"name": "check_warnings", "arguments": {...}}<tool_call|>
+
+REJECTED: empty explanation, prose elsewhere
+<|tool_result>{...}<tool_result|>
+
+I have analyzed the patient's medications. There are several concerns: ...
+{"flags": [], "citations": [], "confidence": 0.5, "defer_to_professional": true, "explanation": ""}

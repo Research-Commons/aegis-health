@@ -6,25 +6,30 @@ CREATE TABLE IF NOT EXISTS rxnorm_lookup (
     brand_name    TEXT NOT NULL,
     generic_name  TEXT NOT NULL,
     tty           TEXT,              -- term type (SBD, SCD, BPCK …)
+    category      TEXT NOT NULL DEFAULT 'Rx',  -- 'Rx', 'OTC', 'Controlled', 'Supplement'
     source        TEXT NOT NULL DEFAULT 'rxnorm'
 );
 CREATE INDEX IF NOT EXISTS idx_rxnorm_brand   ON rxnorm_lookup(brand_name COLLATE NOCASE);
 CREATE INDEX IF NOT EXISTS idx_rxnorm_generic ON rxnorm_lookup(generic_name COLLATE NOCASE);
 
 CREATE TABLE IF NOT EXISTS drugs (
-    id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    rxcui         TEXT NOT NULL,
-    drug_name     TEXT NOT NULL,
-    generic_name  TEXT,
-    dosage_form   TEXT,
-    route         TEXT,
-    labeler       TEXT,
-    description   TEXT,
-    source        TEXT NOT NULL DEFAULT 'openfda',
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    rxcui               TEXT NOT NULL,
+    drug_name           TEXT NOT NULL,
+    generic_name        TEXT,
+    dosage_form         TEXT,
+    route               TEXT,
+    labeler             TEXT,
+    description         TEXT,
+    pharm_class         TEXT,
+    indication_summary  TEXT,
+    source              TEXT NOT NULL DEFAULT 'openfda',
     FOREIGN KEY (rxcui) REFERENCES rxnorm_lookup(rxcui)
 );
 CREATE INDEX IF NOT EXISTS idx_drugs_rxcui ON drugs(rxcui);
 CREATE INDEX IF NOT EXISTS idx_drugs_name  ON drugs(drug_name COLLATE NOCASE);
+-- idx_drugs_pharmclass and unique idx_drugs_unique are created by
+-- openfda._migrate_drugs_schema() so existing KBs can de-dup first.
 
 CREATE TABLE IF NOT EXISTS drug_ingredients (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -101,6 +106,46 @@ CREATE TABLE IF NOT EXISTS guidelines (
     population_sex      TEXT,            -- 'male', 'female', 'all'
     description         TEXT NOT NULL,
     clinical_url        TEXT,
-    source              TEXT NOT NULL DEFAULT 'uspstf'
+    source              TEXT NOT NULL DEFAULT 'uspstf',
+    -- 1 = recommendation only applies when a risk-factor/condition matches
+    -- (ACIP risk-based schedules). Demographic-only queries must exclude
+    -- these; condition-keyword queries must include them.
+    risk_only           INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS idx_guide_grade ON guidelines(grade);
+
+-- Drug class memberships from NLM RxClass API. A single drug can belong to
+-- multiple classes (one row per (rxcui, class_id, class_type) triple).
+CREATE TABLE IF NOT EXISTS drug_classes (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    rxcui           TEXT NOT NULL,
+    drug_name       TEXT NOT NULL,
+    class_id        TEXT NOT NULL,      -- e.g., 'N06AB' (ATC4) or 'N0000175696' (MeSH)
+    class_name      TEXT NOT NULL,      -- e.g., 'Selective serotonin reuptake inhibitors'
+    class_type      TEXT NOT NULL,      -- 'ATC', 'EPC', 'MoA', 'MeSH'
+    rela_source     TEXT,               -- RxClass relaSource: 'ATC', 'DAILYMED', 'MEDRT', ...
+    source          TEXT NOT NULL DEFAULT 'rxclass',
+    FOREIGN KEY (rxcui) REFERENCES rxnorm_lookup(rxcui),
+    UNIQUE (rxcui, class_id, class_type)
+);
+CREATE INDEX IF NOT EXISTS idx_drug_classes_rxcui ON drug_classes(rxcui);
+CREATE INDEX IF NOT EXISTS idx_drug_classes_class ON drug_classes(class_id);
+
+-- Curated class-pair interaction rules. One row expands to every drug pair
+-- whose classes match, letting check_warnings catch interactions the
+-- pairwise `interactions` table misses (e.g., "any SSRI + any MAOI").
+CREATE TABLE IF NOT EXISTS class_interactions (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    class_id_1      TEXT NOT NULL,
+    class_name_1    TEXT NOT NULL,
+    class_type_1    TEXT NOT NULL,
+    class_id_2      TEXT NOT NULL,
+    class_name_2    TEXT NOT NULL,
+    class_type_2    TEXT NOT NULL,
+    severity        INTEGER NOT NULL CHECK (severity BETWEEN 1 AND 5),
+    description     TEXT NOT NULL,
+    mechanism       TEXT,
+    source          TEXT NOT NULL DEFAULT 'curated_class'
+);
+CREATE INDEX IF NOT EXISTS idx_class_interactions_c1 ON class_interactions(class_id_1);
+CREATE INDEX IF NOT EXISTS idx_class_interactions_c2 ON class_interactions(class_id_2);

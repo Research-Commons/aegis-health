@@ -17,10 +17,10 @@ data class Citation(
 
 @Serializable
 data class AegisResponse(
-    val flags: List<Flag> = emptyList(),
-    val citations: List<Citation> = emptyList(),
     val confidence: Double = 0.0,
     val defer_to_professional: Boolean = false,
+    val flags: List<Flag> = emptyList(),
+    val citations: List<Citation> = emptyList(),
     val explanation: String = "",
 )
 

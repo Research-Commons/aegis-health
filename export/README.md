@@ -132,4 +132,4 @@ cp export/output/aegis_model.task android/app/src/main/assets/
 cp kb/output/aegis_kb.sqlite      android/app/src/main/assets/
 ```
 
-These two files are what `GemmaEngine` and `KBDatabase` load on app startup.
+These two files are what `LiteRtLmEngine` and `KBDatabase` load on app startup.

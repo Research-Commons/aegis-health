@@ -1,0 +1,1727 @@
+2026-04-25 16:53:18,409 [INFO] Re-running 81 failed examples
+2026-04-25 16:53:18,410 [INFO] ContaminationGuard: loaded 67 drug-pairs, 32 singletons, 10 consent texts from 2 anchor file(s).
+[92m16:53:18 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:53:18,440 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:53:30 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:53:30,336 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:53:30,358 [INFO] [1/81] drugsafe_class_interaction: OK (salvaged so far: 1/34, $0.0074)
+[92m16:53:30 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:53:30,886 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:53:42 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:53:42,023 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:53:42,032 [INFO] [2/81] drugsafe_lactation: OK (salvaged so far: 1/15, $0.0144)
+[92m16:53:42 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:53:42,545 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:53:54 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:53:54,570 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:53:54,585 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['rosuvastatin', 'azithromycin']})
+2026-04-25 16:53:54,585 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m16:53:54 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:53:54,585 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:54:06 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:54:06,356 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:54:06,369 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['rosuvastatin', 'azithromycin']})
+2026-04-25 16:54:06,369 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m16:54:06 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:54:06,370 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:54:16 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:54:16,825 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:54:16,841 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['rosuvastatin', 'azithromycin monohydrate']})
+2026-04-25 16:54:16,841 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 16:54:16,842 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 16:54:16,842 [WARNING] [3/81] drugsafe_class_interaction: STILL FAILED
+[92m16:54:17 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:54:17,353 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:54:32 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:54:32,599 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:54:32,653 [WARNING] Attempt 1/3: Final-turn validation failed: final turn JSON failed AegisResponse schema
+[92m16:54:32 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:54:32,654 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:54:48 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:54:48,073 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:54:48,127 [INFO] [4/81] drugsafe_otc: OK (salvaged so far: 1/23, $0.0241)
+[92m16:54:48 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:54:48,638 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:55:05 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:55:05,301 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:55:05,348 [WARNING] Attempt 1/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m16:55:05 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:55:05,348 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:55:21 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:55:21,418 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:55:21,499 [WARNING] Attempt 2/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m16:55:21 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:55:21,499 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:55:38 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:55:38,450 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:55:38,499 [WARNING] Attempt 3/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+2026-04-25 16:55:38,500 [WARNING] Rejected example: Failed after 3 attempts. Last error: Final-turn validation failed: final turn is not valid JSON (likely prose)
+2026-04-25 16:55:38,500 [WARNING] [5/81] drugsafe_otc: STILL FAILED
+[92m16:55:39 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:55:39,023 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:55:50 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:55:50,924 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:55:50,940 [INFO] [6/81] drugsafe_class_interaction: OK (salvaged so far: 2/34, $0.0313)
+[92m16:55:51 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:55:51,450 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:55:58 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:55:58,106 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:55:58,119 [INFO] [7/81] drugsafe_class_interaction: OK (salvaged so far: 3/34, $0.0353)
+[92m16:55:58 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:55:58,633 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:56:12 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:56:12,202 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:56:12,235 [INFO] [8/81] drugsafe_otc: OK (salvaged so far: 2/23, $0.0444)
+[92m16:56:12 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:56:12,753 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:56:24 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:56:24,464 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:56:24,481 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'desipramine hydrochloride']})
+2026-04-25 16:56:24,481 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m16:56:24 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:56:24,481 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:56:35 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:56:35,863 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:56:35,877 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'desipramine hydrochloride']})
+2026-04-25 16:56:35,877 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m16:56:35 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:56:35,878 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:56:46 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:56:46,822 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:56:46,832 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'desipramine hydrochloride']})
+2026-04-25 16:56:46,832 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 16:56:46,833 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 16:56:46,833 [WARNING] [9/81] drugsafe_class_interaction: STILL FAILED
+[92m16:56:47 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:56:47,340 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:56:57 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:56:57,561 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:56:57,572 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['enalapril', 'eplerenone']})
+2026-04-25 16:56:57,572 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m16:56:57 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:56:57,572 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:57:08 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:57:08,932 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:57:08,947 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['enalapril', 'eplerenone']})
+2026-04-25 16:57:08,947 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m16:57:08 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:57:08,948 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:57:18 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:57:18,775 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:57:18,785 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['enalapril', 'eplerenone']})
+2026-04-25 16:57:18,785 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 16:57:18,787 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 16:57:18,787 [WARNING] [10/81] drugsafe_class_interaction: STILL FAILED
+[92m16:57:19 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:57:19,297 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:57:29 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:57:29,571 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:57:29,584 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'doxepin hydrochloride']})
+2026-04-25 16:57:29,584 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m16:57:29 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:57:29,585 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:57:41 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:57:41,934 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:57:41,943 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'doxepin hydrochloride']})
+2026-04-25 16:57:41,943 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m16:57:41 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:57:41,944 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:57:52 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:57:52,815 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:57:52,827 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'doxepin hydrochloride']})
+2026-04-25 16:57:52,827 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 16:57:52,828 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 16:57:52,828 [WARNING] [11/81] drugsafe_class_interaction: STILL FAILED
+[92m16:57:53 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:57:53,354 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:58:03 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:58:03,926 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:58:03,927 [INFO] [12/81] drugsafe_food: OK (salvaged so far: 1/5, $0.0515)
+[92m16:58:04 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:58:04,446 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:58:16 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:58:16,045 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:58:16,057 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['sertraline hydrochloride', 'zolmitriptan']})
+2026-04-25 16:58:16,057 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m16:58:16 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:58:16,058 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:58:26 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:58:26,412 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:58:26,426 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['sertraline hydrochloride', 'zolmitriptan']})
+2026-04-25 16:58:26,426 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m16:58:26 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:58:26,427 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:58:37 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:58:37,945 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:58:37,962 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['sertraline hydrochloride', 'zolmitriptan']})
+2026-04-25 16:58:37,962 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 16:58:37,963 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 16:58:37,963 [WARNING] [13/81] drugsafe_class_interaction: STILL FAILED
+[92m16:58:38 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:58:38,491 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:58:49 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:58:49,358 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:58:49,360 [INFO] [14/81] drugsafe_food: OK (salvaged so far: 2/5, $0.0584)
+[92m16:58:49 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:58:49,881 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:59:00 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:59:00,930 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:59:00,947 [INFO] [15/81] drugsafe_class_interaction: OK (salvaged so far: 4/34, $0.0658)
+[92m16:59:01 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:59:01,460 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:59:11 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:59:11,468 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:59:11,478 [INFO] [16/81] drugsafe_deferral: OK (salvaged so far: 1/2, $0.0727)
+[92m16:59:11 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:59:11,985 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:59:21 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:59:21,993 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:59:22,000 [INFO] [17/81] drugsafe_lactation: OK (salvaged so far: 2/15, $0.0798)
+[92m16:59:22 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:59:22,522 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:59:33 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:59:33,181 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:59:33,195 [INFO] [18/81] drugsafe_lactation: OK (salvaged so far: 3/15, $0.0868)
+[92m16:59:33 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:59:33,707 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m16:59:48 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 16:59:48,371 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 16:59:48,492 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['Ibuprofen', 'Pseudoephedrine', 'Acetaminophen', 'Chlorpheniramine', 'Phenylephrine', 'Cetirizine'], 'age': 36})
+2026-04-25 16:59:48,492 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m16:59:48 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 16:59:48,492 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:00:01 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:00:01,723 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:00:01,846 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['Cetirizine', 'Pseudoephedrine', 'Ibuprofen', 'Acetaminophen', 'Chlorpheniramine', 'Phenylephrine'], 'age': 36})
+2026-04-25 17:00:01,847 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:00:01 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:00:01,847 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:00:16 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:00:16,540 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:00:16,621 [INFO] [19/81] drugsafe_otc: OK (salvaged so far: 3/23, $0.0962)
+[92m17:00:17 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:00:17,140 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:00:27 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:00:27,237 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:00:27,245 [INFO] [20/81] drugsafe_lactation: OK (salvaged so far: 4/15, $0.1033)
+[92m17:00:27 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:00:27,752 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:00:39 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:00:39,374 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:00:39,404 [INFO] validate_kb_facts: incoherent — teacher claims severity 4 but does not defer (args={'drug_list': ['Cetirizine', 'Pseudoephedrine', 'Phenylephrine'], 'age': 34})
+2026-04-25 17:00:39,404 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:00:39 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:00:39,404 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:00:51 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:00:51,333 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:00:51,360 [INFO] validate_kb_facts: incoherent — teacher claims severity 4 but does not defer (args={'drug_list': ['Cetirizine', 'Pseudoephedrine', 'Phenylephrine'], 'age': 34})
+2026-04-25 17:00:51,360 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:00:51 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:00:51,361 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:01:03 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:01:03,521 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:01:03,553 [INFO] validate_kb_facts: incoherent — teacher claims severity 4 but does not defer (args={'drug_list': ['Cetirizine', 'Pseudoephedrine', 'Phenylephrine'], 'age': 34})
+2026-04-25 17:01:03,553 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:01:03,554 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:01:03,554 [WARNING] [21/81] drugsafe_otc: STILL FAILED
+[92m17:01:04 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:01:04,070 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:01:14 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:01:14,468 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:01:14,485 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'amitriptyline hydrochloride']})
+2026-04-25 17:01:14,485 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:01:14 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:01:14,485 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:01:25 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:01:25,475 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:01:25,493 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'amitriptyline hydrochloride']})
+2026-04-25 17:01:25,493 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:01:25 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:01:25,493 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:01:35 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:01:35,680 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:01:35,690 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'amitriptyline hydrochloride']})
+2026-04-25 17:01:35,691 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:01:35,691 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:01:35,691 [WARNING] [22/81] drugsafe_class_interaction: STILL FAILED
+[92m17:01:36 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:01:36,215 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:01:46 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:01:46,385 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:01:46,398 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['ramipril', 'sacubitril / valsartan']})
+2026-04-25 17:01:46,398 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:01:46 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:01:46,398 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:01:57 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:01:57,369 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:01:57,382 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['ramipril', 'sacubitril / valsartan']})
+2026-04-25 17:01:57,382 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:01:57 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:01:57,382 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:02:08 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:02:08,078 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:02:08,095 [INFO] [23/81] drugsafe_class_interaction: OK (salvaged so far: 5/34, $0.1106)
+[92m17:02:08 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:02:08,605 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:02:23 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:02:23,637 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:02:23,721 [INFO] [24/81] drugsafe_otc: OK (salvaged so far: 4/23, $0.1203)
+[92m17:02:24 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:02:24,249 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:02:35 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:02:35,260 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:02:35,271 [WARNING] Attempt 1/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m17:02:35 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:02:35,272 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:02:46 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:02:46,498 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:02:46,508 [INFO] [25/81] drugsafe_lactation: OK (salvaged so far: 5/15, $0.1279)
+[92m17:02:47 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:02:47,023 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:03:00 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:03:00,868 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:03:01,031 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['Dextromethorphan', 'Guaifenesin', 'Acetaminophen', 'Aspirin', 'Caffeine', 'Cetirizine', 'Pseudoephedrine', 'Naproxen'], 'age': 43})
+2026-04-25 17:03:01,031 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:03:01 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:03:01,031 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:03:18 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:03:18,022 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:03:18,187 [INFO] [26/81] drugsafe_otc: OK (salvaged so far: 5/23, $0.1377)
+[92m17:03:18 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:03:18,696 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:03:34 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:03:34,287 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:03:34,334 [INFO] validate_kb_facts: incoherent — teacher claims severity 4 but does not defer (args={'drug_list': ['Dextromethorphan', 'Phenylephrine', 'Acetaminophen', 'Guaifenesin'], 'age': 39})
+2026-04-25 17:03:34,334 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:03:34 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:03:34,335 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:03:50 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:03:50,134 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:03:50,189 [INFO] [27/81] drugsafe_otc: OK (salvaged so far: 6/23, $0.1474)
+[92m17:03:50 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:03:50,709 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:04:00 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:04:00,983 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:04:00,984 [WARNING] Attempt 1/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m17:04:00 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:04:00,985 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:04:11 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:04:11,302 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:04:11,304 [INFO] [28/81] drugsafe_food: OK (salvaged so far: 3/5, $0.1543)
+[92m17:04:11 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:04:11,828 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:04:21 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:04:21,247 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:04:21,274 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['methimazole'], 'age': 0, 'conditions': ['breastfeeding']})
+2026-04-25 17:04:21,274 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:04:21 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:04:21,276 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:04:26 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:04:26,879 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:04:26,905 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['methimazole'], 'age': 0, 'conditions': ['breastfeeding']})
+2026-04-25 17:04:26,905 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:04:26 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:04:26,907 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:04:37 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:04:37,063 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:04:37,095 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['methimazole'], 'age': 0, 'conditions': ['breastfeeding']})
+2026-04-25 17:04:37,095 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:04:37,098 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:04:37,098 [WARNING] [29/81] drugsafe_lactation: STILL FAILED
+[92m17:04:37 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:04:37,622 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:04:53 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:04:53,190 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:04:53,280 [INFO] [30/81] drugsafe_otc: OK (salvaged so far: 7/23, $0.1640)
+[92m17:04:53 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:04:53,804 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:05:07 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:05:07,268 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:05:07,303 [INFO] [31/81] drugsafe_class_interaction: OK (salvaged so far: 6/34, $0.1714)
+[92m17:05:07 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:05:07,810 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:05:20 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:05:20,539 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:05:20,665 [INFO] [32/81] drugsafe_otc: OK (salvaged so far: 8/23, $0.1794)
+[92m17:05:21 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:05:21,211 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:05:32 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:05:32,903 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:05:32,921 [INFO] [33/81] drugsafe_lactation: OK (salvaged so far: 6/15, $0.1867)
+[92m17:05:33 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:05:33,433 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:05:45 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:05:45,147 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:05:45,181 [WARNING] Attempt 1/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m17:05:45 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:05:45,182 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:05:55 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:05:55,661 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:05:55,690 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'citalopram']})
+2026-04-25 17:05:55,690 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:05:55 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:05:55,691 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:06:06 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:06:06,385 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:06:06,406 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'citalopram']})
+2026-04-25 17:06:06,408 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:06:06,409 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:06:06,409 [WARNING] [34/81] drugsafe_class_interaction: STILL FAILED
+[92m17:06:06 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:06:06,938 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:06:12 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:06:12,721 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:06:12,721 [WARNING] Attempt 1/3: Chat format validation failed
+[92m17:06:12 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:06:12,722 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:06:19 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:06:19,122 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:06:19,122 [WARNING] Attempt 2/3: Chat format validation failed
+[92m17:06:19 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:06:19,123 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:06:25 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:06:25,252 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:06:25,253 [WARNING] Attempt 3/3: Chat format validation failed
+2026-04-25 17:06:25,255 [WARNING] Rejected example: Failed after 3 attempts. Last error: Chat format validation failed
+2026-04-25 17:06:25,255 [WARNING] [35/81] drugsafe_lactation: STILL FAILED
+[92m17:06:25 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:06:25,768 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:06:39 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:06:39,281 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:06:39,309 [WARNING] Attempt 1/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m17:06:39 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:06:39,309 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:06:52 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:06:52,722 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:06:52,749 [INFO] [36/81] drugsafe_otc: OK (salvaged so far: 9/23, $0.1953)
+[92m17:06:53 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:06:53,266 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:07:04 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:07:04,553 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:07:04,585 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['pravastatin', 'azithromycin']})
+2026-04-25 17:07:04,586 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:07:04 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:07:04,588 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:07:14 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:07:14,989 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:07:15,025 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['pravastatin', 'azithromycin']})
+2026-04-25 17:07:15,025 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:07:15 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:07:15,025 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:07:25 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:07:25,821 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:07:25,847 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['pravastatin', 'azithromycin']})
+2026-04-25 17:07:25,847 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:07:25,849 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:07:25,849 [WARNING] [37/81] drugsafe_class_interaction: STILL FAILED
+[92m17:07:26 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:07:26,374 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:07:37 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:07:37,256 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:07:37,257 [INFO] [38/81] drugsafe_food: OK (salvaged so far: 4/5, $0.2019)
+[92m17:07:37 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:07:37,774 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:07:48 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:07:48,569 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:07:48,602 [INFO] [39/81] drugsafe_class_interaction: OK (salvaged so far: 7/34, $0.2090)
+[92m17:07:49 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:07:49,150 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:08:00 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:08:00,713 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:08:00,727 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['tirzepatide'], 'age': 1, 'conditions': ['breastfeeding']})
+2026-04-25 17:08:00,727 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:08:00 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:08:00,728 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:08:11 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:08:11,255 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:08:11,264 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['tirzepatide'], 'age': 0, 'conditions': ['breastfeeding']})
+2026-04-25 17:08:11,264 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:08:11 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:08:11,265 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:08:22 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:08:22,239 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:08:22,261 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['tirzepatide'], 'age': 1, 'conditions': ['breastfeeding']})
+2026-04-25 17:08:22,261 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:08:22,263 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:08:22,263 [WARNING] [40/81] drugsafe_lactation: STILL FAILED
+[92m17:08:22 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:08:22,779 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:08:32 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:08:32,928 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:08:32,962 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'escitalopram']})
+2026-04-25 17:08:32,962 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:08:32 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:08:32,964 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:08:44 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:08:44,398 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:08:44,422 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'escitalopram']})
+2026-04-25 17:08:44,422 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:08:44 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:08:44,424 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:08:55 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:08:55,621 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:08:55,660 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'escitalopram']})
+2026-04-25 17:08:55,660 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:08:55,662 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:08:55,662 [WARNING] [41/81] drugsafe_class_interaction: STILL FAILED
+[92m17:08:56 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:08:56,176 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:09:08 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:09:08,367 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:09:08,400 [WARNING] Attempt 1/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m17:09:08 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:09:08,401 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:09:20 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:09:20,572 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:09:20,601 [WARNING] Attempt 2/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m17:09:20 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:09:20,603 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:09:32 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:09:32,395 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:09:32,427 [INFO] [42/81] drugsafe_class_interaction: OK (salvaged so far: 8/34, $0.2163)
+[92m17:09:32 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:09:32,976 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:09:43 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:09:43,852 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:09:43,875 [INFO] [43/81] drugsafe_lactation: OK (salvaged so far: 7/15, $0.2235)
+[92m17:09:44 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:09:44,396 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:09:59 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:09:59,749 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:09:59,895 [INFO] [44/81] drugsafe_otc: OK (salvaged so far: 10/23, $0.2329)
+[92m17:10:00 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:10:00,405 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:10:10 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:10:10,525 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:10:10,554 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'sertraline']})
+2026-04-25 17:10:10,555 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:10:10 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:10:10,556 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:10:17 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:10:17,124 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:10:17,159 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'sertraline hydrochloride']})
+2026-04-25 17:10:17,159 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:10:17 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:10:17,160 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:10:27 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:10:27,313 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:10:27,346 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'sertraline']})
+2026-04-25 17:10:27,346 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:10:27,348 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:10:27,348 [WARNING] [45/81] drugsafe_class_interaction: STILL FAILED
+[92m17:10:27 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:10:27,860 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:10:44 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:10:44,418 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:10:44,694 [INFO] [46/81] drugsafe_otc: OK (salvaged so far: 11/23, $0.2431)
+[92m17:10:45 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:10:45,209 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:10:59 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:10:59,431 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:10:59,596 [INFO] [47/81] drugsafe_otc: OK (salvaged so far: 12/23, $0.2521)
+[92m17:11:00 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:11:00,120 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:11:10 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:11:10,211 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:11:10,244 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'desipramine hydrochloride']})
+2026-04-25 17:11:10,244 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:11:10 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:11:10,245 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:11:20 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:11:20,874 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:11:20,927 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'desipramine hydrochloride']})
+2026-04-25 17:11:20,927 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:11:20 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:11:20,928 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:11:31 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:11:31,074 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:11:31,104 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'desipramine hydrochloride']})
+2026-04-25 17:11:31,104 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:11:31,106 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:11:31,106 [WARNING] [48/81] drugsafe_class_interaction: STILL FAILED
+[92m17:11:31 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:11:31,617 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:11:43 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:11:43,928 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:11:43,961 [INFO] [49/81] drugsafe_otc: OK (salvaged so far: 13/23, $0.2601)
+[92m17:11:44 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:11:44,485 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:11:56 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:11:56,365 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:11:56,401 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'venlafaxine hydrochloride']})
+2026-04-25 17:11:56,401 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:11:56 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:11:56,402 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:12:07 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:12:07,133 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:12:07,162 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'venlafaxine hydrochloride']})
+2026-04-25 17:12:07,162 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:12:07 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:12:07,163 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:12:13 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:12:13,584 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:12:13,610 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'venlafaxine hydrochloride']})
+2026-04-25 17:12:13,610 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:12:13,612 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:12:13,613 [WARNING] [50/81] drugsafe_class_interaction: STILL FAILED
+[92m17:12:14 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:12:14,153 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:12:23 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:12:23,895 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:12:23,917 [INFO] [51/81] drugsafe_lactation: OK (salvaged so far: 8/15, $0.2672)
+[92m17:12:24 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:12:24,435 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:12:39 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:12:39,549 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:12:39,963 [INFO] [52/81] drugsafe_polypharmacy: OK (salvaged so far: 1/2, $0.2765)
+[92m17:12:40 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:12:40,520 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:12:51 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:12:51,548 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:12:51,565 [INFO] [53/81] drugsafe_lactation: OK (salvaged so far: 9/15, $0.2836)
+[92m17:12:52 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:12:52,085 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:13:03 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:13:03,740 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:13:03,756 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'pseudoephedrine']})
+2026-04-25 17:13:03,756 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:13:03 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:13:03,757 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:13:14 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:13:14,609 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:13:14,644 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'pseudoephedrine tannate']})
+2026-04-25 17:13:14,644 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:13:14 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:13:14,646 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:13:24 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:13:24,879 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:13:24,910 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'pseudoephedrine']})
+2026-04-25 17:13:24,910 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:13:24,912 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:13:24,912 [WARNING] [54/81] drugsafe_class_interaction: STILL FAILED
+[92m17:13:25 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:13:25,434 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:13:49 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:13:49,370 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:13:49,404 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'sertraline']})
+2026-04-25 17:13:49,405 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:13:49 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:13:49,406 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:13:59 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:13:59,814 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:13:59,833 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'sertraline']})
+2026-04-25 17:13:59,833 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:13:59 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:13:59,834 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:14:09 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:14:09,988 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:14:10,024 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'sertraline']})
+2026-04-25 17:14:10,024 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:14:10,027 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:14:10,027 [WARNING] [55/81] drugsafe_class_interaction: STILL FAILED
+[92m17:14:10 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:14:10,535 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:14:23 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:14:23,406 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:14:23,538 [INFO] [56/81] drugsafe_deferral: OK (salvaged so far: 2/2, $0.2915)
+[92m17:14:24 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:14:24,047 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:14:37 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:14:37,037 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:14:37,082 [WARNING] Attempt 1/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m17:14:37 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:14:37,083 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:14:54 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:14:54,148 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:14:54,181 [WARNING] Attempt 2/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m17:14:54 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:14:54,183 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:15:07 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:15:07,586 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:15:07,601 [INFO] [57/81] drugsafe_otc: OK (salvaged so far: 14/23, $0.2997)
+[92m17:15:08 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:15:08,132 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:15:18 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:15:18,429 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:15:18,456 [INFO] [58/81] drugsafe_lactation: OK (salvaged so far: 10/15, $0.3069)
+[92m17:15:18 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:15:18,970 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:15:30 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:15:30,269 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:15:30,297 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'bupropion']})
+2026-04-25 17:15:30,297 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:15:30 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:15:30,298 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:15:42 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:15:42,127 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:15:42,153 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'bupropion']})
+2026-04-25 17:15:42,153 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:15:42 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:15:42,154 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:15:52 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:15:52,312 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:15:52,346 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'bupropion']})
+2026-04-25 17:15:52,347 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:15:52,348 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:15:52,349 [WARNING] [59/81] drugsafe_class_interaction: STILL FAILED
+[92m17:15:52 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:15:52,862 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:16:02 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:16:02,638 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:16:02,675 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['captopril', 'eplerenone']})
+2026-04-25 17:16:02,675 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:16:02 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:16:02,676 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:16:12 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:16:12,662 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:16:12,686 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['captopril', 'eplerenone']})
+2026-04-25 17:16:12,687 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:16:12 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:16:12,687 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:16:23 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:16:23,923 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:16:24,012 [INFO] [60/81] drugsafe_class_interaction: OK (salvaged so far: 9/34, $0.3140)
+[92m17:16:24 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:16:24,534 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:16:35 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:16:35,598 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:16:35,645 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['simvastatin', 'azithromycin']})
+2026-04-25 17:16:35,645 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:16:35 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:16:35,647 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:16:45 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:16:45,742 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:16:45,781 [WARNING] Attempt 2/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m17:16:45 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:16:45,782 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:16:57 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:16:57,632 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:16:57,664 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['simvastatin', 'azithromycin monohydrate']})
+2026-04-25 17:16:57,664 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:16:57,667 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:16:57,668 [WARNING] [61/81] drugsafe_class_interaction: STILL FAILED
+[92m17:16:58 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:16:58,183 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:17:08 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:17:08,761 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:17:08,798 [INFO] [62/81] drugsafe_class_interaction: OK (salvaged so far: 10/34, $0.3213)
+[92m17:17:09 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:17:09,321 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:17:19 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:17:19,660 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:17:19,705 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['simvastatin', 'azithromycin']})
+2026-04-25 17:17:19,705 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:17:19 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:17:19,707 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:17:31 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:17:31,044 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:17:31,060 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['simvastatin', 'azithromycin monohydrate']})
+2026-04-25 17:17:31,060 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:17:31 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:17:31,061 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:17:42 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:17:42,215 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:17:42,245 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['simvastatin', 'azithromycin monohydrate']})
+2026-04-25 17:17:42,245 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:17:42,248 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:17:42,248 [WARNING] [63/81] drugsafe_class_interaction: STILL FAILED
+[92m17:17:42 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:17:42,758 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:17:54 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:17:54,522 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:17:54,699 [INFO] [64/81] drugsafe_otc: OK (salvaged so far: 15/23, $0.3296)
+[92m17:17:55 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:17:55,216 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:18:06 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:18:06,170 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:18:06,206 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['enalapril maleate', 'irbesartan']})
+2026-04-25 17:18:06,206 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:18:06 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:18:06,208 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:18:16 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:18:16,467 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:18:16,504 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['enalapril maleate', 'irbesartan']})
+2026-04-25 17:18:16,504 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:18:16 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:18:16,506 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:18:26 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:18:26,421 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:18:26,455 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['enalapril', 'irbesartan']})
+2026-04-25 17:18:26,455 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:18:26,457 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:18:26,458 [WARNING] [65/81] drugsafe_class_interaction: STILL FAILED
+[92m17:18:26 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:18:26,966 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:18:41 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:18:41,727 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:18:41,962 [WARNING] Attempt 1/3: Final-turn validation failed: final turn is not valid JSON (likely prose)
+[92m17:18:41 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:18:41,964 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:18:56 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:18:56,116 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:18:56,335 [INFO] [66/81] drugsafe_otc: OK (salvaged so far: 16/23, $0.3386)
+[92m17:18:56 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:18:56,863 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:19:06 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:19:06,885 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:19:06,885 [INFO] [67/81] drugsafe_food: OK (salvaged so far: 5/5, $0.3452)
+[92m17:19:07 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:19:07,398 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:19:17 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:19:17,704 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:19:17,979 [INFO] [68/81] drugsafe_otc: OK (salvaged so far: 17/23, $0.3519)
+[92m17:19:18 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:19:18,493 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:19:26 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:19:26,063 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:19:26,098 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['ramipril', 'spironolactone']})
+2026-04-25 17:19:26,098 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:19:26 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:19:26,100 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:19:37 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:19:37,710 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:19:37,737 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['ramipril', 'spironolactone']})
+2026-04-25 17:19:37,737 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:19:37 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:19:37,738 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:19:47 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:19:47,571 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:19:47,597 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['ramipril', 'spironolactone']})
+2026-04-25 17:19:47,598 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:19:47,599 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:19:47,599 [WARNING] [69/81] drugsafe_class_interaction: STILL FAILED
+[92m17:19:48 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:19:48,118 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:20:01 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:20:01,561 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:20:01,648 [INFO] [70/81] drugsafe_otc: OK (salvaged so far: 18/23, $0.3604)
+[92m17:20:02 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:20:02,164 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:20:14 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:20:14,631 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:20:14,662 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'pseudoephedrine']})
+2026-04-25 17:20:14,663 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:20:14 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:20:14,664 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:20:27 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:20:27,476 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:20:27,518 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'pseudoephedrine tannate']})
+2026-04-25 17:20:27,518 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:20:27 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:20:27,519 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:20:38 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:20:38,674 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:20:38,704 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'pseudoephedrine']})
+2026-04-25 17:20:38,704 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:20:38,706 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:20:38,706 [WARNING] [71/81] drugsafe_class_interaction: STILL FAILED
+[92m17:20:39 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:20:39,221 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:20:49 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:20:49,310 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:20:49,626 [INFO] [72/81] drugsafe_otc: OK (salvaged so far: 19/23, $0.3662)
+[92m17:20:50 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:20:50,136 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:20:57 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:20:57,696 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:20:57,712 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'venlafaxine']})
+2026-04-25 17:20:57,712 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:20:57 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:20:57,713 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:21:03 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:21:03,922 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:21:03,962 [INFO] [73/81] drugsafe_class_interaction: OK (salvaged so far: 11/34, $0.3706)
+[92m17:21:04 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:21:04,488 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:21:14 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:21:14,535 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:21:14,567 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'sertraline hydrochloride']})
+2026-04-25 17:21:14,567 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:21:14 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:21:14,568 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:21:24 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:21:24,612 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:21:24,646 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'sertraline hydrochloride']})
+2026-04-25 17:21:24,646 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:21:24 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:21:24,647 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:21:32 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:21:32,179 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:21:32,195 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'sertraline hydrochloride']})
+2026-04-25 17:21:32,195 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:21:32,195 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:21:32,195 [WARNING] [74/81] drugsafe_class_interaction: STILL FAILED
+[92m17:21:32 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:21:32,702 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:21:47 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:21:47,554 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:21:47,789 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['Ibuprofen', 'Pseudoephedrine', 'Phenylephrine', 'Diphenhydramine', 'Bismuth Subsalicylate'], 'age': 38})
+2026-04-25 17:21:47,790 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:21:47 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:21:47,791 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:22:03 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:22:03,451 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:22:03,735 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['Ibuprofen', 'Pseudoephedrine', 'Phenylephrine', 'Diphenhydramine', 'Bismuth Subsalicylate'], 'age': 38})
+2026-04-25 17:22:03,735 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:22:03 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:22:03,736 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:22:18 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:22:18,033 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:22:18,309 [INFO] validate_kb_facts: safety regression — truth defers, teacher does not (args={'drug_list': ['Ibuprofen', 'Pseudoephedrine', 'Phenylephrine', 'Diphenhydramine', 'Bismuth Subsalicylate'], 'age': 38})
+2026-04-25 17:22:18,311 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:22:18,313 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:22:18,314 [WARNING] [75/81] drugsafe_otc: STILL FAILED
+[92m17:22:18 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:22:18,843 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:22:30 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:22:30,342 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:22:30,343 [WARNING] Attempt 1/3: Chat format validation failed
+[92m17:22:30 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:22:30,343 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:22:40 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:22:40,976 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:22:41,001 [INFO] [76/81] drugsafe_lactation: OK (salvaged so far: 11/15, $0.3777)
+[92m17:22:41 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:22:41,517 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:22:52 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:22:52,592 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:22:52,632 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['phenelzine', 'pseudoephedrine']})
+2026-04-25 17:22:52,632 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:22:52 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:22:52,634 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:23:02 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:02,984 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:02,997 [INFO] [77/81] drugsafe_class_interaction: OK (salvaged so far: 12/34, $0.3851)
+[92m17:23:03 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:23:03,510 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:23:15 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:15,883 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:15,980 [INFO] [78/81] drugsafe_otc: OK (salvaged so far: 20/23, $0.3935)
+[92m17:23:16 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:23:16,506 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:23:27 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:27,480 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:27,502 [INFO] [79/81] drugsafe_lactation: OK (salvaged so far: 12/15, $0.4008)
+[92m17:23:28 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:23:28,020 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:23:35 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:35,223 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:35,238 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'venlafaxine']})
+2026-04-25 17:23:35,238 [WARNING] Attempt 1/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:23:35 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:23:35,238 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:23:41 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:41,896 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:41,928 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'venlafaxine']})
+2026-04-25 17:23:41,928 [WARNING] Attempt 2/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+[92m17:23:41 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:23:41,929 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:23:49 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:49,385 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:49,419 [INFO] validate_kb_facts: missing or unrecognizable citation in flag None (args={'drug_list': ['tranylcypromine', 'venlafaxine']})
+2026-04-25 17:23:49,419 [WARNING] Attempt 3/3: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:23:49,421 [WARNING] Rejected example: Failed after 3 attempts. Last error: KB-fact validation failed (fabricated flag / severity / missed defer)
+2026-04-25 17:23:49,421 [WARNING] [80/81] drugsafe_class_interaction: STILL FAILED
+[92m17:23:49 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+2026-04-25 17:23:49,932 [INFO] 
+LiteLLM completion() model= google/gemini-3-flash-preview; provider = openrouter
+[92m17:23:58 - LiteLLM:INFO[0m: utils.py:1653 - Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:58,790 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-25 17:23:59,244 [INFO] [81/81] drugsafe_polypharmacy: OK (salvaged so far: 2/2, $0.4066)
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+=== Re-run Summary ===
+Re-attempted: 81
+Salvaged:     53
+Still failing: 28
+Cost:         $0.4066
+
+  drugsafe_class_interaction        12/34  ( 35.3%)
+  drugsafe_deferral                  2/2   (100.0%)
+  drugsafe_food                      5/5   (100.0%)
+  drugsafe_lactation                12/15  ( 80.0%)
+  drugsafe_otc                      20/23  ( 87.0%)
+  drugsafe_polypharmacy              2/2   (100.0%)

@@ -18,12 +18,14 @@ This example focuses on demonstrating correct `lookup_term` tool usage within th
 ## Tool-call pattern
 The model should demonstrate multiple sequential lookup_term calls:
 
-Turn 1 (model): <tool_call>{"name": "lookup_term", "arguments": {"term": "first_term"}}</tool_call>
-Turn 2 (model): <tool_result>{"name": "lookup_term", "result": {"term": "...", "plain_language_definition": "...", "citation": "..."}}</tool_result>
-Turn 3 (model): <tool_call>{"name": "lookup_term", "arguments": {"term": "second_term"}}</tool_call>
+Turn 1 (model): <|tool_call>{"name": "lookup_term", "arguments": {"term": "first_term"}}<tool_call|>
+Turn 2 (model): <|tool_result>{"name": "lookup_term", "result": {"term": "...", "plain_language_definition": "...", "citation": "..."}}<tool_result|>
+Turn 3 (model): <|tool_call>{"name": "lookup_term", "arguments": {"term": "second_term"}}<tool_call|>
 ... and so on.
 
-The final model turn should provide the complete simplified text with all looked-up terms annotated.
+The final model turn should provide the complete simplified text with all looked-up terms annotated. Place the simplified text (with [TERM: ...] and [BINDING: ...] annotations) inside the `explanation` field of the AegisResponse JSON envelope — see the FINAL TURN OUTPUT CONTRACT below.
+
+{% include "_final_turn_contract.j2" %}
 
 ## Output format
 Return a JSON object with a single key "conversation" whose value is a list of turns.

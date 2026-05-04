@@ -1,0 +1,33 @@
+Generate a realistic Aegis Health training conversation for a pharmacogenomic (PGx) scenario — a patient has genetic test results that affect how they metabolize a specific drug.
+
+## Scenario (from KB warnings, warning_type='pharmacogenomic', CPIC-sourced)
+- Drug: {{ drug }}
+- Gene / phenotype: {{ gene_phenotype }}
+- Severity: {{ severity }}  (1=mild, 5=contraindicated)
+- Clinical description: {{ description }}
+- Source: {{ source }}
+
+## System prompt to use
+{{ system_prompt }}
+
+## Required tool-call chain
+1. `normalize_drug` — resolve "{{ drug }}".
+2. `get_drug_info` — fetch drug record including pharmacogenomic warnings.
+3. Final model response — must reason about the gene/phenotype implication for this specific drug. Must include an `AegisResponse` JSON with:
+   - flags: [{"severity": {{ severity }}, "type": "pharmacogenomic", "description": "{{ gene_phenotype }} affects {{ drug }} metabolism/response — ...", "citation": "{{ source }}"}]
+   - EVERY flag MUST carry an inline `citation` field naming the CPIC guideline or relevant source. No flag without a citation.
+   - citations: top-level citations array mirroring {{ source }}
+   - defer_to_professional: true  (PGx recommendations always require prescribing-clinician review; Aegis is not prescribing)
+   - Guidance: suggest alternative or dose adjustment as per CPIC, but never recommend a specific dose — that is the clinician's job.
+
+{% include "_final_turn_contract.j2" %}
+
+## Output format
+Return a JSON object with a single key "conversation" whose value is a list of turns.
+Each turn has "role" (system | user | model) and "content".
+Tool calls: <|tool_call>{"name": "...", "arguments": {...}}<tool_call|>
+Tool results: <|tool_result>{"name": "...", "result": {...}}<tool_result|>
+
+The user turn should reflect how real patients encounter PGx results — e.g. "My 23andMe report says I'm a {{ gene_phenotype }}. My doctor wrote me a prescription for {{ drug }}, is that safe?" or "I got genetic testing done and it says {{ gene_phenotype }}. Should I be worried about {{ drug }}?" Vary the phrasing.
+
+Be medically accurate. Do NOT fabricate specific dose multipliers or allele counts that aren't in the KB description.

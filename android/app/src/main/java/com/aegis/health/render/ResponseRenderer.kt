@@ -150,7 +150,7 @@ fun WarningCard(
             Text(
                 text = flag.description,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = Color(0xFF1C1B1F),
             )
 
             AnimatedVisibility(
@@ -162,7 +162,7 @@ fun WarningCard(
                         text = "Citation: ${flag.citation}",
                         style = MaterialTheme.typography.bodySmall,
                         fontStyle = FontStyle.Italic,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = Color(0xFF49454F),
                     )
                 }
             }
@@ -285,7 +285,9 @@ fun SimplifiedText(
 
     ClickableText(
         text = annotated,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MaterialTheme.typography.bodyMedium.copy(
+            color = MaterialTheme.colorScheme.onBackground,
+        ),
         modifier = modifier,
         onClick = { offset ->
             annotated.getStringAnnotations("TERM", offset, offset)
