@@ -24,6 +24,9 @@ class KBDatabase(private val context: Context) {
 
     private var database: SQLiteDatabase? = null
 
+    @Volatile
+    private var drugDictCache: Map<String, String>? = null
+
     private val dbFile: File get() = context.getDatabasePath(DB_NAME)
 
     // ── Lifecycle ───────────────────────────────────────────────────────
@@ -152,6 +155,47 @@ class KBDatabase(private val context: Context) {
         )
         return cursor.use {
             if (it.moveToFirst()) cursorToMap(it) else null
+        }
+    }
+
+    /**
+     * Lowercased name → canonical generic name. Built once from
+     * `rxnorm_lookup` (brand + generic) and `drug_ingredients` (ingredients).
+     * This is the allow-list used by DrugNameExtractor to filter raw OCR
+     * text down to names the rest of the system can actually reason about.
+     */
+    fun loadDrugDictionary(): Map<String, String> {
+        drugDictCache?.let { return it }
+        synchronized(this) {
+            drugDictCache?.let { return it }
+            val dict = HashMap<String, String>(64_000)
+
+            rawQuery(
+                "SELECT brand_name, generic_name FROM rxnorm_lookup WHERE generic_name IS NOT NULL"
+            ).use { cur ->
+                while (cur.moveToNext()) {
+                    val generic = cur.getString(1)?.lowercase()?.trim().orEmpty()
+                    if (generic.isEmpty()) continue
+                    dict.putIfAbsent(generic, generic)
+                    val brand = cur.getString(0)?.lowercase()?.trim().orEmpty()
+                    if (brand.isNotEmpty() && brand != generic) {
+                        dict.putIfAbsent(brand, generic)
+                    }
+                }
+            }
+
+            rawQuery(
+                "SELECT DISTINCT ingredient_name FROM drug_ingredients WHERE ingredient_name IS NOT NULL"
+            ).use { cur ->
+                while (cur.moveToNext()) {
+                    val ing = cur.getString(0)?.lowercase()?.trim().orEmpty()
+                    if (ing.isNotEmpty()) dict.putIfAbsent(ing, ing)
+                }
+            }
+
+            Log.i(TAG, "Drug dictionary loaded: ${dict.size} entries")
+            drugDictCache = dict
+            return dict
         }
     }
 

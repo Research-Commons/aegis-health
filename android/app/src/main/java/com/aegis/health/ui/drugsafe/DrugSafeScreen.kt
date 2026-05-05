@@ -39,12 +39,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.aegis.health.AegisApp
 import com.aegis.health.camera.CameraPreviewWithCapture
+import com.aegis.health.camera.DrugNameExtractor
 import com.aegis.health.inference.ToolDispatcher
 import com.aegis.health.models.AegisResponse
 import com.aegis.health.render.AegisResponseView
 import com.aegis.health.ui.theme.AegisTeal
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun DrugSafeScreen(modifier: Modifier = Modifier) {
@@ -53,6 +57,7 @@ fun DrugSafeScreen(modifier: Modifier = Modifier) {
     var response by remember { mutableStateOf<AegisResponse?>(null) }
     var showCamera by remember { mutableStateOf(false) }
     var cameraPermissionGranted by remember { mutableStateOf(false) }
+    var scanHint by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -64,11 +69,25 @@ fun DrugSafeScreen(modifier: Modifier = Modifier) {
 
     if (showCamera && cameraPermissionGranted) {
         CameraPreviewWithCapture(
-            onTextExtracted = { text ->
-                if (text.isNotBlank()) {
-                    drugInput = text
-                }
+            onTextExtracted = { rawText ->
                 showCamera = false
+                if (rawText.isBlank()) {
+                    scanHint = "No text detected. Try again with better lighting."
+                    return@CameraPreviewWithCapture
+                }
+                scope.launch {
+                    val db = AegisApp.instance.database
+                    val result = withContext(Dispatchers.IO) {
+                        DrugNameExtractor.extract(rawText, db)
+                    }
+                    if (result.canonical.isNotEmpty()) {
+                        drugInput = result.canonical.joinToString(", ")
+                        scanHint = null
+                    } else {
+                        scanHint = "Couldn't recognize a drug name on the label. " +
+                            "Try a closer shot of the active-ingredient line, or type the name manually."
+                    }
+                }
             },
         )
         return
@@ -108,7 +127,10 @@ fun DrugSafeScreen(modifier: Modifier = Modifier) {
         // Input
         OutlinedTextField(
             value = drugInput,
-            onValueChange = { drugInput = it },
+            onValueChange = {
+                drugInput = it
+                if (scanHint != null) scanHint = null
+            },
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Drug names (comma-separated)") },
             placeholder = { Text("e.g. ibuprofen, lisinopril, metformin") },
@@ -116,6 +138,15 @@ fun DrugSafeScreen(modifier: Modifier = Modifier) {
             minLines = 2,
             maxLines = 5,
         )
+
+        scanHint?.let { hint ->
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = hint,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+            )
+        }
 
         Spacer(Modifier.height(12.dp))
 
