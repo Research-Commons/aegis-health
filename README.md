@@ -196,7 +196,7 @@ Validated on Samsung Galaxy S23 (Snapdragon 8 Gen 2). The current shipping path 
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/<your-org>/aegis-health.git
+git clone https://github.com/Research-Commons/aegis-health.git
 cd aegis-health
 
 # 2. Build the knowledge base (~2-5 min; needs internet for FDA / NLM data)
