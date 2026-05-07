@@ -30,7 +30,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +49,7 @@ import com.aegis.health.models.AegisResponse
 import com.aegis.health.ui.common.AegisChip
 import com.aegis.health.ui.common.AegisTextField
 import com.aegis.health.ui.common.ConfidenceDot
+import com.aegis.health.ui.common.DeferralBanner
 import com.aegis.health.ui.common.GhostButton
 import com.aegis.health.ui.common.LoadingPanel
 import com.aegis.health.ui.common.OcrFailBanner
@@ -58,6 +58,7 @@ import com.aegis.health.ui.common.ScreenHeader
 import com.aegis.health.ui.common.SectionLabel
 import com.aegis.health.ui.common.SeverityCard
 import com.aegis.health.ui.common.SummaryPill
+import com.aegis.health.ui.deferral.DeferralStore
 import com.aegis.health.ui.theme.AegisSpacing
 import com.aegis.health.ui.theme.LocalAegisColors
 import kotlinx.coroutines.Dispatchers
@@ -87,14 +88,6 @@ fun DrugSafeScreen(
     ) { granted ->
         cameraGranted = granted
         if (granted) showCamera = true
-    }
-
-    // Auto-route to deferral if response triggers it.
-    LaunchedEffect(response) {
-        val r = response ?: return@LaunchedEffect
-        if (r.defer_to_professional && r.flags.any { it.severity >= 4 }) {
-            onDefer()
-        }
     }
 
     if (showCamera && cameraGranted) {
@@ -230,8 +223,20 @@ fun DrugSafeScreen(
 
         AnimatedVisibility(visible = response != null && !isLoading, enter = fadeIn()) {
             response?.let { resp ->
+                val needsDefer = resp.defer_to_professional && resp.flags.any { it.severity >= 4 }
                 Column {
                     Spacer(Modifier.height(24.dp))
+                    if (needsDefer) {
+                        DeferralBanner(
+                            title = "This combination needs a clinician's review.",
+                            body = "Aegis flagged a high-severity interaction below. Read the findings, then bring a summary to your provider.",
+                            onClick = {
+                                DeferralStore.pending = resp
+                                onDefer()
+                            },
+                        )
+                        Spacer(Modifier.height(16.dp))
+                    }
                     ResultSummaryCard(resp)
                     if (resp.flags.isNotEmpty()) {
                         Spacer(Modifier.height(18.dp))

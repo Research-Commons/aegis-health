@@ -28,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -49,8 +48,10 @@ import com.aegis.health.inference.ToolDispatcher
 import com.aegis.health.models.AegisResponse
 import com.aegis.health.models.GuidelineRecommendation
 import com.aegis.health.models.HealthProfile
+import com.aegis.health.ui.deferral.DeferralStore
 import com.aegis.health.ui.profile.ProfileStore
 import com.aegis.health.ui.common.AegisTextField
+import com.aegis.health.ui.common.DeferralBanner
 import com.aegis.health.ui.common.GhostButton
 import com.aegis.health.ui.common.GradePill
 import com.aegis.health.ui.common.LoadingPanel
@@ -95,13 +96,6 @@ fun HealthPartnerScreen(
     var gaps by remember { mutableStateOf<List<String>>(emptyList()) }
     val checked = remember { mutableStateMapOf<Int, Boolean>() }
     val progress = remember { mutableStateListOf<String>() }
-
-    LaunchedEffect(response) {
-        val r = response ?: return@LaunchedEffect
-        if (r.defer_to_professional && r.flags.any { it.severity >= 4 }) {
-            onDefer()
-        }
-    }
 
     Column(
         modifier = modifier
@@ -210,8 +204,20 @@ fun HealthPartnerScreen(
         }
 
         AnimatedVisibility(visible = response != null && !isLoading, enter = fadeIn()) {
-            response?.let { _ ->
+            response?.let { resp ->
+                val needsDefer = resp.defer_to_professional && resp.flags.any { it.severity >= 4 }
                 Column {
+                    if (needsDefer) {
+                        DeferralBanner(
+                            title = "Your profile flags a finding that needs clinician review.",
+                            body = "Aegis built the prevention checklist below, but one or more items cross a threshold that requires a provider's input.",
+                            onClick = {
+                                DeferralStore.pending = resp
+                                onDefer()
+                            },
+                        )
+                        Spacer(Modifier.height(16.dp))
+                    }
                     PlanSummaryCard(
                         age = ageText,
                         sex = sex,

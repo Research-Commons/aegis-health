@@ -46,6 +46,7 @@ import com.aegis.health.ui.OnboardingPrefs
 import com.aegis.health.ui.bench.BatteryBenchScreen
 import com.aegis.health.ui.consentreader.ConsentReaderScreen
 import com.aegis.health.ui.deferral.DeferralScreen
+import com.aegis.health.ui.deferral.DeferralStore
 import com.aegis.health.ui.drugsafe.DrugSafeScreen
 import com.aegis.health.ui.healthpartner.HealthPartnerScreen
 import com.aegis.health.ui.history.HistoryScreen
@@ -176,7 +177,11 @@ fun AegisNavHost() {
                 )
             }
             composable(Routes.Deferral) {
-                DeferralScreen(onBack = { navController.popBackStack() })
+                val staged = remember { DeferralStore.consume() }
+                DeferralScreen(
+                    onBack = { navController.popBackStack() },
+                    response = staged,
+                )
             }
         }
     }

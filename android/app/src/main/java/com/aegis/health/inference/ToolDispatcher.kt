@@ -384,27 +384,47 @@ object ToolDispatcher {
         if (!isDrugSafeMode(mode)) return response
 
         val flags = response.flags.map { flag ->
-            if (flag.citation.isBlank()) {
+            val cleaned = humanizeCitationSource(flag.citation)
+            if (cleaned.isBlank()) {
                 flag.copy(citation = "Aegis local safety KB")
             } else {
-                flag
+                flag.copy(citation = cleaned)
             }
         }
 
         val modelCitations = response.citations
             .filter { it.source.isNotBlank() || it.text.isNotBlank() }
             .map { citation ->
-                citation.copy(
-                    source = citation.source.ifBlank { "Aegis local safety KB" },
+                Citation(
+                    source = humanizeCitationSource(citation.source).ifBlank { "Aegis local safety KB" },
                     text = citation.text.ifBlank { "Medication safety result from the bundled on-device knowledge base." },
                 )
             }
 
-        // Tier A backfill: combine model-emitted citations with citations
-        // harvested from the dispatched tool results, dedup by source. If the
-        // model emitted nothing and tools were called (e.g. check_warnings),
-        // the user now sees the real KB sources instead of a generic fallback.
-        val combined = (modelCitations + backfillCitations).dedupBySource()
+        // Mine per-flag citations into the Sources list. The model often copies
+        // the source code (e.g. "FDA-WFN §7.1; Shorr...") from the tool result
+        // into each flag.citation but emits an empty top-level citations array.
+        // Without this, the user sees "Aegis local safety KB" as the only
+        // source even though every flag carries a precise FDA reference.
+        val flagCitations = response.flags
+            .filter { it.citation.isNotBlank() }
+            .map { flag ->
+                Citation(
+                    source = humanizeCitationSource(flag.citation),
+                    text = flag.description,
+                )
+            }
+
+        val humanizedBackfill = backfillCitations.map { c ->
+            c.copy(source = humanizeCitationSource(c.source))
+        }
+
+        // Combine model-emitted citations + per-flag citations + tool-result
+        // backfill. Dedup by source so the same FDA reference appearing on
+        // multiple flags collapses to one row. Real sources only fall back to
+        // the generic "Aegis local safety KB" when literally nothing else is
+        // present (rare — usually means the model emitted no flags either).
+        val combined = (modelCitations + flagCitations + humanizedBackfill).dedupBySource()
         val citations = combined.ifEmpty {
             listOf(
                 Citation(
@@ -435,6 +455,42 @@ object ToolDispatcher {
             mode,
             backfillCitations,
         )
+    }
+
+    /**
+     * Curated DDI source codes used in kb/kb/sources/curated_ddi.py expand to
+     * full human labels for display. The table column is `source` (aliased to
+     * `citation` in the SQL query) and ships strings like
+     *   "FDA-WFN §7.1; Shorr RI et al., Arch Intern Med 1993"
+     * which is precise but cryptic. We rewrite the leading code in each
+     * semicolon-delimited segment so the user sees
+     *   "FDA Warfarin Prescribing Information §7.1; Shorr RI et al., …"
+     * Keep this map in sync with the legend at the top of curated_ddi.py.
+     */
+    private val FDA_CODE_LABELS = mapOf(
+        "FDA-WFN" to "FDA Warfarin Prescribing Information",
+        "FDA-MTX" to "FDA Methotrexate Prescribing Information",
+        "FDA-DSC" to "FDA Drug Safety Communication (opioids + benzodiazepines, 2016)",
+        "FDA-SIM" to "FDA Simvastatin Label Update (2011)",
+        "FDA-DIG" to "FDA Digoxin Prescribing Information",
+        "FDA-LIT" to "FDA Lithium Label",
+        "FDA-SSRI" to "FDA SSRI Labels",
+        "FDA-CLO" to "FDA Clopidogrel Label + Drug Safety Communication (2007)",
+        "FDA-DOAC" to "FDA DOAC Labels (rivaroxaban / apixaban)",
+        "FDA-ACE" to "FDA Lisinopril Label + ACC/AHA Heart Failure Guidelines",
+        "FDA-QT" to "FDA Hydroxychloroquine + Ondansetron Labels (QT)",
+        "FDA-BUP" to "FDA Bupropion Label",
+    )
+
+    private fun humanizeCitationSource(source: String): String {
+        if (source.isBlank()) return source
+        var result = source
+        for ((code, label) in FDA_CODE_LABELS) {
+            // Word-boundary match to avoid replacing FDA-WFN inside an
+            // already-expanded label or partial substring.
+            result = Regex("\\b" + Regex.escape(code) + "\\b").replace(result, label)
+        }
+        return result
     }
 
     private fun friendlyToolLabel(name: String): String = when (name) {
