@@ -19,6 +19,13 @@ interface InferenceEngine {
     /**
      * Send [userTurn] as the next user message and return the full response.
      * Must honor coroutine cancellation — if the caller cancels, stop decoding.
+     *
+     * [onPiece] is invoked once per decoded piece (~token) with the piece text
+     * and the running count. Used by the agent loop to surface live progress
+     * during the long decode phase. Default no-op for callers that don't care.
      */
-    suspend fun inferSync(userTurn: String): String
+    suspend fun inferSync(
+        userTurn: String,
+        onPiece: (piece: String, count: Int) -> Unit = { _, _ -> },
+    ): String
 }

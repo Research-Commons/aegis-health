@@ -177,7 +177,7 @@ Four functions with composite weights: `json_validity` (0.2), `citation_presence
 
 ### Android agentic loop
 
-`LiteRtLmEngine.kt` runs inference via LiteRT-LM 0.10.0 with the GPU backend; `EngineRouter.kt` is a thin init wrapper that verifies the sideloaded `aegis_model.litertlm` file. `ToolDispatcher.kt` parses Gemma 4 native `<|tool_call>call:name{args}<tool_call|>` blocks, routes to Kotlin tool implementations in `tools/`, and re-feeds `<|tool_response>` results for up to 6 turns. `GetDrugInfo.kt` is implemented.
+`LiteRtLmEngine.kt` runs inference via LiteRT-LM 0.10.0 with the CPU backend (`Backend.CPU(numOfThreads = 6)`); GPU was tried 2026-05-02 and produced corrupted tokens on Adreno 740 due to FP16 internal precision. `EngineRouter.kt` is a thin init wrapper that verifies the sideloaded `aegis_model.litertlm` file. `ToolDispatcher.kt` parses Gemma 4 native `<|tool_call>call:name{args}<tool_call|>` blocks, routes to Kotlin tool implementations in `tools/`, and re-feeds `<|tool_response>` results for up to 6 turns. `GetDrugInfo.kt` is implemented. `BatteryProbe.kt` wraps `inferSync` and `runAgenticLoop` with optional per-call charge-counter + voltage + temperature snapshots written to a JSONL log; enable from the Bench tab and analyze with `eval/eval/battery_analysis.py` (procedure in `eval/eval/BATTERY_README.md`).
 
 ## Environment Variables
 

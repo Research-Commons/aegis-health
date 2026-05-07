@@ -11,17 +11,24 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -60,6 +67,8 @@ private const val TAG = "CameraPipeline"
 fun CameraPreviewWithCapture(
     onTextExtracted: (String) -> Unit,
     modifier: Modifier = Modifier,
+    hint: String? = null,
+    onCancel: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -116,25 +125,109 @@ fun CameraPreviewWithCapture(
             )
         }
 
-        FloatingActionButton(
-            onClick = {
-                captureAndOcr(imageCapture, context) { text ->
-                    onTextExtracted(text)
-                }
-            },
+        // Reticle brackets — frame the active-ingredient region.
+        ScannerBrackets(modifier = Modifier.fillMaxSize())
+
+        // Hint at the top.
+        if (hint != null) {
+            Text(
+                text = hint,
+                color = Color.White,
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 60.dp, start = 24.dp, end = 24.dp)
+                    .fillMaxWidth(),
+            )
+        }
+
+        // Cancel X — top-left, semi-transparent black pill.
+        if (onCancel != null) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(top = 56.dp, start = 18.dp)
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(Color(0x59000000))
+                    .clickable { onCancel() },
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    Icons.Default.Close,
+                    contentDescription = "Cancel",
+                    tint = Color.White,
+                    modifier = Modifier.size(18.dp),
+                )
+            }
+        }
+
+        // White capture button per spec — 72dp white circle, 4dp translucent ring.
+        Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 32.dp)
-                .size(72.dp),
-            shape = CircleShape,
-            containerColor = MaterialTheme.colorScheme.primary,
+                .padding(bottom = 26.dp)
+                .size(72.dp)
+                .border(4.dp, Color(0x66FFFFFF), CircleShape)
+                .padding(4.dp)
+                .clip(CircleShape)
+                .background(Color.White)
+                .clickable {
+                    captureAndOcr(imageCapture, context) { text ->
+                        onTextExtracted(text)
+                    }
+                },
+            contentAlignment = Alignment.Center,
         ) {
             Icon(
                 Icons.Default.CameraAlt,
                 contentDescription = "Capture",
-                modifier = Modifier.size(32.dp),
+                tint = Color(0xFF1A1816),
+                modifier = Modifier.size(28.dp),
             )
         }
+    }
+}
+
+@Composable
+private fun ScannerBrackets(modifier: Modifier = Modifier) {
+    val mintAccent = Color(0xFF7AF0C5)
+    androidx.compose.foundation.Canvas(modifier = modifier) {
+        val w = size.width
+        val h = size.height
+        // Active-ingredient framing region — 70dp horizontal inset, 32% vertical inset.
+        val padX = 70.dp.toPx().coerceAtMost(w * 0.18f)
+        val padY = h * 0.32f
+        val left = padX
+        val right = w - padX
+        val top = padY
+        val bottom = h - padY
+
+        val brk = 28.dp.toPx()
+        val stroke = 3.dp.toPx()
+
+        fun drawCorner(x: Float, y: Float, dx: Int, dy: Int) {
+            // dx,dy are ±1 indicating the direction the bracket arms extend.
+            drawLine(
+                color = mintAccent,
+                start = androidx.compose.ui.geometry.Offset(x, y),
+                end = androidx.compose.ui.geometry.Offset(x + dx * brk, y),
+                strokeWidth = stroke,
+                cap = androidx.compose.ui.graphics.StrokeCap.Round,
+            )
+            drawLine(
+                color = mintAccent,
+                start = androidx.compose.ui.geometry.Offset(x, y),
+                end = androidx.compose.ui.geometry.Offset(x, y + dy * brk),
+                strokeWidth = stroke,
+                cap = androidx.compose.ui.graphics.StrokeCap.Round,
+            )
+        }
+        drawCorner(left,  top,    +1, +1)
+        drawCorner(right, top,    -1, +1)
+        drawCorner(left,  bottom, +1, -1)
+        drawCorner(right, bottom, -1, -1)
     }
 }
 

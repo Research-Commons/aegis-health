@@ -16,6 +16,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.JsonPrimitive
 import java.io.File
 import java.io.FileNotFoundException
 import kotlin.coroutines.resume
@@ -111,62 +112,79 @@ object LiteRtLmEngine : InferenceEngine {
 
     // ── Inference ───────────────────────────────────────────────────────
 
-    override suspend fun inferSync(userTurn: String): String = withContext(Dispatchers.Default) {
-        val conv = conversation ?: error("Conversation not started — call startConversation() first")
-        val sb = StringBuilder()
-        val t0 = System.currentTimeMillis()
-        val inputChars = userTurn.length
-        var tFirstPiece = 0L
-        var pieces = 0
+    override suspend fun inferSync(
+        userTurn: String,
+        onPiece: (piece: String, count: Int) -> Unit,
+    ): String = BatteryProbe.around(
+        label = "inferSync",
+        initialMetadata = mapOf("input_chars" to JsonPrimitive(userTurn.length)),
+    ) { span ->
+        withContext(Dispatchers.Default) {
+            val conv = conversation ?: error("Conversation not started — call startConversation() first")
+            val sb = StringBuilder()
+            val t0 = System.currentTimeMillis()
+            val inputChars = userTurn.length
+            var tFirstPiece = 0L
+            var pieces = 0
 
-        suspendCancellableCoroutine<String> { cont ->
-            val callback = object : MessageCallback {
-                override fun onMessage(message: Message) {
-                    if (pieces == 0) {
-                        tFirstPiece = System.currentTimeMillis()
-                        Log.i(TAG, "prefill complete in ${tFirstPiece - t0} ms (input=$inputChars chars)")
-                    }
-                    sb.append(message.toString())
-                    pieces++
-                    if (pieces % 32 == 0) {
-                        val decodeSecs = (System.currentTimeMillis() - tFirstPiece) / 1000.0
-                        if (decodeSecs > 0) {
-                            Log.d(TAG, "decoded $pieces pieces in ${"%.1f".format(decodeSecs)}s decode-only (${"%.1f".format(pieces / decodeSecs)} p/s)")
+            suspendCancellableCoroutine<String> { cont ->
+                val callback = object : MessageCallback {
+                    override fun onMessage(message: Message) {
+                        if (pieces == 0) {
+                            tFirstPiece = System.currentTimeMillis()
+                            Log.i(TAG, "prefill complete in ${tFirstPiece - t0} ms (input=$inputChars chars)")
+                        }
+                        val piece = message.toString()
+                        sb.append(piece)
+                        pieces++
+                        runCatching { onPiece(piece, pieces) }
+                            .onFailure { Log.w(TAG, "onPiece callback threw at piece $pieces", it) }
+                        if (pieces % 32 == 0) {
+                            val decodeSecs = (System.currentTimeMillis() - tFirstPiece) / 1000.0
+                            if (decodeSecs > 0) {
+                                Log.d(TAG, "decoded $pieces pieces in ${"%.1f".format(decodeSecs)}s decode-only (${"%.1f".format(pieces / decodeSecs)} p/s)")
+                            }
                         }
                     }
-                }
 
-                override fun onDone() {
-                    val tDone = System.currentTimeMillis()
-                    val totalMs = tDone - t0
-                    if (tFirstPiece > 0L) {
-                        val prefillMs = tFirstPiece - t0
-                        val decodeMs = tDone - tFirstPiece
-                        val decodeSecs = decodeMs / 1000.0
-                        val tps = if (decodeSecs > 0) pieces / decodeSecs else 0.0
-                        Log.i(
-                            TAG,
-                            "inferSync done: total=${totalMs}ms (prefill=${prefillMs}ms, decode=${decodeMs}ms, " +
-                                "$pieces pieces @ ${"%.1f".format(tps)} p/s, input=$inputChars chars)",
-                        )
-                    } else {
-                        Log.i(TAG, "inferSync done: total=${totalMs}ms (no pieces emitted, input=$inputChars chars)")
+                    override fun onDone() {
+                        val tDone = System.currentTimeMillis()
+                        val totalMs = tDone - t0
+                        if (tFirstPiece > 0L) {
+                            val prefillMs = tFirstPiece - t0
+                            val decodeMs = tDone - tFirstPiece
+                            val decodeSecs = decodeMs / 1000.0
+                            val tps = if (decodeSecs > 0) pieces / decodeSecs else 0.0
+                            Log.i(
+                                TAG,
+                                "inferSync done: total=${totalMs}ms (prefill=${prefillMs}ms, decode=${decodeMs}ms, " +
+                                    "$pieces pieces @ ${"%.1f".format(tps)} p/s, input=$inputChars chars)",
+                            )
+                            span.put("prefill_ms", prefillMs)
+                            span.put("decode_ms", decodeMs)
+                        } else {
+                            Log.i(TAG, "inferSync done: total=${totalMs}ms (no pieces emitted, input=$inputChars chars)")
+                        }
+                        span.put("total_ms", totalMs)
+                        span.put("pieces", pieces)
+                        if (cont.isActive) cont.resume(sb.toString())
                     }
-                    if (cont.isActive) cont.resume(sb.toString())
+
+                    override fun onError(throwable: Throwable) {
+                        Log.e(TAG, "inferSync error after $pieces pieces", throwable)
+                        span.put("error", throwable.message ?: throwable.javaClass.simpleName)
+                        span.put("pieces", pieces)
+                        if (cont.isActive) cont.resumeWithException(throwable)
+                    }
                 }
 
-                override fun onError(throwable: Throwable) {
-                    Log.e(TAG, "inferSync error after $pieces pieces", throwable)
-                    if (cont.isActive) cont.resumeWithException(throwable)
+                cont.invokeOnCancellation {
+                    Log.w(TAG, "inferSync cancelled at $pieces pieces — calling cancelProcess()")
+                    runCatching { conv.cancelProcess() }
                 }
-            }
 
-            cont.invokeOnCancellation {
-                Log.w(TAG, "inferSync cancelled at $pieces pieces — calling cancelProcess()")
-                runCatching { conv.cancelProcess() }
+                conv.sendMessageAsync(Contents.of(userTurn), callback)
             }
-
-            conv.sendMessageAsync(Contents.of(userTurn), callback)
         }
     }
 

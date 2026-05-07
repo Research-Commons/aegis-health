@@ -68,6 +68,7 @@ data class ToolResult(
 
 @Serializable
 data class HealthProfile(
+    val name: String? = null,
     val age: Int? = null,
     val sex: String? = null,
     val conditions: List<String> = emptyList(),

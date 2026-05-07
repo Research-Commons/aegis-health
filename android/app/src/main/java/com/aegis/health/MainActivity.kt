@@ -4,32 +4,37 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.HealthAndSafety
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MedicalServices
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -37,24 +42,39 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.aegis.health.ui.OnboardingPrefs
+import com.aegis.health.ui.bench.BatteryBenchScreen
 import com.aegis.health.ui.consentreader.ConsentReaderScreen
+import com.aegis.health.ui.deferral.DeferralScreen
 import com.aegis.health.ui.drugsafe.DrugSafeScreen
 import com.aegis.health.ui.healthpartner.HealthPartnerScreen
+import com.aegis.health.ui.history.HistoryScreen
 import com.aegis.health.ui.home.HomeScreen
+import com.aegis.health.ui.onboarding.OnboardingScreen
+import com.aegis.health.ui.profile.ProfileEditorScreen
+import com.aegis.health.ui.profile.ProfileScreen
+import com.aegis.health.ui.startup.StartupErrorScreen
+import com.aegis.health.ui.startup.StartupLoadingScreen
 import com.aegis.health.ui.theme.AegisHealthTheme
+import com.aegis.health.ui.theme.LocalAegisColors
 
-sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
-    data object Home : Screen("home", "Home", Icons.Default.Home)
-    data object DrugSafe : Screen("drugsafe", "DrugSafe", Icons.Default.MedicalServices)
-    data object ConsentReader : Screen("consent", "Consent", Icons.Default.Description)
-    data object HealthPartner : Screen("partner", "Partner", Icons.Default.HealthAndSafety)
+private object Routes {
+    const val Home = "home"
+    const val History = "history"
+    const val Profile = "profile"
+    const val ProfileEditor = "profile_editor"
+    const val DrugSafe = "drugsafe"
+    const val Consent = "consent"
+    const val Partner = "partner"
+    const val Bench = "bench"
+    const val Deferral = "deferral"
 }
 
-private val topLevelScreens = listOf(
-    Screen.Home,
-    Screen.DrugSafe,
-    Screen.ConsentReader,
-    Screen.HealthPartner,
+private data class TabItem(val route: String, val label: String, val icon: ImageVector)
+private val TopLevelTabs = listOf(
+    TabItem(Routes.Home, "Home", Icons.Default.Home),
+    TabItem(Routes.History, "History", Icons.Default.History),
+    TabItem(Routes.Profile, "Profile", Icons.Default.Person),
 )
 
 class MainActivity : ComponentActivity() {
@@ -63,17 +83,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AegisHealthTheme {
-                StartupGate { AegisNavHost() }
+                StartupGate { AegisRoot() }
             }
         }
     }
 }
 
-/**
- * Observes [AegisApp.startup] and shows loading / ready / error UI.
- * Prevents the app from crashing to a blank screen when the model
- * isn't sideloaded or the KB copy fails.
- */
 @Composable
 fun StartupGate(readyContent: @Composable () -> Unit) {
     val state by AegisApp.instance.startup.collectAsState()
@@ -85,100 +100,128 @@ fun StartupGate(readyContent: @Composable () -> Unit) {
 }
 
 @Composable
-private fun StartupLoadingScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            CircularProgressIndicator()
-            Text(
-                "Loading Aegis Health…",
-                modifier = Modifier.padding(top = 16.dp),
-                style = MaterialTheme.typography.bodyLarge,
-            )
-        }
+private fun AegisRoot() {
+    val context = LocalContext.current
+    var showOnboarding by rememberSaveable {
+        mutableStateOf(OnboardingPrefs.isFirstRun(context))
     }
-}
-
-@Composable
-private fun StartupErrorScreen(message: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-            .verticalScroll(rememberScrollState()),
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            Text(
-                "Aegis Health could not start",
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.error,
-            )
-            Text(
-                message,
-                style = MaterialTheme.typography.bodyLarge,
-                fontFamily = FontFamily.Monospace,
-            )
-            Text(
-                "Aegis Health needs a model file to run. Connect this device " +
-                    "to a computer and push the LiteRT-LM bundle to the app's " +
-                    "external files directory. After pushing, force-stop and " +
-                    "relaunch the app.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
+    if (showOnboarding) {
+        OnboardingScreen(onDone = {
+            OnboardingPrefs.markComplete(context)
+            showOnboarding = false
+        })
+    } else {
+        AegisNavHost()
     }
 }
 
 @Composable
 fun AegisNavHost() {
     val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val current = backStackEntry?.destination
+
+    val showTabs = current?.route in setOf(Routes.Home, Routes.History, Routes.Profile)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar {
-                topLevelScreens.forEach { screen ->
-                    NavigationBarItem(
-                        icon = { Icon(screen.icon, contentDescription = screen.label) },
-                        label = { Text(screen.label) },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                    )
+            if (showTabs) AegisTabBar(currentRoute = current?.route, onTab = { route ->
+                navController.navigate(route) {
+                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                    launchSingleTop = true
+                    restoreState = true
                 }
-            }
+            })
         },
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Home.route,
+            startDestination = Routes.Home,
             modifier = Modifier.padding(innerPadding),
         ) {
-            composable(Screen.Home.route) {
-                HomeScreen(onNavigate = { route -> navController.navigate(route) })
+            composable(Routes.Home) {
+                HomeScreen(
+                    onOpen = { navController.navigate(it) },
+                    onSettings = { navController.navigate(Routes.Profile) },
+                )
             }
-            composable(Screen.DrugSafe.route) {
-                DrugSafeScreen()
+            composable(Routes.History) { HistoryScreen() }
+            composable(Routes.Profile) {
+                ProfileScreen(
+                    onOpenBench = { navController.navigate(Routes.Bench) },
+                    onEditProfile = { navController.navigate(Routes.ProfileEditor) },
+                )
             }
-            composable(Screen.ConsentReader.route) {
-                ConsentReaderScreen()
+            composable(Routes.DrugSafe) {
+                DrugSafeScreen(
+                    onBack = { navController.popBackStack() },
+                    onDefer = { navController.navigate(Routes.Deferral) },
+                )
             }
-            composable(Screen.HealthPartner.route) {
-                HealthPartnerScreen()
+            composable(Routes.Consent) {
+                ConsentReaderScreen(onBack = { navController.popBackStack() })
+            }
+            composable(Routes.Partner) {
+                HealthPartnerScreen(
+                    onBack = { navController.popBackStack() },
+                    onDefer = { navController.navigate(Routes.Deferral) },
+                )
+            }
+            composable(Routes.Bench) { BatteryBenchScreen() }
+            composable(Routes.ProfileEditor) {
+                ProfileEditorScreen(
+                    onBack = { navController.popBackStack() },
+                    onSaved = { navController.popBackStack() },
+                )
+            }
+            composable(Routes.Deferral) {
+                DeferralScreen(onBack = { navController.popBackStack() })
+            }
+        }
+    }
+}
+
+@Composable
+private fun AegisTabBar(currentRoute: String?, onTab: (String) -> Unit) {
+    val colors = LocalAegisColors.current
+    Column {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(colors.hairline),
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(colors.surface)
+                .padding(vertical = 6.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            TopLevelTabs.forEach { tab ->
+                val active = currentRoute == tab.route
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .clickable { onTab(tab.route) }
+                        .padding(horizontal = 24.dp, vertical = 8.dp),
+                ) {
+                    Icon(
+                        tab.icon,
+                        contentDescription = tab.label,
+                        tint = if (active) colors.accent else colors.onSurfaceMuted,
+                        modifier = Modifier.size(if (active) 22.dp else 20.dp),
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        tab.label,
+                        style = if (active) MaterialTheme.typography.labelLarge
+                        else MaterialTheme.typography.labelMedium,
+                        color = if (active) colors.accent else colors.onSurfaceMuted,
+                    )
+                }
             }
         }
     }

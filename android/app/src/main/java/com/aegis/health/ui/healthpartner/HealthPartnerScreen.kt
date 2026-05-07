@@ -3,6 +3,9 @@ package com.aegis.health.ui.healthpartner
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,27 +18,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.HealthAndSafety
-import androidx.compose.material.icons.filled.HelpOutline
-import androidx.compose.material.icons.filled.Save
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.automirrored.filled.HelpOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,181 +38,110 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.aegis.health.AegisApp
+import com.aegis.health.db.history.HistoryEntity
 import com.aegis.health.inference.ToolDispatcher
 import com.aegis.health.models.AegisResponse
 import com.aegis.health.models.GuidelineRecommendation
 import com.aegis.health.models.HealthProfile
-import com.aegis.health.render.ChecklistItem
-import com.aegis.health.render.DeferralCard
-import com.aegis.health.ui.theme.AegisTeal
-import com.aegis.health.ui.theme.SeverityAmber
+import com.aegis.health.ui.profile.ProfileStore
+import com.aegis.health.ui.common.AegisTextField
+import com.aegis.health.ui.common.GhostButton
+import com.aegis.health.ui.common.GradePill
+import com.aegis.health.ui.common.LoadingPanel
+import com.aegis.health.ui.common.PrimaryButton
+import com.aegis.health.ui.common.ScreenHeader
+import com.aegis.health.ui.common.SectionLabel
+import com.aegis.health.ui.common.Tag
+import com.aegis.health.ui.theme.AegisSpacing
+import com.aegis.health.ui.theme.LocalAegisColors
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HealthPartnerScreen(modifier: Modifier = Modifier) {
-    var ageText by remember { mutableStateOf("") }
-    var sex by remember { mutableStateOf("") }
-    var sexExpanded by remember { mutableStateOf(false) }
-    var conditions by remember { mutableStateOf("") }
-    var medications by remember { mutableStateOf("") }
-    var familyHistory by remember { mutableStateOf("") }
+fun HealthPartnerScreen(
+    onBack: () -> Unit,
+    onDefer: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colors = LocalAegisColors.current
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
+    // Form state — pre-fill from ProfileStore on first composition.
+    val seed = remember { ProfileStore.current() }
+    var ageText by remember { mutableStateOf(seed?.age?.toString().orEmpty()) }
+    var sex by remember {
+        mutableStateOf(seed?.sex?.replaceFirstChar { it.uppercaseChar() }.orEmpty())
+    }
+    var conditions by remember { mutableStateOf(seed?.conditions?.joinToString(", ").orEmpty()) }
+    var medications by remember { mutableStateOf(seed?.medications?.joinToString(", ").orEmpty()) }
+    var familyHistory by remember {
+        mutableStateOf(seed?.familyHistory?.joinToString(", ").orEmpty())
+    }
+
+    // Output state.
     var isLoading by remember { mutableStateOf(false) }
     var response by remember { mutableStateOf<AegisResponse?>(null) }
     var recommendations by remember { mutableStateOf<List<GuidelineRecommendation>>(emptyList()) }
     var gaps by remember { mutableStateOf<List<String>>(emptyList()) }
-    val checkedItems = remember { mutableStateMapOf<Int, Boolean>() }
+    val checked = remember { mutableStateMapOf<Int, Boolean>() }
+    val progress = remember { mutableStateListOf<String>() }
 
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
+    LaunchedEffect(response) {
+        val r = response ?: return@LaunchedEffect
+        if (r.defer_to_professional && r.flags.any { it.severity >= 4 }) {
+            onDefer()
+        }
+    }
 
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(colors.canvas)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 16.dp),
+            .padding(horizontal = AegisSpacing.xl, vertical = AegisSpacing.xl),
     ) {
-        // Header
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                Icons.Default.HealthAndSafety,
-                contentDescription = null,
-                tint = AegisTeal,
-                modifier = Modifier.size(32.dp),
+        ScreenHeader(
+            title = "HealthPartner",
+            subtitle = "A prevention checklist grounded in USPSTF guidance.",
+            onBack = onBack,
+        )
+        Spacer(Modifier.height(22.dp))
+
+        if (response == null && !isLoading) {
+            ProfileForm(
+                ageText = ageText, onAgeChange = { ageText = it.filter { c -> c.isDigit() } },
+                sex = sex, onSexChange = { sex = it },
+                conditions = conditions, onConditionsChange = { conditions = it },
+                medications = medications, onMedicationsChange = { medications = it },
+                familyHistory = familyHistory, onFamilyHistoryChange = { familyHistory = it },
             )
-            Spacer(Modifier.width(10.dp))
-            Text(
-                text = "HealthPartner",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = AegisTeal,
-            )
-        }
-        Spacer(Modifier.height(4.dp))
-        Text(
-            text = "Personalized prevention checklist based on USPSTF guidelines",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-
-        Spacer(Modifier.height(20.dp))
-
-        // Profile form
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            OutlinedTextField(
-                value = ageText,
-                onValueChange = { ageText = it.filter { c -> c.isDigit() } },
-                modifier = Modifier.weight(1f),
-                label = { Text("Age") },
-                placeholder = { Text("e.g. 45") },
-                singleLine = true,
-            )
-
-            ExposedDropdownMenuBox(
-                expanded = sexExpanded,
-                onExpandedChange = { sexExpanded = it },
-                modifier = Modifier.weight(1f),
-            ) {
-                OutlinedTextField(
-                    value = sex,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Sex") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = sexExpanded) },
-                    modifier = Modifier.menuAnchor(),
-                )
-                ExposedDropdownMenu(
-                    expanded = sexExpanded,
-                    onDismissRequest = { sexExpanded = false },
-                ) {
-                    listOf("Male", "Female").forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                sex = option
-                                sexExpanded = false
-                            },
-                        )
-                    }
-                }
-            }
-        }
-
-        Spacer(Modifier.height(12.dp))
-
-        OutlinedTextField(
-            value = conditions,
-            onValueChange = { conditions = it },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Conditions") },
-            placeholder = { Text("e.g. diabetes, hypertension") },
-            singleLine = true,
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        OutlinedTextField(
-            value = medications,
-            onValueChange = { medications = it },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Current medications") },
-            placeholder = { Text("e.g. metformin, lisinopril") },
-            singleLine = true,
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        OutlinedTextField(
-            value = familyHistory,
-            onValueChange = { familyHistory = it },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Family history") },
-            placeholder = { Text("e.g. heart disease, cancer") },
-            singleLine = true,
-        )
-
-        Spacer(Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            OutlinedButton(
-                onClick = { saveProfile(context, ageText, sex, conditions, medications, familyHistory) },
-                modifier = Modifier.weight(1f),
-            ) {
-                Icon(Icons.Default.Save, contentDescription = null)
-                Spacer(Modifier.width(6.dp))
-                Text("Save Profile")
-            }
-
-            Button(
+            Spacer(Modifier.height(20.dp))
+            PrimaryButton(
+                text = "Build my plan",
                 onClick = {
                     val age = ageText.toIntOrNull()
                     if (age != null && sex.isNotBlank()) {
+                        saveProfile(context, ageText, sex, conditions, medications, familyHistory)
                         scope.launch {
                             isLoading = true
                             response = null
                             recommendations = emptyList()
                             gaps = emptyList()
-                            checkedItems.clear()
+                            checked.clear()
+                            progress.clear()
 
-                            val condList = conditions.split(",")
-                                .map { it.trim() }
-                                .filter { it.isNotBlank() }
-                            val medList = medications.split(",")
-                                .map { it.trim() }
-                                .filter { it.isNotBlank() }
-
+                            val condList = conditions.splitTrim()
+                            val medList = medications.splitTrim()
                             val profileDesc = buildString {
                                 append("Age: $age, Sex: $sex")
                                 if (condList.isNotEmpty()) append(", Conditions: ${condList.joinToString()}")
@@ -225,144 +149,350 @@ fun HealthPartnerScreen(modifier: Modifier = Modifier) {
                                 if (familyHistory.isNotBlank()) append(", Family history: $familyHistory")
                             }
 
-                            val result = ToolDispatcher.runAgenticLoop(
+                            val r = ToolDispatcher.runAgenticLoop(
                                 userInput = "Get preventive care recommendations for this patient: $profileDesc",
                                 mode = "healthpartner",
+                                onProgress = { it.applyTo(progress) },
                             )
-                            response = result
-
-                            // Parse recommendations from response flags
-                            recommendations = result.flags.map { flag ->
+                            response = r
+                            recommendations = r.flags.map { f ->
                                 GuidelineRecommendation(
-                                    title = flag.description.substringBefore(":").take(80),
-                                    grade = if (flag.severity <= 2) "A" else "B",
-                                    description = flag.description,
-                                    population = "Age $age, ${sex}",
-                                    citation = flag.citation,
+                                    title = f.description.substringBefore(":").take(80),
+                                    grade = if (f.severity <= 2) "A" else "B",
+                                    description = f.description,
+                                    population = "Age $age, $sex",
+                                    citation = f.citation,
                                 )
                             }
-
                             gaps = buildList {
                                 if (condList.isEmpty()) add("No conditions provided — condition-specific screenings may be missing.")
                                 if (familyHistory.isBlank()) add("No family history provided — genetic risk factors not assessed.")
                             }
-
+                            withContext(Dispatchers.IO) {
+                                AegisApp.instance.historyDb.history().insert(
+                                    HistoryEntity(
+                                        kind = HistoryEntity.KIND_PARTNER,
+                                        title = "Prevention plan · age $age",
+                                        sub = "${recommendations.size} rec${if (recommendations.size == 1) "" else "s"}",
+                                        severityKey = HistoryEntity.SEV_INFO,
+                                        createdAt = System.currentTimeMillis(),
+                                        payloadJson = Json.encodeToString(r),
+                                    ),
+                                )
+                            }
                             isLoading = false
                         }
                     }
                 },
-                modifier = Modifier.weight(1f),
-                enabled = ageText.isNotBlank() && sex.isNotBlank() && !isLoading,
-            ) {
-                Icon(Icons.Default.Search, contentDescription = null)
-                Spacer(Modifier.width(6.dp))
-                Text("Get Plan")
+                leading = Icons.Default.AutoAwesome,
+                enabled = ageText.isNotBlank() && sex.isNotBlank(),
+                modifier = Modifier.fillMaxWidth(),
+            )
+            if (ageText.isBlank() || sex.isBlank()) {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    "Age and sex required for guideline matching.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = colors.onSurfaceMuted,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                )
             }
         }
 
-        Spacer(Modifier.height(20.dp))
-
-        // Loading
         if (isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 32.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(48.dp),
-                        color = AegisTeal,
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    Text(
-                        text = "Building your prevention plan…",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
+            LoadingPanel(
+                label = "Building your prevention plan…",
+                steps = progress,
+                autoAdvance = false,
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
 
-        // Results
-        AnimatedVisibility(
-            visible = !isLoading && (recommendations.isNotEmpty() || response != null),
-            enter = fadeIn(),
-        ) {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                if (response?.defer_to_professional == true) {
-                    DeferralCard()
-                }
-
-                if (recommendations.isNotEmpty()) {
-                    Text(
-                        text = "Your Prevention Checklist",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
+        AnimatedVisibility(visible = response != null && !isLoading, enter = fadeIn()) {
+            response?.let { _ ->
+                Column {
+                    PlanSummaryCard(
+                        age = ageText,
+                        sex = sex,
+                        conditions = conditions,
+                        recCount = recommendations.size,
+                        gradeACount = recommendations.count { it.grade.equals("A", ignoreCase = true) },
                     )
-
-                    recommendations.forEachIndexed { index, rec ->
-                        ChecklistItem(
-                            recommendation = rec,
-                            checked = checkedItems[index] == true,
-                            onCheckedChange = { checkedItems[index] = it },
-                        )
-                    }
-                }
-
-                // "What we don't know" section
-                if (gaps.isNotEmpty()) {
-                    Spacer(Modifier.height(8.dp))
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = SeverityAmber.copy(alpha = 0.08f),
-                        ),
-                        shape = MaterialTheme.shapes.medium,
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    Icons.Default.HelpOutline,
-                                    contentDescription = null,
-                                    tint = SeverityAmber,
-                                    modifier = Modifier.size(20.dp),
-                                )
-                                Spacer(Modifier.width(8.dp))
-                                Text(
-                                    text = "What We Don't Know",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = SeverityAmber,
-                                )
-                            }
-                            Spacer(Modifier.height(8.dp))
-                            gaps.forEach { gap ->
-                                Text(
-                                    text = "• $gap",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.padding(vertical = 2.dp),
-                                )
-                            }
+                    Spacer(Modifier.height(18.dp))
+                    SectionLabel("Your checklist · ${recommendations.size} items")
+                    Spacer(Modifier.height(10.dp))
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        recommendations.forEachIndexed { i, rec ->
+                            ChecklistRow(
+                                rec = rec,
+                                checked = checked[i] == true,
+                                onCheck = { checked[i] = !(checked[i] ?: false) },
+                            )
                         }
                     }
-                }
-
-                response?.let { resp ->
-                    if (resp.explanation.isNotBlank()) {
-                        Text(
-                            text = resp.explanation,
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(top = 8.dp),
-                        )
+                    if (gaps.isNotEmpty()) {
+                        Spacer(Modifier.height(22.dp))
+                        GapsCard(items = gaps)
                     }
+                    Spacer(Modifier.height(16.dp))
+                    GhostButton(
+                        text = "Edit profile",
+                        onClick = {
+                            response = null
+                            recommendations = emptyList()
+                            gaps = emptyList()
+                            checked.clear()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
                 }
             }
         }
     }
 }
+
+@Composable
+private fun ProfileForm(
+    ageText: String, onAgeChange: (String) -> Unit,
+    sex: String, onSexChange: (String) -> Unit,
+    conditions: String, onConditionsChange: (String) -> Unit,
+    medications: String, onMedicationsChange: (String) -> Unit,
+    familyHistory: String, onFamilyHistoryChange: (String) -> Unit,
+) {
+    SectionLabel("Profile")
+    Spacer(Modifier.height(12.dp))
+    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        AegisTextField(
+            value = ageText,
+            onValueChange = onAgeChange,
+            label = "Age",
+            placeholder = "45",
+            keyboardType = KeyboardType.Number,
+            modifier = Modifier.weight(1f),
+        )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                "SEX",
+                style = MaterialTheme.typography.labelMedium,
+                color = LocalAegisColors.current.onSurfaceMuted,
+            )
+            Spacer(Modifier.height(8.dp))
+            SexSegmented(value = sex, onChange = onSexChange)
+        }
+    }
+    Spacer(Modifier.height(14.dp))
+    AegisTextField(
+        value = conditions,
+        onValueChange = onConditionsChange,
+        label = "Conditions",
+        placeholder = "diabetes, hypertension",
+        modifier = Modifier.fillMaxWidth(),
+    )
+    Spacer(Modifier.height(14.dp))
+    AegisTextField(
+        value = medications,
+        onValueChange = onMedicationsChange,
+        label = "Current medications",
+        placeholder = "metformin, lisinopril",
+        modifier = Modifier.fillMaxWidth(),
+    )
+    Spacer(Modifier.height(14.dp))
+    AegisTextField(
+        value = familyHistory,
+        onValueChange = onFamilyHistoryChange,
+        label = "Family history",
+        placeholder = "heart disease, breast cancer",
+        modifier = Modifier.fillMaxWidth(),
+    )
+}
+
+@Composable
+private fun SexSegmented(value: String, onChange: (String) -> Unit) {
+    val colors = LocalAegisColors.current
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        listOf("Female", "Male").forEach { option ->
+            val selected = value == option
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(52.dp)
+                    .background(
+                        color = if (selected) colors.accent else colors.surface,
+                        shape = RoundedCornerShape(16.dp),
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = if (selected) colors.accent else colors.hairline,
+                        shape = RoundedCornerShape(16.dp),
+                    )
+                    .clickable { onChange(option) },
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    option,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (selected) colors.accentInk else colors.onSurface,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PlanSummaryCard(
+    age: String,
+    sex: String,
+    conditions: String,
+    recCount: Int,
+    gradeACount: Int,
+) {
+    val colors = LocalAegisColors.current
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colors.surface, RoundedCornerShape(18.dp))
+            .border(1.dp, colors.hairline, RoundedCornerShape(18.dp))
+            .padding(18.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .size(56.dp)
+                .background(colors.accent, RoundedCornerShape(14.dp)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                age.ifBlank { "—" },
+                style = MaterialTheme.typography.headlineMedium,
+                color = colors.accentInk,
+            )
+        }
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                "${sex.ifBlank { "—" }} · age ${age.ifBlank { "—" }}",
+                style = MaterialTheme.typography.titleMedium,
+                color = colors.onSurface,
+            )
+            Text(
+                conditions.ifBlank { "no conditions provided" }.take(48),
+                style = MaterialTheme.typography.bodySmall,
+                color = colors.onSurfaceMuted,
+            )
+            Spacer(Modifier.height(8.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Tag("$recCount recs")
+                Tag("$gradeACount grade A")
+                Tag("USPSTF 2024")
+            }
+        }
+    }
+}
+
+@Composable
+private fun ChecklistRow(
+    rec: GuidelineRecommendation,
+    checked: Boolean,
+    onCheck: () -> Unit,
+) {
+    val colors = LocalAegisColors.current
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colors.surface, RoundedCornerShape(16.dp))
+            .border(1.dp, colors.hairline, RoundedCornerShape(16.dp))
+            .padding(14.dp),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        // 22dp checkbox
+        Box(
+            modifier = Modifier
+                .padding(top = 2.dp)
+                .size(22.dp)
+                .background(
+                    color = if (checked) colors.accent else androidx.compose.ui.graphics.Color.Transparent,
+                    shape = RoundedCornerShape(6.dp),
+                )
+                .border(
+                    width = 1.5.dp,
+                    color = if (checked) colors.accent else colors.hairline,
+                    shape = RoundedCornerShape(6.dp),
+                )
+                .clickable { onCheck() },
+            contentAlignment = Alignment.Center,
+        ) {
+            if (checked) {
+                Icon(Icons.Default.Check, null, tint = colors.accentInk, modifier = Modifier.size(13.dp))
+            }
+        }
+        Column(modifier = Modifier.weight(1f).alpha(if (checked) 0.55f else 1f)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text(
+                    rec.title,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        textDecoration = if (checked) TextDecoration.LineThrough else null,
+                    ),
+                    color = colors.onSurface,
+                )
+                GradePill(grade = rec.grade)
+            }
+            Spacer(Modifier.height(4.dp))
+            Text(
+                rec.description,
+                style = MaterialTheme.typography.bodyMedium,
+                color = colors.onSurfaceMuted,
+            )
+            Spacer(Modifier.height(6.dp))
+            Text(
+                rec.citation,
+                style = MaterialTheme.typography.labelMedium,
+                color = colors.accent,
+            )
+        }
+    }
+}
+
+@Composable
+private fun GapsCard(items: List<String>) {
+    val colors = LocalAegisColors.current
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colors.sevModBg, RoundedCornerShape(16.dp))
+            .let { if (colors.isDark) it.border(1.dp, colors.hairline, RoundedCornerShape(16.dp)) else it }
+            .padding(16.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Icon(Icons.AutoMirrored.Filled.HelpOutline, null, tint = colors.sevModFg, modifier = Modifier.size(16.dp))
+            Text(
+                "WHAT WE DON'T KNOW",
+                style = MaterialTheme.typography.labelMedium,
+                color = colors.sevModFg,
+            )
+        }
+        Spacer(Modifier.height(8.dp))
+        items.forEachIndexed { i, gap ->
+            Text(
+                "· $gap",
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (colors.isDark) colors.onSurfaceMuted else androidx.compose.ui.graphics.Color(0xFF3B3733),
+                modifier = Modifier.padding(top = if (i == 0) 0.dp else 4.dp),
+            )
+        }
+    }
+}
+
+private fun String.splitTrim(): List<String> =
+    split(",").map { it.trim() }.filter { it.isNotBlank() }
 
 private fun saveProfile(
     context: Context,
@@ -372,16 +502,14 @@ private fun saveProfile(
     medications: String,
     familyHistory: String,
 ) {
+    val existing = ProfileStore.current()
     val profile = HealthProfile(
+        name = existing?.name,
         age = age.toIntOrNull(),
         sex = sex.lowercase(),
-        conditions = conditions.split(",").map { it.trim() }.filter { it.isNotBlank() },
-        medications = medications.split(",").map { it.trim() }.filter { it.isNotBlank() },
-        familyHistory = familyHistory.split(",").map { it.trim() }.filter { it.isNotBlank() },
+        conditions = conditions.splitTrim(),
+        medications = medications.splitTrim(),
+        familyHistory = familyHistory.splitTrim(),
     )
-    val json = Json.encodeToString(profile)
-    context.getSharedPreferences("aegis_profile", Context.MODE_PRIVATE)
-        .edit()
-        .putString("health_profile", json)
-        .apply()
+    ProfileStore.save(context, profile)
 }

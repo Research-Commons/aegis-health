@@ -119,14 +119,53 @@ object ToolDispatcher {
     }
 
     /**
+     * Live progress signal for the agent loop. `Step` appends a new entry to
+     * the visible step list (treat the previous entry as Done). `Update`
+     * replaces the last entry's text in place — used to refresh the token
+     * counter during the long decode phase without spamming the list.
+     */
+    sealed class ProgressEvent {
+        abstract fun applyTo(steps: MutableList<String>)
+
+        data class Step(val label: String) : ProgressEvent() {
+            override fun applyTo(steps: MutableList<String>) {
+                steps.add(label)
+            }
+        }
+
+        data class Update(val label: String) : ProgressEvent() {
+            override fun applyTo(steps: MutableList<String>) {
+                if (steps.isEmpty()) steps.add(label) else steps[steps.lastIndex] = label
+            }
+        }
+    }
+
+    /**
      * Runs the agent loop:
      *   model tool_call -> real tool_response -> model final JSON
      *
      * The loop matches eval behavior by dispatching every native tool_call in a
      * turn, truncating hallucinated text after the final tool_call marker, and
      * capping the interaction at six model turns.
+     *
+     * `onProgress` receives ProgressEvents the screen layer surfaces in
+     * LoadingPanel — Step for phase transitions ("Reading prompt…",
+     * "Checking interactions"), Update for in-phase refreshes (token
+     * count during decode). The decode phase is the long one, so we emit a
+     * token-count Update every 4 pieces to give the user concrete proof of
+     * life instead of a static "Thinking…" label.
      */
-    suspend fun runAgenticLoop(userInput: String, mode: String): AegisResponse {
+    suspend fun runAgenticLoop(
+        userInput: String,
+        mode: String,
+        onProgress: (ProgressEvent) -> Unit = {},
+    ): AegisResponse = BatteryProbe.around(
+        label = "agentic_loop",
+        initialMetadata = mapOf(
+            "mode" to JsonPrimitive(mode),
+            "user_input_chars" to JsonPrimitive(userInput.length),
+        ),
+    ) { span ->
         val engine = EngineRouter.active
         engine.startConversation(mode)
         var nextTurn = userInput
@@ -135,18 +174,35 @@ object ToolDispatcher {
         // the final response when the model leaves the citations array empty —
         // see enforceModeContract's combined-citation path.
         val accumulatedCitations = mutableListOf<Citation>()
+        var totalToolCalls = 0
+        var modelTurns = 0
 
         repeat(MAX_TURNS) { turn ->
-            val modelOutput = engine.inferSync(nextTurn)
+            onProgress(ProgressEvent.Step("Reading prompt…"))
+            var lastEmittedCount = 0
+            val modelOutput = engine.inferSync(nextTurn) { _, count ->
+                if (count == 1 || count - lastEmittedCount >= 4) {
+                    lastEmittedCount = count
+                    val noun = if (count == 1) "token" else "tokens"
+                    onProgress(ProgressEvent.Update("Generating response ($count $noun)…"))
+                }
+            }
+            modelTurns = turn + 1
             Log.d(TAG, "Turn $turn model output: ${modelOutput.take(200)}...")
 
             val toolCalls = extractNativeToolCalls(modelOutput)
             if (toolCalls.isEmpty()) {
-                return parseAegisResponse(modelOutput, mode, accumulatedCitations.dedupBySource())
+                onProgress(ProgressEvent.Step("Composing answer…"))
+                span.put("model_turns", modelTurns)
+                span.put("tool_calls_total", totalToolCalls)
+                span.put("terminated_at_max", false)
+                return@around parseAegisResponse(modelOutput, mode, accumulatedCitations.dedupBySource())
             }
+            totalToolCalls += toolCalls.size
 
             val toolResponses = buildString {
                 for (call in toolCalls) {
+                    onProgress(ProgressEvent.Step(friendlyToolLabel(call.toolCall.name)))
                     val toolCall = call.toolCall
                     val result = if (toolCall.name == "get_drug_info") {
                         val key = toolCall.stableKey()
@@ -171,7 +227,10 @@ object ToolDispatcher {
             Log.d(TAG, "Turn $turn dispatched ${toolCalls.size} tool_call(s)")
         }
 
-        return invalidFinalResponse(
+        span.put("model_turns", modelTurns)
+        span.put("tool_calls_total", totalToolCalls)
+        span.put("terminated_at_max", true)
+        invalidFinalResponse(
             message = "Maximum tool-call turns exceeded. Please consult a healthcare professional.",
             mode = mode,
             backfillCitations = accumulatedCitations.dedupBySource(),
@@ -376,6 +435,16 @@ object ToolDispatcher {
             mode,
             backfillCitations,
         )
+    }
+
+    private fun friendlyToolLabel(name: String): String = when (name) {
+        "normalize_drug" -> "Normalizing drug names"
+        "decompose_product" -> "Decomposing products"
+        "check_warnings" -> "Checking interactions"
+        "lookup_term" -> "Looking up term"
+        "get_drug_info" -> "Loading drug info"
+        "get_guideline" -> "Pulling USPSTF guidelines"
+        else -> "Running $name"
     }
 
     private fun ToolCall.stableKey(): String {

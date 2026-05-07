@@ -3,7 +3,9 @@ package com.aegis.health
 import android.app.Application
 import android.util.Log
 import com.aegis.health.db.KBDatabase
+import com.aegis.health.db.history.HistoryDatabase
 import com.aegis.health.inference.EngineRouter
+import com.aegis.health.ui.profile.ProfileStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -30,6 +32,9 @@ class AegisApp : Application() {
     lateinit var database: KBDatabase
         private set
 
+    lateinit var historyDb: HistoryDatabase
+        private set
+
     private val _startup = MutableStateFlow<StartupState>(StartupState.Initializing)
     val startup: StateFlow<StartupState> = _startup.asStateFlow()
 
@@ -38,6 +43,8 @@ class AegisApp : Application() {
         instance = this
 
         database = KBDatabase(this)
+        historyDb = HistoryDatabase.build(this)
+        ProfileStore.init(this)
 
         appScope.launch {
             try {
