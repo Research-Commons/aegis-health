@@ -180,12 +180,31 @@ object ToolDispatcher {
         repeat(MAX_TURNS) { turn ->
             onProgress(ProgressEvent.Step("Reading prompt…"))
             var lastEmittedCount = 0
-            val modelOutput = engine.inferSync(nextTurn) { _, count ->
-                if (count == 1 || count - lastEmittedCount >= 4) {
-                    lastEmittedCount = count
-                    val noun = if (count == 1) "token" else "tokens"
-                    onProgress(ProgressEvent.Update("Generating response ($count $noun)…"))
+            val modelOutput = try {
+                engine.inferSync(nextTurn) { _, count ->
+                    if (count == 1 || count - lastEmittedCount >= 4) {
+                        lastEmittedCount = count
+                        val noun = if (count == 1) "token" else "tokens"
+                        onProgress(ProgressEvent.Update("Generating response ($count $noun)…"))
+                    }
                 }
+            } catch (e: Exception) {
+                // Engine errors (most commonly LiteRtLmJniException for context
+                // overflow at 4096 tokens) must NOT crash the app. The screen
+                // launches us from rememberCoroutineScope, which has no
+                // exception handler. Degrade to a deferral message and let the
+                // user see real KB citations harvested so far.
+                Log.e(TAG, "Inference failed on turn $turn", e)
+                span.put("model_turns", turn + 1)
+                span.put("tool_calls_total", totalToolCalls)
+                span.put("inference_error", e.javaClass.simpleName)
+                span.put("inference_error_message", e.message ?: "")
+                return@around invalidFinalResponse(
+                    message = "On-device inference hit a limit. " +
+                        "Please consult a healthcare professional with the findings below.",
+                    mode = mode,
+                    backfillCitations = accumulatedCitations.dedupBySource(),
+                )
             }
             modelTurns = turn + 1
             Log.d(TAG, "Turn $turn model output: ${modelOutput.take(200)}...")
@@ -480,15 +499,23 @@ object ToolDispatcher {
         "FDA-ACE" to "FDA Lisinopril Label + ACC/AHA Heart Failure Guidelines",
         "FDA-QT" to "FDA Hydroxychloroquine + Ondansetron Labels (QT)",
         "FDA-BUP" to "FDA Bupropion Label",
+        // Generic source labels emitted by check_warnings tool results.
+        // Bare "openfda" lands on screen as a too-terse citation next to fully
+        // expanded FDA labels and looks unprofessional. Resolves regardless of
+        // case via the IGNORE_CASE flag in humanizeCitationSource.
+        "openfda" to "openFDA Drug Labels (FDA)",
     )
 
     private fun humanizeCitationSource(source: String): String {
         if (source.isBlank()) return source
         var result = source
         for ((code, label) in FDA_CODE_LABELS) {
-            // Word-boundary match to avoid replacing FDA-WFN inside an
-            // already-expanded label or partial substring.
-            result = Regex("\\b" + Regex.escape(code) + "\\b").replace(result, label)
+            // Word-boundary match avoids replacing a code inside an
+            // already-expanded label or partial substring. IGNORE_CASE so
+            // "openfda", "OpenFDA", and "OPENFDA" all resolve to the same
+            // canonical label.
+            result = Regex("\\b" + Regex.escape(code) + "\\b", RegexOption.IGNORE_CASE)
+                .replace(result, label)
         }
         return result
     }

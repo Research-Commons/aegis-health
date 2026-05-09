@@ -2,7 +2,14 @@ package com.aegis.health.inference
 
 /**
  * Mode-specific system prompts shared by every InferenceEngine implementation.
- * Contains the tool catalog and AegisResponse output schema expectation.
+ * Contains the prose instructions and AegisResponse output schema expectation.
+ *
+ * Tool catalog declarations are NOT inlined here. LiteRtLmEngine registers
+ * OpenApiTool providers with `ConversationConfig.tools`; the SDK renders the
+ * trained `<|tool>declaration:..<tool|>` blocks into the system turn for us.
+ * Inlining a JSON tool list as prose was the original bug — the model was SFT'd
+ * on the structured-token format and ignored the prose catalog, so it never
+ * emitted `<|tool_call>` markers and ToolDispatcher never fired.
  *
  * Do not place raw Gemma control-token strings in this prompt. LiteRT-LM
  * 0.10.0 can crash natively on-device when those strings appear inside a
@@ -13,7 +20,6 @@ object SystemPrompts {
 
     fun forMode(mode: String): String = buildString {
         val normalizedMode = mode.lowercase()
-        val usesTools = normalizedMode != "consentreader" && normalizedMode != "consent"
         append(
             "You are Aegis Health, an offline medical safety assistant running on the user's device. " +
                 "You have NO internet access. When this mode provides tools, factual medical claims must come " +
@@ -26,11 +32,6 @@ object SystemPrompts {
                 "- Final JSON key order must be: confidence, defer_to_professional, flags, citations, explanation.\n" +
                 "- Never repeat or narrate what you are about to do. Just do it.\n\n",
         )
-        if (usesTools) {
-            append("## Tools available\n")
-            append(TOOL_DEFINITIONS_JSON)
-            append("\n\n")
-        }
         append("## How to respond\n")
         when (normalizedMode) {
             "consentreader" -> append(consentReaderInstructions())
@@ -64,14 +65,4 @@ object SystemPrompts {
             """   {"confidence":0.85,"defer_to_professional":false,"flags":[],"citations":[{"source":"USPSTF","text":"<recommendation>"}],"explanation":"<summary of applicable screenings>"}""" + "\n" +
             "3. If the patient reports active symptoms or asks for a diagnosis, do NOT call get_guideline; output JSON that explains guidelines are for prevention and set defer_to_professional=true."
 
-    private val TOOL_DEFINITIONS_JSON = """
-        [
-          {"type":"function","function":{"name":"normalize_drug","description":"Resolve a drug name to its canonical generic name, RxCUI, and category.","parameters":{"type":"object","properties":{"name":{"type":"string"}},"required":["name"]}}},
-          {"type":"function","function":{"name":"decompose_product","description":"Break a combination product into its individual active ingredients.","parameters":{"type":"object","properties":{"product_name":{"type":"string"}},"required":["product_name"]}}},
-          {"type":"function","function":{"name":"check_warnings","description":"Analyse drugs for interactions, contraindications, and population risks.","parameters":{"type":"object","properties":{"drug_list":{"type":"array","items":{"type":"string"}},"age":{"type":"integer"},"conditions":{"type":"array","items":{"type":"string"}}},"required":["drug_list"]}}},
-          {"type":"function","function":{"name":"get_drug_info","description":"Retrieve one full drug record by RxCUI only when a prior result requires it. Do not call this repeatedly.","parameters":{"type":"object","properties":{"rxcui":{"type":"string"}},"required":["rxcui"]}}},
-          {"type":"function","function":{"name":"lookup_term","description":"Look up a medical term and return a plain-language definition.","parameters":{"type":"object","properties":{"term":{"type":"string"}},"required":["term"]}}},
-          {"type":"function","function":{"name":"get_guideline","description":"Retrieve USPSTF preventive-care recommendations for a patient profile.","parameters":{"type":"object","properties":{"age":{"type":"integer"},"sex":{"type":"string"},"conditions":{"type":"array","items":{"type":"string"}}},"required":["age","sex"]}}}
-        ]
-    """.trimIndent()
 }

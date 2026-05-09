@@ -264,13 +264,33 @@ fun DrugSafeScreen(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .background(colors.surfaceAlt, RoundedCornerShape(12.dp))
-                                        .padding(horizontal = 14.dp, vertical = 10.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
+                                        .padding(horizontal = 14.dp, vertical = 12.dp),
+                                    verticalAlignment = Alignment.Top,
                                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                                 ) {
-                                    Icon(Icons.Default.Book, null, tint = colors.accent, modifier = Modifier.size(14.dp))
-                                    Text(c.source, style = MaterialTheme.typography.titleSmall, color = colors.onSurface)
-                                    Text("· ${c.text}", style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceMuted)
+                                    Icon(
+                                        Icons.Default.Book,
+                                        null,
+                                        tint = colors.accent,
+                                        modifier = Modifier
+                                            .size(14.dp)
+                                            .padding(top = 3.dp),
+                                    )
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            c.source,
+                                            style = MaterialTheme.typography.titleSmall,
+                                            color = colors.onSurface,
+                                        )
+                                        if (c.text.isNotBlank()) {
+                                            Spacer(Modifier.height(4.dp))
+                                            Text(
+                                                c.text,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = colors.onSurfaceMuted,
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -296,13 +316,25 @@ private fun ResultSummaryCard(resp: AegisResponse) {
             Box(modifier = Modifier.weight(1f))
             ConfidenceDot(confidence = resp.confidence)
         }
-        if (resp.explanation.isNotBlank()) {
-            Spacer(Modifier.height(12.dp))
-            Text(
-                resp.explanation,
-                style = MaterialTheme.typography.bodyLarge,
-                color = colors.onSurface,
-            )
-        }
+        Spacer(Modifier.height(12.dp))
+        Text(
+            resp.explanation.ifBlank { fallbackSummary(resp) },
+            style = MaterialTheme.typography.bodyLarge,
+            color = colors.onSurface,
+        )
+    }
+}
+
+private fun fallbackSummary(resp: AegisResponse): String {
+    val highSeverity = resp.flags.any { it.severity >= 4 }
+    return when {
+        resp.flags.isEmpty() && resp.defer_to_professional ->
+            "No interactions identified, but a clinician should review this combination before you proceed."
+        resp.flags.isEmpty() ->
+            "No safety issues found in the local knowledge base for the medications you entered."
+        highSeverity ->
+            "Found ${resp.flags.size} safety concern${if (resp.flags.size == 1) "" else "s"}, including a high-severity issue. Review the findings below."
+        else ->
+            "Found ${resp.flags.size} safety concern${if (resp.flags.size == 1) "" else "s"}. Review the findings below."
     }
 }
