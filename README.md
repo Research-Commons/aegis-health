@@ -183,7 +183,7 @@ This walks through getting Aegis Health installed and running on a fresh Android
 | SoC | Snapdragon 7+ Gen 2 / Dimensity 8000 / Tensor G2 | Snapdragon 8 Gen 2+ / Dimensity 9000+ / Tensor G3+ |
 | GPU | OpenCL-capable Adreno / Mali / Xclipse (currently CPU-only path; reserved for future use) | Same |
 
-Validated on Samsung Galaxy S23 (Snapdragon 8 Gen 2). The current shipping path uses CPU inference (`Backend.CPU`, 6 threads). End-to-end response latency on the validated device is ~90 seconds for a typical DrugSafe prompt; lower-tier devices will be slower. See [ON-DEVICE-DEPLOYMENT-ANALYSIS.md](ON-DEVICE-DEPLOYMENT-ANALYSIS.md) for the full constraints write-up.
+Validated on Samsung Galaxy S23 (Snapdragon 8 Gen 2). The current shipping path uses CPU inference (`Backend.CPU`) with runtime-selected thread counts per device profile. End-to-end response latency depends on the model artifact and phone thermals; lower-tier devices will be slower. See [ON-DEVICE-DEPLOYMENT-ANALYSIS.md](ON-DEVICE-DEPLOYMENT-ANALYSIS.md) for the historical constraints write-up.
 
 ### Prerequisites
 
@@ -259,8 +259,8 @@ adb logcat -s LiteRtLmEngine ToolDispatcher EngineRouter
 Expected lines after the app starts:
 
 ```
-EngineRouter: Selecting LiteRtLmEngine (8202600448 bytes at aegis_model.litertlm)
-LiteRtLmEngine: Engine initialized in <ms> ms (CPU x6 threads, ctx=2048) ...
+EngineRouter: Selecting LiteRtLmEngine (<bytes> bytes at aegis_model.litertlm)
+LiteRtLmEngine: Engine initialized in <ms> ms (profile=<profile>, CPU x<threads> threads, topK=<k>, ctx=4096) ...
 ```
 
 ### Smoke test prompts
@@ -288,9 +288,9 @@ Before declaring the install good:
 
 **`Model not found at ...`** — model wasn't pushed, or it landed at the wrong path. The app reads from `getExternalFilesDir(null)`, which is `/sdcard/Android/data/com.aegis.health/files/` and only exists once the app has been installed and launched at least once. Install the APK first, launch it (it'll fail to find the model, that's fine), then run the `adb push` step.
 
-**Engine init succeeds but the first prompt crashes (SIGSEGV)** — likely the wrong `.litertlm` bundle. Confirm you downloaded `model.litertlm` from `V1rtucious/gemma4-e4b-toolcalling-litertlm-v2` (the W8 build); other variants exist on the user's HF account that hit known runtime bugs (see [ON-DEVICE-DEPLOYMENT-ANALYSIS.md](ON-DEVICE-DEPLOYMENT-ANALYSIS.md)).
+**Engine init succeeds but the first prompt crashes (SIGSEGV)** — confirm you downloaded `model.litertlm` from `V1rtucious/gemma4-e4b-toolcalling-litertlm-v2` (the W8 build). The `V1rtucious/gemma4-e4b-toolcalling-litertlm-v3` W4 build reproduces the known LiteRT-LM 0.10.2 native crash on the first prompt; do not use it as the default runtime artifact until upstream W4 support is fixed (see [ON-DEVICE-DEPLOYMENT-ANALYSIS.md](ON-DEVICE-DEPLOYMENT-ANALYSIS.md)).
 
-**Responses take longer than ~3 minutes** — confirm the device has at least 8 GB RAM free and isn't thermal-throttling. Background-killing other apps (`adb shell am kill-all`) before each smoke test helps. Also confirm `NUM_THREADS = 6` in [`LiteRtLmEngine.kt`](android/app/src/main/java/com/aegis/health/inference/LiteRtLmEngine.kt) is appropriate for your SoC — going above 6 may spill onto slower small cores.
+**Responses take longer than ~3 minutes** — confirm the device has at least 8 GB RAM free and isn't thermal-throttling. Background-killing other apps (`adb shell am kill-all`) before each smoke test helps. Also check the selected device profile in [`LiteRtLmEngine.kt`](android/app/src/main/java/com/aegis/health/inference/LiteRtLmEngine.kt); too many threads can spill work onto slower small cores.
 
 ---
 

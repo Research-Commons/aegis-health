@@ -48,20 +48,49 @@ object AegisToolDefs {
 
     private const val GET_GUIDELINE_JSON = """{"name":"get_guideline","description":"Retrieve USPSTF preventive-care recommendations (grade A and B) that apply to a patient based on age, sex, and conditions.","parameters":{"type":"object","properties":{"age":{"type":"integer","description":"Patient age in years."},"sex":{"type":"string","enum":["male","female","m","f"],"description":"Patient sex."},"conditions":{"type":"array","items":{"type":"string"},"description":"Optional list of patient conditions for condition-specific screening recommendations."}},"required":["age","sex"]}}"""
 
+    private val normalizeDrug: ToolProvider by lazy {
+        tool(ManualDispatchTool("normalize_drug", NORMALIZE_DRUG_JSON))
+    }
+    private val decomposeProduct: ToolProvider by lazy {
+        tool(ManualDispatchTool("decompose_product", DECOMPOSE_PRODUCT_JSON))
+    }
+    private val getDrugInfo: ToolProvider by lazy {
+        tool(ManualDispatchTool("get_drug_info", GET_DRUG_INFO_JSON))
+    }
+    private val checkWarnings: ToolProvider by lazy {
+        tool(ManualDispatchTool("check_warnings", CHECK_WARNINGS_JSON))
+    }
+    private val lookupTerm: ToolProvider by lazy {
+        tool(ManualDispatchTool("lookup_term", LOOKUP_TERM_JSON))
+    }
+    private val getGuideline: ToolProvider by lazy {
+        tool(ManualDispatchTool("get_guideline", GET_GUIDELINE_JSON))
+    }
+
+    private val drugSafe: List<ToolProvider> by lazy {
+        listOf(normalizeDrug, decomposeProduct, getDrugInfo, checkWarnings)
+    }
+
+    private val healthPartner: List<ToolProvider> by lazy {
+        listOf(getGuideline)
+    }
+
     /**
-     * All six tools, suitable for DrugSafe and HealthPartner modes. Mirrors
-     * the pre-fix system-prompt catalog — every mode that emitted the tool
-     * JSON block before saw all six declarations.
+     * Fallback catalog for unknown/future modes. Known modes should use the
+     * narrowest catalog that can satisfy their prompt contract, which reduces
+     * prefill cost and tool-choice ambiguity without changing the model.
      */
     val all: List<ToolProvider> by lazy {
-        listOf(
-            tool(ManualDispatchTool("normalize_drug", NORMALIZE_DRUG_JSON)),
-            tool(ManualDispatchTool("decompose_product", DECOMPOSE_PRODUCT_JSON)),
-            tool(ManualDispatchTool("get_drug_info", GET_DRUG_INFO_JSON)),
-            tool(ManualDispatchTool("check_warnings", CHECK_WARNINGS_JSON)),
-            tool(ManualDispatchTool("lookup_term", LOOKUP_TERM_JSON)),
-            tool(ManualDispatchTool("get_guideline", GET_GUIDELINE_JSON)),
-        )
+        listOf(normalizeDrug, decomposeProduct, getDrugInfo, checkWarnings, lookupTerm, getGuideline)
+    }
+
+    fun forMode(mode: String): List<ToolProvider> {
+        return when (mode.lowercase()) {
+            "consentreader", "consent" -> emptyList()
+            "healthpartner" -> healthPartner
+            "drugsafe" -> drugSafe
+            else -> all
+        }
     }
 
     private class ManualDispatchTool(

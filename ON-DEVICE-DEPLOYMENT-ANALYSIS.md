@@ -3,6 +3,8 @@
 **Date:** 2026-05-02
 **Subject:** Why the Aegis Health SFT model (`V1rtucious/aegis-sft-e4b-merged-v4`) ships on-device with the LiteRT-LM CPU backend, and not via any of the faster paths we evaluated.
 
+**Status update, 2026-05-11:** `V1rtucious/gemma4-e4b-toolcalling-litertlm-v3`, a new W4 `.litertlm` export, was tested on the Galaxy S23 and reproduced the same native LiteRT-LM crash on first prompt (`SIGSEGV`, `liblitertlm_jni.so`, PC `0x102aaf0`). The W8 `v2` bundle remains the default runtime artifact.
+
 ## TL;DR
 
 We exhaustively evaluated five on-device runtime/quantization combinations for our fine-tuned Gemma 3n / Gemma 4 E4B SFT model. Exactly one produces correct output: **LiteRT-LM 0.10.2 with `Backend.CPU(numOfThreads = 4)` on the W8 `.litertlm` bundle.** Per-prompt latency is ~5 minutes. Every faster alternative hit either a runtime crash, numerical corruption, or a blocked toolchain. The blockers are upstream — they are not fixable in this repository within the hackathon window.

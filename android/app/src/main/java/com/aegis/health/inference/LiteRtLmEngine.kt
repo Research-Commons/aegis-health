@@ -139,7 +139,7 @@ object LiteRtLmEngine : InferenceEngine {
 
     // ── Conversation lifecycle ──────────────────────────────────────────
 
-    override suspend fun startConversation(mode: String) = mutex.withLock<Unit> {
+    override suspend fun startConversation(mode: String, includeTools: Boolean) = mutex.withLock<Unit> {
         val eng = requireReady()
         withContext(Dispatchers.Default) {
             conversation?.close()
@@ -150,7 +150,7 @@ object LiteRtLmEngine : InferenceEngine {
             // `<|tool_call>` markers, so ToolDispatcher's regex never matches.
             // automaticToolCalling = false keeps dispatch in ToolDispatcher;
             // OpenApiTool.execute throws if the SDK ever auto-invokes.
-            val toolProviders = if (modeUsesTools(mode)) AegisToolDefs.all else emptyList()
+            val toolProviders = if (includeTools) AegisToolDefs.forMode(mode) else emptyList()
             conversation = eng.createConversation(
                 ConversationConfig(
                     systemInstruction = Contents.of(SystemPrompts.forMode(mode)),
@@ -163,13 +163,8 @@ object LiteRtLmEngine : InferenceEngine {
                     automaticToolCalling = false,
                 ),
             )
-            Log.d(TAG, "Conversation started (mode=$mode, tools=${toolProviders.size})")
+            Log.d(TAG, "Conversation started (mode=$mode, tools=${toolProviders.size}, includeTools=$includeTools)")
         }
-    }
-
-    private fun modeUsesTools(mode: String): Boolean {
-        val normalized = mode.lowercase()
-        return normalized != "consentreader" && normalized != "consent"
     }
 
     // ── Inference ───────────────────────────────────────────────────────
@@ -190,19 +185,32 @@ object LiteRtLmEngine : InferenceEngine {
             var pieces = 0
 
             suspendCancellableCoroutine<String> { cont ->
-                // Gemma 4 native tool calling stops at <tool_call|>: the
-                // chat template expects the host to inject the real
-                // <|tool_response>...<tool_response|> immediately after,
-                // inside the same model turn (no <turn|> separator). LiteRT-LM
-                // doesn't honor that boundary natively, so the model freely
-                // hallucinates a tool_response (and often a second fake
-                // tool_call after it). We detect the marker in the streamed
-                // text and call cancelProcess() ourselves. Without this:
-                // - Turn 0 burns ~100s of decode time on hallucinated content
-                // - Turn 1's prefill balloons (truncated turn 0 + huge real
-                //   tool_response) and exhausts the 2048-token context, so
-                //   the synthesis JSON never gets generated.
-                val toolCallStopHit = java.util.concurrent.atomic.AtomicBoolean(false)
+                // Two host-driven early-stop conditions, both observed during
+                // streaming and both routed through cancelProcess():
+                //
+                //   1. tool_call: model emitted `<tool_call|>`. The chat
+                //      template expects the host to inject the real
+                //      `<|tool_response>...<tool_response|>` immediately
+                //      after, inside the same model turn. LiteRT-LM doesn't
+                //      honor that boundary natively, so without our cancel
+                //      the model hallucinates a tool_response (and often a
+                //      second fake tool_call after it), burning ~100s of
+                //      decode on garbage.
+                //
+                //   2. json_close: synthesis turn produced a complete
+                //      AegisResponse JSON object. Brace-balanced tracking
+                //      (string- and escape-aware) trips when depth returns
+                //      to 0 after the opening `{`. Saves the trailing
+                //      whitespace + `<turn|>`/`<eos>` decode the model
+                //      emits before naturally stopping (~50–150 tokens
+                //      typical at ~3.7 t/s on SD8G2 = ~13–40s).
+                //
+                // First trigger wins via the AtomicReference CAS. Both
+                // surface to onDone or onError as a CancellationException
+                // depending on SDK timing; both paths resume the coroutine
+                // cleanly with sb.toString().
+                val hostStop = java.util.concurrent.atomic.AtomicReference<HostStopReason?>(null)
+                val jsonClose = JsonCloseDetector()
                 val callback = object : MessageCallback {
                     override fun onMessage(message: Message) {
                         if (pieces == 0) {
@@ -220,16 +228,39 @@ object LiteRtLmEngine : InferenceEngine {
                                 Log.d(TAG, "decoded $pieces pieces in ${"%.1f".format(decodeSecs)}s decode-only (${"%.1f".format(pieces / decodeSecs)} p/s)")
                             }
                         }
-                        // Boundary check after append — see comment at the top
-                        // of suspendCancellableCoroutine. Idempotent via the
-                        // atomic CAS. cancelProcess() lands in onError or
-                        // onDone (SDK choice); both paths resume the coroutine
-                        // with sb.toString().
-                        if (!toolCallStopHit.get() &&
-                            sb.indexOf("<tool_call|>") >= 0 &&
-                            toolCallStopHit.compareAndSet(false, true)
+                        if (hostStop.get() != null) return
+
+                        // tool_call boundary: cheap substring check on the
+                        // accumulated buffer. Stays correct if a piece
+                        // splits the marker across two callbacks.
+                        if (sb.indexOf("<tool_call|>") >= 0 &&
+                            hostStop.compareAndSet(null, HostStopReason.TOOL_CALL)
                         ) {
                             Log.i(TAG, "Stopping decode at <tool_call|> boundary after $pieces pieces")
+                            runCatching { conv.cancelProcess() }
+                            return
+                        }
+
+                        // json_close: stateful, advanced piece-by-piece.
+                        // Detector remembers depth/inString/escaped across
+                        // calls, no buffer re-scan.
+                        //
+                        // SUPPRESSED on tool-call turns: the model's tool_call
+                        // syntax `<|tool_call>call:name{...args...}<tool_call|>`
+                        // has its own balanced `{...}` block, and the detector
+                        // would trip on the args' closing `}` before the
+                        // <tool_call|> marker arrives — cancelling mid-tool_call
+                        // and leaving ToolDispatcher with an unclosed fragment.
+                        // Once `<|tool_call>` has appeared in the buffer, the
+                        // tool_call boundary check above owns termination of
+                        // this turn; json_close only matters for synthesis
+                        // turns, where `<|tool_call>` never appears.
+                        val inToolCallTurn = sb.indexOf("<|tool_call>") >= 0
+                        if (!inToolCallTurn &&
+                            jsonClose.advance(piece) &&
+                            hostStop.compareAndSet(null, HostStopReason.JSON_CLOSE)
+                        ) {
+                            Log.i(TAG, "Stopping decode at JSON close after $pieces pieces")
                             runCatching { conv.cancelProcess() }
                         }
                     }
@@ -237,12 +268,13 @@ object LiteRtLmEngine : InferenceEngine {
                     override fun onDone() {
                         val tDone = System.currentTimeMillis()
                         val totalMs = tDone - t0
+                        val stopReason = hostStop.get()
                         if (tFirstPiece > 0L) {
                             val prefillMs = tFirstPiece - t0
                             val decodeMs = tDone - tFirstPiece
                             val decodeSecs = decodeMs / 1000.0
                             val tps = if (decodeSecs > 0) pieces / decodeSecs else 0.0
-                            val stopNote = if (toolCallStopHit.get()) ", stopped=tool_call" else ""
+                            val stopNote = stopReason?.let { ", stopped=${it.label}" } ?: ""
                             Log.i(
                                 TAG,
                                 "inferSync done: total=${totalMs}ms (prefill=${prefillMs}ms, decode=${decodeMs}ms, " +
@@ -255,20 +287,21 @@ object LiteRtLmEngine : InferenceEngine {
                         }
                         span.put("total_ms", totalMs)
                         span.put("pieces", pieces)
-                        span.put("stopped_at_tool_call", toolCallStopHit.get())
+                        span.put("stop_reason", stopReason?.label ?: "natural")
                         if (cont.isActive) cont.resume(sb.toString())
                     }
 
                     override fun onError(throwable: Throwable) {
-                        // cancelProcess() at the tool_call boundary may surface
-                        // here as a "cancelled" error rather than as onDone.
-                        // Treat that path as a clean stop and return the
-                        // accumulated text — the agent loop downstream parses
-                        // it normally.
-                        if (toolCallStopHit.get()) {
-                            Log.i(TAG, "tool_call cancellation surfaced as error (${throwable.javaClass.simpleName}); returning $pieces pieces")
+                        // cancelProcess() at any host stop boundary may
+                        // surface here as a "cancelled" error rather than
+                        // as onDone. Treat that path as a clean stop and
+                        // return the accumulated text — the agent loop
+                        // downstream parses it normally.
+                        val stopReason = hostStop.get()
+                        if (stopReason != null) {
+                            Log.i(TAG, "${stopReason.label} cancellation surfaced as error (${throwable.javaClass.simpleName}); returning $pieces pieces")
                             span.put("pieces", pieces)
-                            span.put("stopped_at_tool_call", true)
+                            span.put("stop_reason", stopReason.label)
                             if (cont.isActive) cont.resume(sb.toString())
                             return
                         }
@@ -318,5 +351,60 @@ object LiteRtLmEngine : InferenceEngine {
     private fun requireReady(): Engine {
         check(initialized) { "LiteRtLmEngine not initialized — call initialize() first" }
         return engine!!
+    }
+
+    // ── Host-driven early-stop helpers ──────────────────────────────────
+
+    private enum class HostStopReason(val label: String) {
+        TOOL_CALL("tool_call"),
+        JSON_CLOSE("json_close"),
+    }
+
+    /**
+     * Stateful brace-balanced JSON detector. [advance] consumes one
+     * streaming piece at a time and returns true exactly once — when the
+     * top-level JSON object closes (depth returns to 0 after the first
+     * `{`). String- and escape-aware so braces inside string literals are
+     * ignored. Mirrors the parser used by ToolDispatcher.extractFirstBalancedJsonObject
+     * but operates incrementally so we never re-scan the accumulated buffer.
+     *
+     * Returns false if no `{` has been seen yet, or if depth is still >0,
+     * or once the close has already been reported (idempotent).
+     */
+    private class JsonCloseDetector {
+        private var depth = 0
+        private var inString = false
+        private var escaped = false
+        private var started = false
+        private var fired = false
+
+        fun advance(piece: String): Boolean {
+            if (fired) return false
+            for (ch in piece) {
+                if (inString) {
+                    when {
+                        escaped -> escaped = false
+                        ch == '\\' -> escaped = true
+                        ch == '"' -> inString = false
+                    }
+                    continue
+                }
+                when (ch) {
+                    '"' -> inString = true
+                    '{' -> {
+                        depth += 1
+                        started = true
+                    }
+                    '}' -> {
+                        depth -= 1
+                        if (started && depth == 0) {
+                            fired = true
+                            return true
+                        }
+                    }
+                }
+            }
+            return false
+        }
     }
 }

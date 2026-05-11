@@ -81,6 +81,10 @@ fun DrugSafeScreen(
     var cameraGranted by remember { mutableStateOf(false) }
     var ocrFailed by remember { mutableStateOf(false) }
     val progress = remember { mutableStateListOf<String>() }
+    // FlagPreview events from ToolDispatcher land here as the synthesis turn
+    // streams. Cleared on each new "Check" click; replaced by the real
+    // SeverityCards once `response` is populated.
+    val flagPreviews = remember { mutableStateListOf<ToolDispatcher.ProgressEvent.FlagPreview>() }
     val scope = rememberCoroutineScope()
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -183,10 +187,23 @@ fun DrugSafeScreen(
                             isLoading = true
                             response = null
                             progress.clear()
-                            val r = ToolDispatcher.runAgenticLoop(
-                                userInput = "Check these drugs for interactions and safety: $drugInput",
-                                mode = "drugsafe",
-                                onProgress = { it.applyTo(progress) },
+                            flagPreviews.clear()
+                            val r = ToolDispatcher.runDrugSafeFastPath(
+                                userInput = drugInput,
+                                onProgress = { event ->
+                                    // Route typed FlagPreview events to a
+                                    // dedicated state list so the screen can
+                                    // render preview SeverityCards mid-decode.
+                                    // Step / Update events stay on the existing
+                                    // progress label list.
+                                    if (event is ToolDispatcher.ProgressEvent.FlagPreview) {
+                                        if (flagPreviews.none { it.description == event.description && it.citation == event.citation }) {
+                                            flagPreviews.add(event)
+                                        }
+                                    } else {
+                                        event.applyTo(progress)
+                                    }
+                                },
                             )
                             response = r
                             withContext(Dispatchers.IO) {
@@ -219,6 +236,30 @@ fun DrugSafeScreen(
                 autoAdvance = false,
                 modifier = Modifier.fillMaxWidth(),
             )
+
+            // Phase B: streaming preview cards. Appear as ToolDispatcher's
+            // FlagsStreamParser emits each completed flag during the
+            // synthesis decode (~30s after Check is tapped on SD8G2,
+            // vs ~155s for the full response). The cards vanish when
+            // `isLoading` flips to false; the real Findings section then
+            // takes over via the AnimatedVisibility block below. Render
+            // in arrival order — sorting them on the fly would rearrange
+            // visible cards each time a new one streams in.
+            if (flagPreviews.isNotEmpty()) {
+                Spacer(Modifier.height(18.dp))
+                val flagWord = if (flagPreviews.size == 1) "flag" else "flags"
+                SectionLabel("Streaming · ${flagPreviews.size} $flagWord so far")
+                Spacer(Modifier.height(10.dp))
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    flagPreviews.forEach { preview ->
+                        SeverityCard(
+                            severity = preview.severity,
+                            description = preview.description,
+                            citation = preview.citation,
+                        )
+                    }
+                }
+            }
         }
 
         AnimatedVisibility(visible = response != null && !isLoading, enter = fadeIn()) {

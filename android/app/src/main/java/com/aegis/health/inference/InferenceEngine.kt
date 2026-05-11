@@ -14,7 +14,7 @@ interface InferenceEngine {
     suspend fun initialize(context: Context)
 
     /** Reset KV cache and seed the mode-specific system prompt. */
-    suspend fun startConversation(mode: String)
+    suspend fun startConversation(mode: String, includeTools: Boolean = true)
 
     /**
      * Send [userTurn] as the next user message and return the full response.

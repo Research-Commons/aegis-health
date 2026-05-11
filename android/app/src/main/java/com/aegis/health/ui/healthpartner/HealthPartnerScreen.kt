@@ -143,9 +143,11 @@ fun HealthPartnerScreen(
                                 if (familyHistory.isNotBlank()) append(", Family history: $familyHistory")
                             }
 
-                            val r = ToolDispatcher.runAgenticLoop(
-                                userInput = "Get preventive care recommendations for this patient: $profileDesc",
-                                mode = "healthpartner",
+                            val r = ToolDispatcher.runHealthPartnerFastPath(
+                                age = age,
+                                sex = sex,
+                                conditions = condList,
+                                userInput = profileDesc,
                                 onProgress = { it.applyTo(progress) },
                             )
                             response = r

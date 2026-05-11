@@ -30,6 +30,7 @@ object SystemPrompts {
                 "When producing the final answer, return a single JSON object. Nothing before or after.\n" +
                 "- Final answers must be JSON only: no markdown, labels, prose, code fences, or trailing commentary outside the JSON object.\n" +
                 "- Final JSON key order must be: confidence, defer_to_professional, flags, citations, explanation.\n" +
+                "- Keep explanation concise: one or two short sentences, without repeating every flag.\n" +
                 "- Never repeat or narrate what you are about to do. Just do it.\n\n",
         )
         append("## How to respond\n")
