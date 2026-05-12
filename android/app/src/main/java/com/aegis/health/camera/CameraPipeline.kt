@@ -192,7 +192,8 @@ fun CameraPreviewWithCapture(
 
 @Composable
 private fun ScannerBrackets(modifier: Modifier = Modifier) {
-    val mintAccent = Color(0xFF7AF0C5)
+    // Direction A · Clinical Calm — coral brackets to match the system accent.
+    val mintAccent = com.aegis.health.ui.theme.AegisCoral
     androidx.compose.foundation.Canvas(modifier = modifier) {
         val w = size.width
         val h = size.height

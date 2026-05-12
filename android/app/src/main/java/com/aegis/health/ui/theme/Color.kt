@@ -5,49 +5,58 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 // ── Direction A · Clinical Calm — light tokens ──────────────────────────
+// Source: design handoff bundle 2026-05-12 (Aegis Health Revamp.html · `calm`
+// theme in data.jsx). White canvas, near-black text, terracotta accent, warm
+// clay secondary for ConsentReader. Severity palette is warm-aligned so it
+// reads on the cream/white surface.
 
-val AegisTeal = Color(0xFF0D7377)
-val AegisTealInk = Color(0xFF073A3C)
-val AegisTealSoft = Color(0xFFD6EBE9)
-val AegisSecondary = Color(0xFF1F5D92)
-val AegisSecondarySoft = Color(0xFFDEE9F5)
-val AegisCanvas = Color(0xFFF6FAF8)
-val AegisSurfaceLight = Color(0xFFFFFFFF)
-val AegisSurfaceAltLight = Color(0xFFEEF4F1)
-val AegisOnSurfaceLight = Color(0xFF0F1F1D)
-val AegisOnSurfaceMutedLight = Color(0xFF5E6F6A)
-val AegisHairlineLight = Color(0x140F1F1D) // 0.08 alpha black-teal
+val AegisCoral = Color(0xFFCC785C)          // accent · primary, CTAs
+val AegisCoralInk = Color(0xFFFFFFFF)        // on-accent text
+val AegisCoralSoft = Color(0xFFF7E8E1)       // soft chip / icon container
+val AegisChip = Color(0x1ACC785C)            // 0.10 alpha terracotta — privacy strip / on-device pill
+val AegisSecondary = Color(0xFF8A6A4A)       // ConsentReader accent — warm clay
+val AegisSecondarySoft = Color(0xFFF0E8DC)
+val AegisCanvas = Color(0xFFFFFFFF)          // app background — pure white
+val AegisSurfaceLight = Color(0xFFFFFFFF)    // cards, sheets
+val AegisSurfaceAltLight = Color(0xFFF4F4F2) // recessed surfaces, tags
+val AegisOnSurfaceLight = Color(0xFF0A0A0A)  // near-black text
+val AegisOnSurfaceMutedLight = Color(0xFF5A5A5A)
+val AegisHairlineLight = Color(0x1A0A0A0A)   // 0.10 alpha black
 
-val SevCrit = Color(0xFFA3262A)
-val SevCritBg = Color(0xFFFBE6E6)
-val SevMod = Color(0xFF9E6604)
-val SevModBg = Color(0xFFFBF0D6)
-val SevLow = Color(0xFF1F5D92)
-val SevLowBg = Color(0xFFDEE9F5)
-val SevInfo = Color(0xFF22683A)
-val SevInfoBg = Color(0xFFDDE9D8)
+val SevCrit = Color(0xFFB3503E)
+val SevCritBg = Color(0xFFF7E3DA)
+val SevMod = Color(0xFF8A5A13)
+val SevModBg = Color(0xFFF5E8C8)
+val SevLow = Color(0xFF3A5A82)
+val SevLowBg = Color(0xFFE2EAF2)
+val SevInfo = Color(0xFF3B6240)
+val SevInfoBg = Color(0xFFE2EBDA)
 
 // ── Direction A · Clinical Calm — dark tokens ───────────────────────────
+// Dark variant kept for system-dark fallback. Keeps the terracotta accent
+// at full chroma against an ink canvas — the design canvas only shipped a
+// light spec, so this is an internal extension.
 
-val AegisTealDarkAccent = Color(0xFF5FC7C2)
-val AegisTealDarkSoft = Color(0x245FC7C2) // 0.14 alpha
-val AegisSecondaryDark = Color(0xFF7EB1E0)
-val AegisSecondarySoftDark = Color(0x247EB1E0)
-val AegisCanvasDark = Color(0xFF0C1413)
-val AegisSurfaceDark = Color(0xFF141D1C)
-val AegisSurfaceAltDark = Color(0xFF1C2625)
-val AegisOnSurfaceDark = Color(0xFFE8EFED)
-val AegisOnSurfaceMutedDark = Color(0xFF8A9994)
-val AegisHairlineDark = Color(0x14E8EFED) // 0.08 alpha
+val AegisCoralDarkAccent = Color(0xFFE89A82)
+val AegisCoralDarkSoft = Color(0x24E89A82)   // 0.14 alpha
+val AegisChipDark = Color(0x33E89A82)
+val AegisSecondaryDark = Color(0xFFC9AC86)
+val AegisSecondarySoftDark = Color(0x24C9AC86)
+val AegisCanvasDark = Color(0xFF131110)
+val AegisSurfaceDark = Color(0xFF1C1A18)
+val AegisSurfaceAltDark = Color(0xFF26231F)
+val AegisOnSurfaceDark = Color(0xFFEDEAE4)
+val AegisOnSurfaceMutedDark = Color(0xFF9A938A)
+val AegisHairlineDark = Color(0x1FEDEAE4)    // 0.12 alpha
 
-val SevCritDark = Color(0xFFFF8585)
-val SevCritBgDark = Color(0x1FFF8585)
-val SevModDark = Color(0xFFF0BB6F)
-val SevModBgDark = Color(0x1FF0BB6F)
-val SevLowDark = Color(0xFF7EB1E0)
-val SevLowBgDark = Color(0x1F7EB1E0)
-val SevInfoDark = Color(0xFF7ED29A)
-val SevInfoBgDark = Color(0x1F7ED29A)
+val SevCritDark = Color(0xFFE89180)
+val SevCritBgDark = Color(0x1FE89180)
+val SevModDark = Color(0xFFE2B86A)
+val SevModBgDark = Color(0x1FE2B86A)
+val SevLowDark = Color(0xFF8FAFD3)
+val SevLowBgDark = Color(0x1F8FAFD3)
+val SevInfoDark = Color(0xFF9BC59E)
+val SevInfoBgDark = Color(0x1F9BC59E)
 
 // ── Extended palette container — surfaces every token to screens ────────
 
@@ -62,6 +71,7 @@ data class AegisColors(
     val accent: Color,
     val accentSoft: Color,
     val accentInk: Color,
+    val chip: Color,
     val secondary: Color,
     val secondarySoft: Color,
     val sevCritFg: Color,
@@ -82,9 +92,10 @@ val LightAegisColors = AegisColors(
     onSurface = AegisOnSurfaceLight,
     onSurfaceMuted = AegisOnSurfaceMutedLight,
     hairline = AegisHairlineLight,
-    accent = AegisTeal,
-    accentSoft = AegisTealSoft,
-    accentInk = Color.White,
+    accent = AegisCoral,
+    accentSoft = AegisCoralSoft,
+    accentInk = AegisCoralInk,
+    chip = AegisChip,
     secondary = AegisSecondary,
     secondarySoft = AegisSecondarySoft,
     sevCritFg = SevCrit,
@@ -105,9 +116,10 @@ val DarkAegisColors = AegisColors(
     onSurface = AegisOnSurfaceDark,
     onSurfaceMuted = AegisOnSurfaceMutedDark,
     hairline = AegisHairlineDark,
-    accent = AegisTealDarkAccent,
-    accentSoft = AegisTealDarkSoft,
+    accent = AegisCoralDarkAccent,
+    accentSoft = AegisCoralDarkSoft,
     accentInk = AegisCanvasDark,
+    chip = AegisChipDark,
     secondary = AegisSecondaryDark,
     secondarySoft = AegisSecondarySoftDark,
     sevCritFg = SevCritDark,
@@ -123,8 +135,14 @@ val DarkAegisColors = AegisColors(
 
 val LocalAegisColors = staticCompositionLocalOf { LightAegisColors }
 
-// ── Legacy aliases — kept so screens compile during the staged revamp ───
-// These are removed once all screens are migrated to LocalAegisColors.
+// ── Legacy aliases — kept so existing screens compile during the revamp ──
+// New code should reach for LocalAegisColors.current.* instead.
+@Deprecated("Use LocalAegisColors.current.accent", ReplaceWith("LocalAegisColors.current.accent"))
+val AegisTeal = AegisCoral
+@Deprecated("Use LocalAegisColors.current.accentInk", ReplaceWith("LocalAegisColors.current.accentInk"))
+val AegisTealInk = AegisCoralInk
+@Deprecated("Use LocalAegisColors.current.accentSoft", ReplaceWith("LocalAegisColors.current.accentSoft"))
+val AegisTealSoft = AegisCoralSoft
 @Deprecated("Use LocalAegisColors.current.secondary", ReplaceWith("LocalAegisColors.current.secondary"))
 val AegisBlue = AegisSecondary
 @Deprecated("Use LocalAegisColors.current.canvas", ReplaceWith("LocalAegisColors.current.canvas"))

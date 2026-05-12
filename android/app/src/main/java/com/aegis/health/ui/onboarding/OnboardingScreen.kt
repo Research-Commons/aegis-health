@@ -55,7 +55,11 @@ fun OnboardingScreen(
         )
         Text(
             "on your device.",
-            style = MaterialTheme.typography.displayLarge,
+            // Italic-serif accent line — matches the design's italicized
+            // closing phrase on the cream/white canvas.
+            style = MaterialTheme.typography.displayLarge.copy(
+                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+            ),
             color = colors.accent,
         )
 

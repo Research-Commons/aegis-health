@@ -306,7 +306,7 @@ private fun ReadingMeta(originalWords: Int, simplifiedWords: Int) {
         Box(
             modifier = Modifier
                 .background(
-                    color = if (colors.isDark) colors.accentSoft else androidx.compose.ui.graphics.Color(0x140D7377),
+                    color = if (colors.isDark) colors.accentSoft else colors.chip,
                     shape = RoundedCornerShape(99.dp),
                 )
                 .padding(horizontal = 10.dp, vertical = 5.dp),

@@ -105,7 +105,7 @@ fun Tag(
 fun OnDeviceChip(modifier: Modifier = Modifier) {
     val colors = LocalAegisColors.current
     val tint = colors.accent
-    val tintBg = if (colors.isDark) colors.accentSoft else Color(0x140D7377) // ~0.08 alpha teal
+    val tintBg = if (colors.isDark) colors.accentSoft else colors.chip
 
     Row(
         modifier = modifier
@@ -134,7 +134,7 @@ fun PillTag(
     leading: ImageVector? = null,
 ) {
     val colors = LocalAegisColors.current
-    val tintBg = if (colors.isDark) colors.accentSoft else Color(0x140D7377)
+    val tintBg = if (colors.isDark) colors.accentSoft else colors.chip
     Row(
         modifier = modifier
             .background(tintBg, RoundedCornerShape(99.dp))

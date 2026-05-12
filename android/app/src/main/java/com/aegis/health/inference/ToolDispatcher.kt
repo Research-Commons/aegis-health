@@ -11,6 +11,7 @@ import com.aegis.health.tools.CheckWarnings
 import com.aegis.health.tools.DecomposeProduct
 import com.aegis.health.tools.GetDrugInfo
 import com.aegis.health.tools.GetGuideline
+import com.aegis.health.tools.GetGuidelineResult
 import com.aegis.health.tools.LookupTerm
 import com.aegis.health.tools.NormalizeDrug
 import kotlinx.serialization.decodeFromString
@@ -365,33 +366,38 @@ object ToolDispatcher {
      * conditions are already validated by the UI, so the model does not need
      * to spend a first turn extracting get_guideline arguments.
      */
+    data class HealthPartnerResult(
+        val response: AegisResponse,
+        val guidelines: GetGuidelineResult,
+    )
+
     suspend fun runHealthPartnerFastPath(
         age: Int,
         sex: String,
         conditions: List<String>,
         userInput: String,
         onProgress: (ProgressEvent) -> Unit = {},
-    ): AegisResponse {
+    ): HealthPartnerResult {
         onProgress(ProgressEvent.Step("Pulling USPSTF guidelines"))
+        val guidelines = GetGuideline.getGuidelines(
+            age = age,
+            sex = sex,
+            conditions = conditions,
+            db = AegisApp.instance.database,
+        )
         val result = ToolResult(
             name = "get_guideline",
-            result = json.encodeToString(
-                GetGuideline.getGuidelines(
-                    age = age,
-                    sex = sex,
-                    conditions = conditions,
-                    db = AegisApp.instance.database,
-                ),
-            ),
+            result = json.encodeToString(guidelines),
         )
 
-        return runPrecomputedToolSynthesis(
+        val response = runPrecomputedToolSynthesis(
             mode = "healthpartner",
             userInput = "Get preventive care recommendations for this patient: $userInput",
             nativeToolCall = formatGetGuidelineCall(age, sex, conditions),
             toolResult = result,
             onProgress = onProgress,
         )
+        return HealthPartnerResult(response = response, guidelines = guidelines)
     }
 
     private data class DrugSafeFastPathArgs(

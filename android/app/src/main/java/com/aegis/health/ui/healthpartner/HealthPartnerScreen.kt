@@ -150,18 +150,10 @@ fun HealthPartnerScreen(
                                 userInput = profileDesc,
                                 onProgress = { it.applyTo(progress) },
                             )
-                            response = r
-                            recommendations = r.flags.map { f ->
-                                GuidelineRecommendation(
-                                    title = f.description.substringBefore(":").take(80),
-                                    grade = if (f.severity <= 2) "A" else "B",
-                                    description = f.description,
-                                    population = "Age $age, $sex",
-                                    citation = f.citation,
-                                )
-                            }
+                            response = r.response
+                            recommendations = r.guidelines.recommendations
                             gaps = buildList {
-                                if (condList.isEmpty()) add("No conditions provided — condition-specific screenings may be missing.")
+                                addAll(r.guidelines.gaps)
                                 if (familyHistory.isBlank()) add("No family history provided — genetic risk factors not assessed.")
                             }
                             withContext(Dispatchers.IO) {
@@ -172,7 +164,7 @@ fun HealthPartnerScreen(
                                         sub = "${recommendations.size} rec${if (recommendations.size == 1) "" else "s"}",
                                         severityKey = HistoryEntity.SEV_INFO,
                                         createdAt = System.currentTimeMillis(),
-                                        payloadJson = Json.encodeToString(r),
+                                        payloadJson = Json.encodeToString(r.response),
                                     ),
                                 )
                             }

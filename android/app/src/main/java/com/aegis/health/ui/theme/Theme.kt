@@ -9,12 +9,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 
 // ── Material3 schemes — derived from the AegisColors token sheet ────────
+// Direction A · Clinical Calm: terracotta accent on white canvas.
 
 private val LightColorScheme = lightColorScheme(
-    primary = AegisTeal,
-    onPrimary = Color.White,
-    primaryContainer = AegisTealSoft,
-    onPrimaryContainer = AegisTealInk,
+    primary = AegisCoral,
+    onPrimary = AegisCoralInk,
+    primaryContainer = AegisCoralSoft,
+    onPrimaryContainer = AegisCoral,
     secondary = AegisSecondary,
     onSecondary = Color.White,
     secondaryContainer = AegisSecondarySoft,
@@ -36,10 +37,10 @@ private val LightColorScheme = lightColorScheme(
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary = AegisTealDarkAccent,
+    primary = AegisCoralDarkAccent,
     onPrimary = AegisCanvasDark,
-    primaryContainer = AegisTealDarkSoft,
-    onPrimaryContainer = AegisTealDarkAccent,
+    primaryContainer = AegisCoralDarkSoft,
+    onPrimaryContainer = AegisCoralDarkAccent,
     secondary = AegisSecondaryDark,
     onSecondary = AegisCanvasDark,
     secondaryContainer = AegisSecondarySoftDark,

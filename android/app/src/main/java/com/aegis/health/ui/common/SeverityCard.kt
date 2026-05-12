@@ -130,14 +130,14 @@ fun SeverityCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp)
-                        .background(if (colors.isDark) colors.hairline else Color(0x140F1F1D)),
+                        .background(colors.hairline),
                 )
                 Spacer(Modifier.height(10.dp))
                 Text(
                     citation,
                     style = MaterialTheme.typography.bodySmall,
                     fontStyle = FontStyle.Italic,
-                    color = if (colors.isDark) colors.onSurfaceMuted else Color(0xFF5F5A52),
+                    color = colors.onSurfaceMuted,
                 )
             }
         }

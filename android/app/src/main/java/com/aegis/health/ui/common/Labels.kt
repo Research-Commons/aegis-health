@@ -47,7 +47,7 @@ fun SummaryPill(
         text = text,
         modifier = modifier
             .background(
-                color = if (colors.isDark) colors.accentSoft else Color(0x140D7377),
+                color = if (colors.isDark) colors.accentSoft else colors.chip,
                 shape = RoundedCornerShape(6.dp),
             )
             .padding(horizontal = 9.dp, vertical = 4.dp),
@@ -91,9 +91,9 @@ fun ConfidenceDot(
 }
 
 /**
- * GradePill — small green/teal label used in HealthPartner checklist items.
+ * GradePill — small label used in HealthPartner checklist items.
  *   A → info green
- *   B → accent teal
+ *   B → accent (terracotta)
  */
 @Composable
 fun GradePill(

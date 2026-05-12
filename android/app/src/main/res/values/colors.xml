@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#0F766E</color>
+    <!-- Direction A · Clinical Calm coral. Launcher PNGs in mipmap-* still
+         carry the legacy teal mark and need to be regenerated separately. -->
+    <color name="ic_launcher_background">#CC785C</color>
 </resources>

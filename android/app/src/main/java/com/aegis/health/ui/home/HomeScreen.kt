@@ -86,14 +86,18 @@ fun HomeScreen(
         Spacer(Modifier.height(22.dp))
 
         // ── Greeting ──
+        // Serif headline pair: regular weight intro line, italic accent
+        // close — mirrors the design's "Good afternoon, *Sara.*" moment.
         Text(
-            greetingForNow() + ".",
+            greetingForNow() + ",",
             style = MaterialTheme.typography.headlineLarge,
             color = colors.onSurface,
         )
         Text(
             "What can I check for you?",
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.headlineLarge.copy(
+                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+            ),
             color = colors.accent,
         )
 
