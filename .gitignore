@@ -110,3 +110,9 @@ remaining_steps.md
 #Recordings
 recordings/
 eval/output/
+
+# GSD planning artifacts (codebase maps, plans — local only)
+.planning/
+
+# Eval kit build artifact (reproducible via `python build_eval_kit.py`)
+aegis_eval_kit.zip
