@@ -1,0 +1,140 @@
+{
+  "citations": [
+    {
+      "label": "MedlinePlus: Cholesterol",
+      "url": "https://medlineplus.gov/cholesterol.html"
+    },
+    {
+      "label": "MedlinePlus: Cholesterol Levels",
+      "url": "https://medlineplus.gov/lab-tests/cholesterol-levels/"
+    },
+    {
+      "label": "MedlinePlus: Cholesterol Levels",
+      "url": "https://medlineplus.gov/lab-tests/cholesterol-levels/"
+    },
+    {
+      "label": "MedlinePlus: Cholesterol Levels",
+      "url": "https://medlineplus.gov/lab-tests/cholesterol-levels/"
+    },
+    {
+      "label": "MedlinePlus: HDL Cholesterol",
+      "url": "https://medlineplus.gov/hdlthegoodcholesterol.html"
+    },
+    {
+      "label": "MedlinePlus: LDL Cholesterol",
+      "url": "https://medlineplus.gov/ldlthebadcholesterol.html"
+    },
+    {
+      "label": "MedlinePlus: Triglycerides Test",
+      "url": "https://medlineplus.gov/lab-tests/triglycerides-test/"
+    },
+    {
+      "label": "MedlinePlus: VLDL Cholesterol Test",
+      "url": "https://medlineplus.gov/lab-tests/vldl-cholesterol/"
+    }
+  ],
+  "has_outside_range": true,
+  "has_unknown": false,
+  "profile_used": {
+    "age": 40,
+    "sex": "male"
+  },
+  "rows": [
+    {
+      "canonical_name": "total cholesterol",
+      "definition": "Cholesterol is a waxy, fat-like substance in your blood. A total cholesterol test measures the overall amount of cholesterol in your blood, including both LDL and HDL cholesterol.",
+      "definition_citation": "https://medlineplus.gov/cholesterol.html",
+      "raw_name": "Total Cholesterol",
+      "ref_high": 200,
+      "ref_low": null,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "mg/dL",
+      "value": 122
+    },
+    {
+      "canonical_name": "triglycerides",
+      "definition": "Triglycerides are a type of fat found in your blood. Your body uses them for energy. High levels can raise your risk of heart disease.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/triglycerides-test/",
+      "raw_name": "Triglyceride",
+      "ref_high": 150,
+      "ref_low": null,
+      "ref_source": "report",
+      "status": "OUTSIDE_RANGE",
+      "units": "mg/dL",
+      "value": 184
+    },
+    {
+      "canonical_name": "HDL cholesterol",
+      "definition": "HDL stands for high-density lipoprotein. HDL is the \"good\" cholesterol because it helps remove other forms of cholesterol from your blood.",
+      "definition_citation": "https://medlineplus.gov/hdlthegoodcholesterol.html",
+      "raw_name": "HDL Cholesterol",
+      "ref_high": null,
+      "ref_low": 45,
+      "ref_source": "report",
+      "status": "OUTSIDE_RANGE",
+      "units": "mg/dL",
+      "value": 37
+    },
+    {
+      "canonical_name": "VLDL cholesterol",
+      "definition": "VLDL stands for very-low-density lipoprotein. VLDL contains the highest amount of triglycerides among the lipoproteins and is considered a type of \"bad\" cholesterol.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/vldl-cholesterol/",
+      "raw_name": "VLDL Cholesterol",
+      "ref_high": 40,
+      "ref_low": 5,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "mg/dL",
+      "value": 37
+    },
+    {
+      "canonical_name": "LDL cholesterol",
+      "definition": "LDL stands for low-density lipoprotein. LDL is sometimes called the \"bad\" cholesterol because a high LDL level can lead to plaque buildup in your arteries.",
+      "definition_citation": "https://medlineplus.gov/ldlthebadcholesterol.html",
+      "raw_name": "LDL Cholesterol",
+      "ref_high": 100,
+      "ref_low": null,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "mg/dL",
+      "value": 48
+    },
+    {
+      "canonical_name": "non-HDL cholesterol",
+      "definition": "Non-HDL cholesterol is your total cholesterol minus your HDL cholesterol. It includes LDL and other types of \"bad\" cholesterol.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/cholesterol-levels/",
+      "raw_name": "Non-HDL Cholesterol",
+      "ref_high": 130,
+      "ref_low": null,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "mg/dL",
+      "value": 85
+    },
+    {
+      "canonical_name": "LDL/HDL ratio",
+      "definition": "The LDL-to-HDL ratio compares \"bad\" LDL cholesterol to \"good\" HDL cholesterol. It is one of several ways to look at heart-disease risk.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/cholesterol-levels/",
+      "raw_name": "LDL / HDL Ratio",
+      "ref_high": 3.5,
+      "ref_low": 1.5,
+      "ref_source": "report",
+      "status": "OUTSIDE_RANGE",
+      "units": "Ratio",
+      "value": 1.3
+    },
+    {
+      "canonical_name": "cholesterol ratio",
+      "definition": "The cholesterol ratio compares total cholesterol to HDL cholesterol. Doctors sometimes use it to estimate heart-disease risk, though most clinical guidelines now rely on the individual cholesterol values directly.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/cholesterol-levels/",
+      "raw_name": "TC / HDL Ratio",
+      "ref_high": 5,
+      "ref_low": 3,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "Ratio",
+      "value": 3.3
+    }
+  ]
+}

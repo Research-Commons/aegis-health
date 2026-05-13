@@ -1,0 +1,312 @@
+{
+  "citations": [
+    {
+      "label": "MedlinePlus: ALP Blood Test",
+      "url": "https://medlineplus.gov/lab-tests/alp-alkaline-phosphatase-blood-test/"
+    },
+    {
+      "label": "MedlinePlus: ALT Blood Test",
+      "url": "https://medlineplus.gov/lab-tests/alt-blood-test/"
+    },
+    {
+      "label": "MedlinePlus: AST Test",
+      "url": "https://medlineplus.gov/lab-tests/ast-test/"
+    },
+    {
+      "label": "MedlinePlus: Albumin Blood Test",
+      "url": "https://medlineplus.gov/lab-tests/albumin-blood-test/"
+    },
+    {
+      "label": "MedlinePlus: BUN Test",
+      "url": "https://medlineplus.gov/lab-tests/blood-urea-nitrogen-bun-test/"
+    },
+    {
+      "label": "MedlinePlus: BUN Test",
+      "url": "https://medlineplus.gov/lab-tests/blood-urea-nitrogen-bun-test/"
+    },
+    {
+      "label": "MedlinePlus: Bilirubin Blood Test",
+      "url": "https://medlineplus.gov/lab-tests/bilirubin-blood-test/"
+    },
+    {
+      "label": "MedlinePlus: Blood Glucose",
+      "url": "https://medlineplus.gov/bloodglucose.html"
+    },
+    {
+      "label": "MedlinePlus: CO2 Blood Test",
+      "url": "https://medlineplus.gov/lab-tests/co2-blood-test/"
+    },
+    {
+      "label": "MedlinePlus: Calcium",
+      "url": "https://medlineplus.gov/calcium.html"
+    },
+    {
+      "label": "MedlinePlus: Chloride Blood Test",
+      "url": "https://medlineplus.gov/lab-tests/chloride-blood-test/"
+    },
+    {
+      "label": "MedlinePlus: Creatinine Test",
+      "url": "https://medlineplus.gov/lab-tests/creatinine-test/"
+    },
+    {
+      "label": "MedlinePlus: GFR Test",
+      "url": "https://medlineplus.gov/lab-tests/glomerular-filtration-rate-gfr-test/"
+    },
+    {
+      "label": "MedlinePlus: Potassium Blood Test",
+      "url": "https://medlineplus.gov/lab-tests/potassium-blood-test/"
+    },
+    {
+      "label": "MedlinePlus: Sodium Blood Test",
+      "url": "https://medlineplus.gov/lab-tests/sodium-blood-test/"
+    },
+    {
+      "label": "MedlinePlus: Total Protein and A/G Ratio",
+      "url": "https://medlineplus.gov/lab-tests/total-protein-and-albumin-globulin-ag-ratio/"
+    },
+    {
+      "label": "MedlinePlus: Total Protein and A/G Ratio",
+      "url": "https://medlineplus.gov/lab-tests/total-protein-and-albumin-globulin-ag-ratio/"
+    },
+    {
+      "label": "MedlinePlus: Total Protein and A/G Ratio",
+      "url": "https://medlineplus.gov/lab-tests/total-protein-and-albumin-globulin-ag-ratio/"
+    }
+  ],
+  "has_outside_range": true,
+  "has_unknown": false,
+  "profile_used": {
+    "age": null,
+    "sex": null
+  },
+  "rows": [
+    {
+      "canonical_name": "glucose",
+      "definition": "A blood glucose test measures the amount of glucose (sugar) in your blood. Glucose is your body's main source of energy.",
+      "definition_citation": "https://medlineplus.gov/bloodglucose.html",
+      "raw_name": "GLUCOSE",
+      "ref_high": 99,
+      "ref_low": 65,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "mg/dL",
+      "value": 99
+    },
+    {
+      "canonical_name": "blood urea nitrogen",
+      "definition": "A BUN test measures the amount of urea nitrogen in your blood. Urea nitrogen is a waste product made when your body breaks down protein.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/blood-urea-nitrogen-bun-test/",
+      "raw_name": "UREA NITROGEN (BUN)",
+      "ref_high": 25,
+      "ref_low": 7,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "mg/dL",
+      "value": 20
+    },
+    {
+      "canonical_name": "creatinine",
+      "definition": "Creatinine is a waste product made when your muscles use energy. A blood creatinine test helps show how well your kidneys are working.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/creatinine-test/",
+      "raw_name": "CREATININE",
+      "ref_high": 1.25,
+      "ref_low": 0.7,
+      "ref_source": "report",
+      "status": "OUTSIDE_RANGE",
+      "units": "mg/dL",
+      "value": 1.44
+    },
+    {
+      "canonical_name": "eGFR",
+      "definition": "eGFR (estimated glomerular filtration rate) estimates how well your kidneys filter waste from your blood. A lower eGFR can be a sign of kidney disease.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/glomerular-filtration-rate-gfr-test/",
+      "raw_name": "eGFR NON-AFR. AMERICAN",
+      "ref_high": null,
+      "ref_low": 60,
+      "ref_source": "report",
+      "status": "OUTSIDE_RANGE",
+      "units": "mL/min/1.73m2",
+      "value": 51
+    },
+    {
+      "canonical_name": "eGFR",
+      "definition": "eGFR (estimated glomerular filtration rate) estimates how well your kidneys filter waste from your blood. A lower eGFR can be a sign of kidney disease.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/glomerular-filtration-rate-gfr-test/",
+      "raw_name": "eGFR AFRICAN AMERICAN",
+      "ref_high": null,
+      "ref_low": 60,
+      "ref_source": "report",
+      "status": "OUTSIDE_RANGE",
+      "units": "mL/min/1.73m2",
+      "value": 59
+    },
+    {
+      "canonical_name": "BUN/creatinine ratio",
+      "definition": "The BUN/creatinine ratio compares the level of urea nitrogen to creatinine in your blood. It helps doctors understand whether kidney problems may be related to dehydration or another cause.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/blood-urea-nitrogen-bun-test/",
+      "raw_name": "BUN/CREATININE RATIO",
+      "ref_high": 22,
+      "ref_low": 6,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": null,
+      "value": 14
+    },
+    {
+      "canonical_name": "sodium",
+      "definition": "Sodium is an electrolyte that helps balance fluid in your body. A blood sodium test can help diagnose conditions affecting the kidneys, adrenal glands, or hydration.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/sodium-blood-test/",
+      "raw_name": "SODIUM",
+      "ref_high": 146,
+      "ref_low": 135,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "mmol/L",
+      "value": 142
+    },
+    {
+      "canonical_name": "potassium",
+      "definition": "Potassium is an electrolyte that helps your nerves and muscles work properly. A blood potassium test can help diagnose problems with the kidneys, heart, or other conditions.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/potassium-blood-test/",
+      "raw_name": "POTASSIUM",
+      "ref_high": 5.3,
+      "ref_low": 3.5,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "mmol/L",
+      "value": 4.2
+    },
+    {
+      "canonical_name": "chloride",
+      "definition": "Chloride is an electrolyte that works with sodium and potassium to keep your body's fluids and acid-base balance in check.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/chloride-blood-test/",
+      "raw_name": "CHLORIDE",
+      "ref_high": 110,
+      "ref_low": 98,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "mmol/L",
+      "value": 104
+    },
+    {
+      "canonical_name": "carbon dioxide",
+      "definition": "A CO2 (carbon dioxide) blood test measures the amount of carbon dioxide in the liquid part of your blood. It helps doctors check the acid-base balance and kidney/lung function.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/co2-blood-test/",
+      "raw_name": "CARBON DIOXIDE",
+      "ref_high": 30,
+      "ref_low": 19,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "mmol/L",
+      "value": 29
+    },
+    {
+      "canonical_name": "calcium",
+      "definition": "Calcium is a mineral your body needs to build strong bones and teeth. A blood calcium test measures the calcium level in your blood and can help find problems with the bones, kidneys, or other conditions.",
+      "definition_citation": "https://medlineplus.gov/calcium.html",
+      "raw_name": "CALCIUM",
+      "ref_high": 10.3,
+      "ref_low": 8.6,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "mg/dL",
+      "value": 9.5
+    },
+    {
+      "canonical_name": "total protein",
+      "definition": "A total protein test measures the total amount of two types of proteins — albumin and globulin — in the liquid part of your blood. It can help diagnose problems with the liver or kidneys.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/total-protein-and-albumin-globulin-ag-ratio/",
+      "raw_name": "PROTEIN, TOTAL",
+      "ref_high": 8.1,
+      "ref_low": 6.1,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "g/dL",
+      "value": 6.6
+    },
+    {
+      "canonical_name": "albumin",
+      "definition": "Albumin is a protein made by the liver. A blood albumin test can help diagnose problems with the liver, kidneys, or nutrition.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/albumin-blood-test/",
+      "raw_name": "ALBUMIN",
+      "ref_high": 5.1,
+      "ref_low": 3.6,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "g/dL",
+      "value": 4.3
+    },
+    {
+      "canonical_name": "globulin",
+      "definition": "Globulins are a group of proteins in the blood made by the liver and immune system. A globulin test is often part of a total-protein panel and can help check the immune system or liver.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/total-protein-and-albumin-globulin-ag-ratio/",
+      "raw_name": "GLOBULIN",
+      "ref_high": 3.7,
+      "ref_low": 1.9,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "g/dL",
+      "value": 2.3
+    },
+    {
+      "canonical_name": "albumin/globulin ratio",
+      "definition": "The albumin/globulin (A/G) ratio compares the amounts of albumin and globulin in your blood. Doctors use it together with the total-protein test to look for liver, kidney, or immune-system problems.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/total-protein-and-albumin-globulin-ag-ratio/",
+      "raw_name": "ALBUMIN/GLOBULIN RATIO",
+      "ref_high": 2.5,
+      "ref_low": 1.0,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": null,
+      "value": 1.9
+    },
+    {
+      "canonical_name": "bilirubin",
+      "definition": "Bilirubin is a yellowish substance made when the body breaks down old red blood cells. High levels can cause jaundice and may signal a problem with the liver, gallbladder, or red blood cells.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/bilirubin-blood-test/",
+      "raw_name": "BILIRUBIN, TOTAL",
+      "ref_high": 1.2,
+      "ref_low": 0.2,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "mg/dL",
+      "value": 0.5
+    },
+    {
+      "canonical_name": "alkaline phosphatase",
+      "definition": "Alkaline phosphatase (ALP) is an enzyme found mostly in the liver and bones. A blood ALP test can help diagnose liver disease or bone problems.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/alp-alkaline-phosphatase-blood-test/",
+      "raw_name": "ALKALINE PHOSPHATASE",
+      "ref_high": 115,
+      "ref_low": 40,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "U/L",
+      "value": 66
+    },
+    {
+      "canonical_name": "AST",
+      "definition": "AST (aspartate aminotransferase) is an enzyme found in the liver, heart, and muscles. A blood AST test helps check for liver damage or disease.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/ast-test/",
+      "raw_name": "AST",
+      "ref_high": 35,
+      "ref_low": 10,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "U/L",
+      "value": 14
+    },
+    {
+      "canonical_name": "ALT",
+      "definition": "ALT (alanine aminotransferase) is an enzyme found mostly in the liver. A blood ALT test helps check for liver injury or disease.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/alt-blood-test/",
+      "raw_name": "ALT",
+      "ref_high": 46,
+      "ref_low": 9,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "U/L",
+      "value": 18
+    }
+  ]
+}

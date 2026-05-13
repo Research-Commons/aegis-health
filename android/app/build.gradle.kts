@@ -90,6 +90,11 @@ dependencies {
     // ML Kit — text recognition (offline, bundled model)
     implementation("com.google.mlkit:text-recognition:16.0.0")
 
+    // PdfBox-Android — Apache 2.0 pure-Java port of PDFBox 2.0.27. No INTERNET
+    // permission declared (verified Plan 01-08). PDFBoxResourceLoader.init(ctx)
+    // may be required at app start; spike (Plan 01-08) verifies empirically.
+    implementation("com.tom-roush:pdfbox-android:2.0.27.0")
+
     // Stock Android SQLite is used directly — no SQLCipher wrapper.
     // The KB contains only public-domain FDA/NLM data; encryption adds
     // no real security since the passphrase would have to ship in the APK.
