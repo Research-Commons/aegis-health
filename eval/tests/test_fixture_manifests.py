@@ -126,3 +126,71 @@ def test_unknown_status_implies_no_range(vendor):
             assert row["ref_source"] == "none" or (row["ref_low"] is None and row["ref_high"] is None), (
                 f"{vendor} row[{i}] ({row['canonical_name']}): status='unknown' but has a printed range"
             )
+
+
+# ---------------------------------------------------------------------------
+# Phase 2 D-10 / D-12 schema-enforcement tests.
+#
+# These tests are the regression gate for the precondition wave: they will FAIL
+# until Plan 02-02 updates the 5 GT JSONs to carry the new `report_status` and
+# per-row `defer_reason` fields. That is by design — they pin the wire format
+# before Python parser changes or Kotlin work begin.
+# ---------------------------------------------------------------------------
+
+_D12_VOCABULARY = frozenset([
+    "missing_units",
+    "mismatched_units",
+    "non_numeric_result",
+    "range_unavailable",
+    "kb_no_pediatric",
+    "kb_no_pregnancy",
+    "auto_defer:tumor_marker",
+    "auto_defer:genetic",
+    "auto_defer:pathology",
+])
+
+
+@pytest.mark.parametrize("vendor", EXPECTED_VENDORS)
+def test_evaluated_json_has_report_status_ok(vendor):
+    """Every fixture in the current corpus is a successful parse; non-OK paths land in JVM unit tests with synthetic inputs (Phase 2 D-10)."""
+    _require_corpus()
+    jsons = list((FIXTURE_ROOT / vendor).glob("*-evaluated.json"))
+    assert len(jsons) == 1, f"{vendor} must have exactly 1 *-evaluated.json"
+    data = json.loads(jsons[0].read_text(encoding="utf-8"))
+    assert "report_status" in data, f"{vendor} GT must carry report_status (D-10)"
+    assert data["report_status"]["code"] == "OK", (
+        f"{vendor} is a successful-parse fixture; expected report_status.code='OK', "
+        f"got {data['report_status']['code']!r}"
+    )
+
+
+@pytest.mark.parametrize("vendor", EXPECTED_VENDORS)
+def test_evaluated_json_unknown_rows_have_defer_reason(vendor):
+    """D-12: every row with status='unknown' must carry a non-null defer_reason from the canonical short-code set."""
+    _require_corpus()
+    jsons = list((FIXTURE_ROOT / vendor).glob("*-evaluated.json"))
+    data = json.loads(jsons[0].read_text(encoding="utf-8"))
+    for i, row in enumerate(data.get("rows", [])):
+        if row.get("status") == "unknown":
+            reason = row.get("defer_reason")
+            assert reason is not None, (
+                f"{vendor} row[{i}] canonical={row.get('canonical_name')!r} "
+                f"has status='unknown' but defer_reason is null"
+            )
+            assert reason in _D12_VOCABULARY, (
+                f"{vendor} row[{i}] defer_reason={reason!r} is not in D-12 vocabulary {sorted(_D12_VOCABULARY)}"
+            )
+        else:
+            # status IN_RANGE | BORDERLINE | OUTSIDE_RANGE must NOT have a defer_reason
+            assert row.get("defer_reason") is None, (
+                f"{vendor} row[{i}] status={row['status']!r} must have defer_reason=null, "
+                f"got {row.get('defer_reason')!r}"
+            )
+
+
+def test_d12_defer_reason_vocabulary_is_exactly_9_entries():
+    """Regression guard: if a new defer_reason is added, update EXTRACTION-SPEC.md AND this list."""
+    assert len(_D12_VOCABULARY) == 9, (
+        f"D-12 vocabulary changed (size={len(_D12_VOCABULARY)}); "
+        f"update EXTRACTION-SPEC.md and the schema description in lockstep."
+    )
