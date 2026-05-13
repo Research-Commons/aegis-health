@@ -19,6 +19,10 @@ kb = [
 ]
 tools = [
     "pydantic>=2.0",
+    # pdfplumber drives tools/parsers/lab_report_parser.py (Phase 1 Plan 10
+    # reference parser). Apache 2.0, pure-Python; ships its own pdfminer.six
+    # fork — no system deps required.
+    "pdfplumber>=0.10,<1.0",
 ]
 datagen = [
     "litellm>=1.40",
@@ -66,6 +70,9 @@ demo = [
 dev = [
     "pytest>=8.0",
     "ruff>=0.3",
+    # reportlab synthesizes hermetic 1-page PDFs for
+    # tools/tests/test_lab_report_parser.py unit tests (Phase 1 Plan 10).
+    "reportlab>=4.0,<5.0",
 ]
 
 [build-system]
