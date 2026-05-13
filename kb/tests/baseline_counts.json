@@ -1,5 +1,5 @@
 {
-  "_description": "Pre-expansion row-count snapshot. Phase 1 (2026-05-13) added 5 lab-range tables (lab_reference_ranges, clinical_thresholds, critical_values, reference_ranges_pediatric, reference_ranges_pregnancy) via curated_lab_ranges source.",
+  "_description": "Pre-expansion row-count snapshot. Phase 1 (2026-05-13) added 5 lab-range tables (lab_reference_ranges, clinical_thresholds, critical_values, reference_ranges_pediatric, reference_ranges_pregnancy) via curated_lab_ranges source. Updated 2026-05-13 for Phase 2 D-11 auto_defer_tests table.",
   "_source_kb": "kb/output/aegis_kb.sqlite.bak",
   "_drug_ingredients_note": "Baseline was 185; revised to 180 to tolerate DailyMed variance from rxnorm rxcui churn between rebuilds. drug_ingredients counts depend on which rxcuis are in rxnorm_lookup, not strictly increasing.",
   "row_counts": {
@@ -15,7 +15,8 @@
     "clinical_thresholds": 12,
     "critical_values": 10,
     "reference_ranges_pediatric": 6,
-    "reference_ranges_pregnancy": 6
+    "reference_ranges_pregnancy": 6,
+    "auto_defer_tests": 10
   },
   "sub_breakdowns": {
     "warnings_by_type": {

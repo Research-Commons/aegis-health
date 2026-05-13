@@ -17,7 +17,7 @@ from pathlib import Path
 
 from kb.sources import (
     rxnorm, openfda, dailymed, nih_dsld, medlineplus, uspstf,
-    curated_lab_ranges,
+    curated_lab_ranges, curated_auto_defer,
     curated_ddi, lactmed, ods_supplements, geriatric_pim, rxclass, acip,
     food_interactions, pharmacogenomics,
 )
@@ -46,6 +46,7 @@ SOURCES: list[tuple[str, object]] = [
     ("food_interactions", food_interactions),
     ("pharmacogenomics",  pharmacogenomics),
     ("curated_lab_ranges", curated_lab_ranges),
+    ("curated_auto_defer", curated_auto_defer),  # Phase 2 D-11
     ("curated_ddi", curated_ddi),
 ]
 
