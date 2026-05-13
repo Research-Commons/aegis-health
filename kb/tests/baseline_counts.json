@@ -1,5 +1,5 @@
 {
-  "_description": "Pre-expansion row-count snapshot. Every expanded KB must meet or exceed these counts. Captured 2026-04-23 before Tier 1 KB expansion (USPSTF fix, LactMed, Beers-derived PIMs, ODS supplements, openFDA drug breadth+depth).",
+  "_description": "Pre-expansion row-count snapshot. Phase 1 (2026-05-13) added 5 lab-range tables (lab_reference_ranges, clinical_thresholds, critical_values, reference_ranges_pediatric, reference_ranges_pregnancy) via curated_lab_ranges source.",
   "_source_kb": "kb/output/aegis_kb.sqlite.bak",
   "_drug_ingredients_note": "Baseline was 185; revised to 180 to tolerate DailyMed variance from rxnorm rxcui churn between rebuilds. drug_ingredients counts depend on which rxcuis are in rxnorm_lookup, not strictly increasing.",
   "row_counts": {
@@ -10,7 +10,12 @@
     "warnings": 1756,
     "supplements": 35,
     "terms": 1175,
-    "guidelines": 48
+    "guidelines": 48,
+    "lab_reference_ranges": 30,
+    "clinical_thresholds": 12,
+    "critical_values": 10,
+    "reference_ranges_pediatric": 6,
+    "reference_ranges_pregnancy": 6
   },
   "sub_breakdowns": {
     "warnings_by_type": {
