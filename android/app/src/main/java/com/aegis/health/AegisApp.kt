@@ -6,6 +6,7 @@ import com.aegis.health.db.KBDatabase
 import com.aegis.health.db.history.HistoryDatabase
 import com.aegis.health.inference.EngineRouter
 import com.aegis.health.ui.profile.ProfileStore
+import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -40,6 +41,13 @@ class AegisApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // Phase 2 ReportReader: pdfbox-android resource loader must be initialized
+        // ONCE per process before any PDDocument.load() call. LM-1 (Phase 1 commit
+        // e099aaf): androidTest @Before separately initializes for the test process;
+        // production init lives here. Runs before any other startup work so it is
+        // ready for both the eager KB/engine path below and any later PDF picker.
+        PDFBoxResourceLoader.init(applicationContext)
+
         instance = this
 
         database = KBDatabase(this)
