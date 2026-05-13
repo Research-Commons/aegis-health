@@ -149,3 +149,81 @@ CREATE TABLE IF NOT EXISTS class_interactions (
 );
 CREATE INDEX IF NOT EXISTS idx_class_interactions_c1 ON class_interactions(class_id_1);
 CREATE INDEX IF NOT EXISTS idx_class_interactions_c2 ON class_interactions(class_id_2);
+
+-- ---------------------------------------------------------------------------
+-- Phase 1 — ReportReader: lab reference ranges (adult-default + per-population)
+-- ---------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS lab_reference_ranges (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    test_name   TEXT NOT NULL,
+    ref_low     REAL,
+    ref_high    REAL,
+    units       TEXT NOT NULL,
+    population  TEXT NOT NULL DEFAULT 'adult',
+    citation    TEXT NOT NULL,
+    source      TEXT NOT NULL DEFAULT 'curated_labs'
+);
+CREATE INDEX IF NOT EXISTS idx_lab_ref_name ON lab_reference_ranges(test_name COLLATE NOCASE);
+CREATE INDEX IF NOT EXISTS idx_lab_ref_pop  ON lab_reference_ranges(population);
+
+-- Clinical decision thresholds (A1C 5.7/6.5, fasting glucose 100/126, LDL
+-- 100/130/160/190, eGFR 60/45/30/15, TSH 4.0/10.0, etc).
+-- threshold_tier values are free-form short codes (e.g., 'prediabetes', 'diabetes',
+-- 'borderline_high', 'high', 'very_high', 'stage_2', 'stage_3a').
+CREATE TABLE IF NOT EXISTS clinical_thresholds (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    test_name       TEXT NOT NULL,
+    threshold_tier  TEXT NOT NULL,
+    low_cutoff      REAL,
+    high_cutoff     REAL,
+    units           TEXT NOT NULL,
+    citation        TEXT NOT NULL,
+    source          TEXT NOT NULL DEFAULT 'curated_thresholds'
+);
+CREATE INDEX IF NOT EXISTS idx_clin_thr_name ON clinical_thresholds(test_name COLLATE NOCASE);
+CREATE INDEX IF NOT EXISTS idx_clin_thr_tier ON clinical_thresholds(threshold_tier);
+
+-- CLIA / vendor "panic" values used to flag URGENT-tier rows in RangeEvaluator.
+-- direction values: 'low' (value <= cutoff) or 'high' (value >= cutoff).
+CREATE TABLE IF NOT EXISTS critical_values (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    test_name       TEXT NOT NULL,
+    direction       TEXT NOT NULL CHECK (direction IN ('low', 'high')),
+    cutoff          REAL NOT NULL,
+    units           TEXT NOT NULL,
+    citation        TEXT NOT NULL,
+    source          TEXT NOT NULL DEFAULT 'curated_critical'
+);
+CREATE INDEX IF NOT EXISTS idx_crit_val_name ON critical_values(test_name COLLATE NOCASE);
+
+-- Pediatric reference ranges. age_low/age_high are inclusive year bands
+-- (NULL = unbounded); sex is 'all' | 'male' | 'female'.
+CREATE TABLE IF NOT EXISTS reference_ranges_pediatric (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    test_name   TEXT NOT NULL,
+    age_low     INTEGER,
+    age_high    INTEGER,
+    sex         TEXT NOT NULL DEFAULT 'all',
+    ref_low     REAL,
+    ref_high    REAL,
+    units       TEXT NOT NULL,
+    citation    TEXT NOT NULL,
+    source      TEXT NOT NULL DEFAULT 'curated_peds'
+);
+CREATE INDEX IF NOT EXISTS idx_peds_ref_name ON reference_ranges_pediatric(test_name COLLATE NOCASE);
+CREATE INDEX IF NOT EXISTS idx_peds_ref_age  ON reference_ranges_pediatric(age_low, age_high);
+
+-- Pregnancy reference ranges. trimester values: 1, 2, 3, or NULL ('all').
+CREATE TABLE IF NOT EXISTS reference_ranges_pregnancy (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    test_name   TEXT NOT NULL,
+    trimester   INTEGER CHECK (trimester IS NULL OR trimester BETWEEN 1 AND 3),
+    ref_low     REAL,
+    ref_high    REAL,
+    units       TEXT NOT NULL,
+    citation    TEXT NOT NULL,
+    source      TEXT NOT NULL DEFAULT 'curated_preg'
+);
+CREATE INDEX IF NOT EXISTS idx_preg_ref_name ON reference_ranges_pregnancy(test_name COLLATE NOCASE);
+CREATE INDEX IF NOT EXISTS idx_preg_ref_tri  ON reference_ranges_pregnancy(trimester);
