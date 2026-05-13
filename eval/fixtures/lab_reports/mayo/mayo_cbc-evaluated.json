@@ -1,0 +1,220 @@
+{
+  "citations": [
+    {
+      "label": "MedlinePlus: Blood Differential Test",
+      "url": "https://medlineplus.gov/lab-tests/blood-differential-test/"
+    },
+    {
+      "label": "MedlinePlus: Blood Differential Test",
+      "url": "https://medlineplus.gov/lab-tests/blood-differential-test/"
+    },
+    {
+      "label": "MedlinePlus: Blood Differential Test",
+      "url": "https://medlineplus.gov/lab-tests/blood-differential-test/"
+    },
+    {
+      "label": "MedlinePlus: Blood Differential Test",
+      "url": "https://medlineplus.gov/lab-tests/blood-differential-test/"
+    },
+    {
+      "label": "MedlinePlus: Blood Differential Test",
+      "url": "https://medlineplus.gov/lab-tests/blood-differential-test/"
+    },
+    {
+      "label": "MedlinePlus: Hematocrit Test",
+      "url": "https://medlineplus.gov/lab-tests/hematocrit-test/"
+    },
+    {
+      "label": "MedlinePlus: Hemoglobin Test",
+      "url": "https://medlineplus.gov/lab-tests/hemoglobin-test/"
+    },
+    {
+      "label": "MedlinePlus: MCV Blood Test",
+      "url": "https://medlineplus.gov/lab-tests/mcv-blood-test-mean-corpuscular-volume/"
+    },
+    {
+      "label": "MedlinePlus: Platelet Tests",
+      "url": "https://medlineplus.gov/lab-tests/platelet-tests/"
+    },
+    {
+      "label": "MedlinePlus: Red Blood Cell Count",
+      "url": "https://medlineplus.gov/lab-tests/red-blood-cell-count/"
+    },
+    {
+      "label": "MedlinePlus: Red Blood Cell Indices",
+      "url": "https://medlineplus.gov/lab-tests/red-blood-cell-indices/"
+    },
+    {
+      "label": "MedlinePlus: Red Blood Cell Indices",
+      "url": "https://medlineplus.gov/lab-tests/red-blood-cell-indices/"
+    },
+    {
+      "label": "MedlinePlus: White Blood Count (WBC)",
+      "url": "https://medlineplus.gov/lab-tests/white-blood-count-wbc/"
+    }
+  ],
+  "has_outside_range": true,
+  "has_unknown": false,
+  "profile_used": {
+    "age": 27,
+    "sex": "male"
+  },
+  "rows": [
+    {
+      "canonical_name": "hemoglobin",
+      "definition": "Hemoglobin is a protein in your red blood cells that carries oxygen from your lungs to the rest of your body. Low hemoglobin can be a sign of anemia.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/hemoglobin-test/",
+      "raw_name": "HEMOGLOBIN",
+      "ref_high": 17,
+      "ref_low": 13,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "g/dl",
+      "value": 15
+    },
+    {
+      "canonical_name": "white blood cell count",
+      "definition": "A white blood cell (WBC) count measures the number of white blood cells in your blood. White blood cells are part of your immune system and help fight infections.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/white-blood-count-wbc/",
+      "raw_name": "TOTAL LEUKOCYTE COUNT",
+      "ref_high": 10800,
+      "ref_low": 4800,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "cumm",
+      "value": 5100
+    },
+    {
+      "canonical_name": "neutrophils",
+      "definition": "Neutrophils are the most common type of white blood cell and a key part of your immune response to infections. They are typically reported as part of a complete blood count (CBC) with differential.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/blood-differential-test/",
+      "raw_name": "NEUTROPHILS",
+      "ref_high": 80,
+      "ref_low": 40,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "%",
+      "value": 79
+    },
+    {
+      "canonical_name": "lymphocytes",
+      "definition": "Lymphocytes are a type of white blood cell that helps your immune system fight infections. They include T cells, B cells, and natural killer (NK) cells.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/blood-differential-test/",
+      "raw_name": "LYMPHOCYTE",
+      "ref_high": 40,
+      "ref_low": 20,
+      "ref_source": "report",
+      "status": "OUTSIDE_RANGE",
+      "units": "%",
+      "value": 18
+    },
+    {
+      "canonical_name": "eosinophils",
+      "definition": "Eosinophils are a type of white blood cell. They help fight off infections and play a role in allergic reactions.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/blood-differential-test/",
+      "raw_name": "EOSINOPHILS",
+      "ref_high": 6,
+      "ref_low": 1,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "%",
+      "value": 1
+    },
+    {
+      "canonical_name": "monocytes",
+      "definition": "Monocytes are a type of white blood cell that helps fight infection and remove damaged tissue. They are part of a complete blood count (CBC) with differential.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/blood-differential-test/",
+      "raw_name": "MONOCYTES",
+      "ref_high": 10,
+      "ref_low": 2,
+      "ref_source": "report",
+      "status": "OUTSIDE_RANGE",
+      "units": "%",
+      "value": 1
+    },
+    {
+      "canonical_name": "basophils",
+      "definition": "Basophils are the rarest type of white blood cell. They release chemicals such as histamine and play a role in allergic reactions and inflammation.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/blood-differential-test/",
+      "raw_name": "BASOPHILS",
+      "ref_high": 2,
+      "ref_low": null,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "%",
+      "value": 1
+    },
+    {
+      "canonical_name": "platelet count",
+      "definition": "Platelets are blood cells that help your body form clots to stop bleeding. A platelet count measures the number of platelets in your blood.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/platelet-tests/",
+      "raw_name": "PLATELET COUNT",
+      "ref_high": 4.1,
+      "ref_low": 1.5,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "lakhs/cumm",
+      "value": 3.5
+    },
+    {
+      "canonical_name": "red blood cell count",
+      "definition": "A red blood cell (RBC) count measures the number of red blood cells in your blood. Red blood cells carry oxygen from your lungs to the rest of your body.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/red-blood-cell-count/",
+      "raw_name": "TOTAL RBC COUNT",
+      "ref_high": 5.5,
+      "ref_low": 4.5,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "million/cumm",
+      "value": 5
+    },
+    {
+      "canonical_name": "hematocrit",
+      "definition": "Hematocrit is the percentage of your blood that is made up of red blood cells. It is part of a complete blood count and helps screen for anemia and other conditions.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/hematocrit-test/",
+      "raw_name": "HEMATOCRIT VALUE, HCT",
+      "ref_high": 50,
+      "ref_low": 40,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "%",
+      "value": 42
+    },
+    {
+      "canonical_name": "mean corpuscular volume",
+      "definition": "Mean corpuscular volume (MCV) measures the average size of your red blood cells. It is part of a complete blood count and helps diagnose different types of anemia.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/mcv-blood-test-mean-corpuscular-volume/",
+      "raw_name": "MEAN CORPUSCULAR VOLUME, MCV",
+      "ref_high": 101,
+      "ref_low": 83,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "fL",
+      "value": 84.0
+    },
+    {
+      "canonical_name": "mean corpuscular hemoglobin",
+      "definition": "Mean corpuscular hemoglobin (MCH) measures the average amount of hemoglobin in each red blood cell. It is reported on a complete blood count alongside MCV and MCHC.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/red-blood-cell-indices/",
+      "raw_name": "MEAN CELL HAEMOGLOBIN, MCH",
+      "ref_high": 32,
+      "ref_low": 27,
+      "ref_source": "report",
+      "status": "IN_RANGE",
+      "units": "Pg",
+      "value": 30.0
+    },
+    {
+      "canonical_name": "mean corpuscular hemoglobin concentration",
+      "definition": "Mean corpuscular hemoglobin concentration (MCHC) measures the average concentration of hemoglobin inside red blood cells. It is reported on a complete blood count alongside MCV and MCH.",
+      "definition_citation": "https://medlineplus.gov/lab-tests/red-blood-cell-indices/",
+      "raw_name": "MEAN CELL HAEMOGLOBIN CON, MCHC",
+      "ref_high": 34.5,
+      "ref_low": 31.5,
+      "ref_source": "report",
+      "status": "OUTSIDE_RANGE",
+      "units": "%",
+      "value": 35.7
+    }
+  ]
+}

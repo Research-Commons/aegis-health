@@ -1,0 +1,44 @@
+{
+  "citations": [
+    {
+      "label": "MedlinePlus: A1C",
+      "url": "https://medlineplus.gov/a1c.html"
+    },
+    {
+      "label": "MedlinePlus: A1C",
+      "url": "https://medlineplus.gov/a1c.html"
+    }
+  ],
+  "has_outside_range": true,
+  "has_unknown": true,
+  "profile_used": {
+    "age": null,
+    "sex": null
+  },
+  "rows": [
+    {
+      "canonical_name": "hemoglobin a1c",
+      "definition": "A hemoglobin A1c test measures your average blood sugar level over the past 3 months. It is used to diagnose and monitor type 2 diabetes and prediabetes.",
+      "definition_citation": "https://medlineplus.gov/a1c.html",
+      "raw_name": "Hemoglobin A1c",
+      "ref_high": 5.6,
+      "ref_low": 4.8,
+      "ref_source": "report",
+      "status": "OUTSIDE_RANGE",
+      "units": "%",
+      "value": 7.9
+    },
+    {
+      "canonical_name": "estimated average glucose",
+      "definition": "Estimated average glucose (eAG) translates your hemoglobin A1c result into the same units used for everyday glucose meters. It is a derived value calculated from your A1c.",
+      "definition_citation": "https://medlineplus.gov/a1c.html",
+      "raw_name": "Estim. Avg Glu (eAG)",
+      "ref_high": null,
+      "ref_low": null,
+      "ref_source": "none",
+      "status": "unknown",
+      "units": "mg/dL",
+      "value": 180
+    }
+  ]
+}
