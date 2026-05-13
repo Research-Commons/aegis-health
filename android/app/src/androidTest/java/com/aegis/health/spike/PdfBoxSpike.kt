@@ -6,7 +6,7 @@ import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 import com.tom_roush.pdfbox.pdmodel.PDDocument
 import com.tom_roush.pdfbox.text.PDFTextStripper
 import org.json.JSONObject
-import org.junit.BeforeClass
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -25,15 +25,21 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PdfBoxSpike {
 
-    companion object {
-        @BeforeClass
-        @JvmStatic
-        fun initPdfBox() {
-            // STACK.md line 27 open question — verify the answer in this spike.
-            PDFBoxResourceLoader.init(
-                InstrumentationRegistry.getInstrumentation().context
-            )
-        }
+    @Before
+    fun initPdfBox() {
+        // STACK.md line 27 open question — verify the answer in this spike.
+        //
+        // Empirical answer (Plan 01-08 Task 2, S23 Ultra / Android 16, AGP 10.x):
+        //   - @BeforeClass + getInstrumentation().context returns null Context (NPE).
+        //   - @Before  + getInstrumentation().targetContext.applicationContext works.
+        // Production wire-up will call PDFBoxResourceLoader.init(applicationContext)
+        // from AegisApp.onCreate() — moving here for the spike to match that pattern
+        // and to keep the init invocation closer to the test that needs it.
+        val appContext = InstrumentationRegistry
+            .getInstrumentation()
+            .targetContext
+            .applicationContext
+        PDFBoxResourceLoader.init(appContext)
     }
 
     @Test
