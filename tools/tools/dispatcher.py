@@ -8,6 +8,7 @@ from typing import Any
 
 from tools.tools.check_warnings import check_warnings
 from tools.tools.decompose_product import decompose_product
+from tools.tools.explain_lab_test import explain_lab_test
 from tools.tools.get_drug_info import get_drug_info
 from tools.tools.get_guideline import get_guideline
 from tools.tools.lookup_lab_reference_range import lookup_lab_reference_range
@@ -24,6 +25,7 @@ _TOOL_REGISTRY: dict[str, Any] = {
     "lookup_term": lookup_term,
     "get_guideline": get_guideline,
     "lookup_lab_reference_range": lookup_lab_reference_range,
+    "explain_lab_test": explain_lab_test,
 }
 
 

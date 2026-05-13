@@ -146,5 +146,22 @@
         "required": ["test_name"]
       }
     }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "explain_lab_test",
+      "description": "Return a plain-language definition of what a lab test measures (e.g., 'LDL cholesterol carries cholesterol from the liver...'). Use for the per-row narrative in lab-report explanations. Aliases like 'LDL', 'A1C', 'WBC' route automatically to canonical MedlinePlus terms.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_name": {
+            "type": "string",
+            "description": "Lab test name; aliases like 'LDL', 'HbA1c', 'WBC' accepted."
+          }
+        },
+        "required": ["test_name"]
+      }
+    }
   }
 ]
