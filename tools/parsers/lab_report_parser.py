@@ -57,10 +57,63 @@ from tools.parsers._alias_map import LAB_TERM_ALIASES, normalize as _normalize_a
 
 # Tumor markers / genetic tests / pathology-grade tests auto-defer at the
 # row level (INTERPRET-04 mirror; canonical names so post-normalization).
+#
+# Kept as a frozenset for legacy callers that use it as a pure membership
+# test; the new _lookup_auto_defer_category() helper (Phase 2 D-11) returns
+# a defer_reason short-code category and is preferred for new code paths.
 _AUTO_DEFER_CANONICAL = frozenset({
     "CA-125", "CA 19-9", "PSA", "AFP", "CEA",
     "BRCA1", "BRCA2", "KRAS",
 })
+
+# Category assignment for the legacy _AUTO_DEFER_CANONICAL set. Used as the
+# fallback when no auto_defer_tests KB table is available (Plan 02-03 lands
+# the table; until then this in-memory map keeps Python and Kotlin agreed on
+# the 8-entry seed set).
+_CANONICAL_DEFAULT_CATEGORIES: dict[str, str] = {
+    "CA-125": "tumor_marker",
+    "CA 19-9": "tumor_marker",
+    "PSA": "tumor_marker",
+    "AFP": "tumor_marker",
+    "CEA": "tumor_marker",
+    "BRCA1": "genetic",
+    "BRCA2": "genetic",
+    "KRAS": "genetic",
+}
+
+
+def _lookup_auto_defer_category(canonical: str, db_path) -> str | None:
+    """Return 'tumor_marker' | 'genetic' | 'pathology' on hit, else None.
+
+    When db_path is provided, queries the auto_defer_tests KB table (D-11) to
+    keep Python and Kotlin pointing at the same single source of truth. Falls
+    back to the in-memory _CANONICAL_DEFAULT_CATEGORIES map when db_path is
+    None or the table does not yet exist (Plan 02-03 may not have rebuilt the
+    KB yet during test runs).
+    """
+    if db_path is not None:
+        try:
+            import sqlite3
+            from pathlib import Path as _Path
+            db = _Path(db_path)
+            if db.exists():
+                conn = sqlite3.connect(str(db))
+                try:
+                    cur = conn.execute(
+                        "SELECT category FROM auto_defer_tests "
+                        "WHERE LOWER(canonical_name) = LOWER(?) LIMIT 1",
+                        (canonical,),
+                    )
+                    row = cur.fetchone()
+                    if row is not None:
+                        return row[0]
+                except sqlite3.Error:
+                    pass  # table may not exist yet; fall through
+                finally:
+                    conn.close()
+        except Exception:  # pragma: no cover -- defensive
+            pass  # any failure falls through to the in-memory fallback
+    return _CANONICAL_DEFAULT_CATEGORIES.get(canonical)
 
 
 # ---------------------------------------------------------------------------
@@ -368,9 +421,14 @@ _DEFINITION_DB: dict[str, tuple[str, str, str]] = {
 def parse(pdf_path: Path | str, *, db_path: Path | str | None = None) -> dict:
     """Parse a lab-report PDF into a PreparsedReport-shaped dict.
 
-    Returns a dict matching .planning/specs/PreparsedReport.schema.json on
-    success; returns {"error": "scanned_image_only", ...} when the PDF has no
-    extractable text layer (deferral path per INTERPRET-03; no silent OCR).
+    Always returns a dict matching .planning/specs/PreparsedReport.schema.json.
+    Phase 2 D-10: the top-level `report_status.code` discriminates outcomes:
+      - "OK"                 -- successful parse; rows populated
+      - "IMAGE_ONLY"         -- no extractable text layer (EXTRACT-03)
+      - "UNKNOWN_VENDOR"     -- page-1 fingerprint did not match (EXTRACT-01)
+      - "TOO_MANY_ANALYTES"  -- >25 normalized rows (INTERPRET-05)
+
+    For the three non-OK codes, rows is [] and citations is [].
 
     The db_path argument is the path to the SQLite KB built by `make kb`. It
     is consulted only when a parsed row has no printed reference range; the
@@ -383,10 +441,30 @@ def parse(pdf_path: Path | str, *, db_path: Path | str | None = None) -> dict:
     # --- Stage 1: PdfTextExtractor ---
     pages_text, all_text = _extract_text(pdf_path)
     if not all_text.strip():
-        return {"error": "scanned_image_only", "vendor": None, "rows": []}
+        # Phase 2 D-10: image-only PDFs return a full PreparsedReport-shaped
+        # dict with report_status.code='IMAGE_ONLY' (EXTRACT-03). UI handles
+        # the deferral via report_status; rows[] is empty.
+        return _build_status_only_report(
+            demographics={"age": None, "sex": None},
+            status_code="IMAGE_ONLY",
+            status_message=(
+                "This appears to be a scanned image; "
+                "please use a digital lab report."
+            ),
+        )
 
     # --- Stage 2: LabValueParser ---
     vendor = _detect_vendor(pages_text)
+    if vendor is None:
+        # Phase 2 D-10: no page-1 fingerprint match. Short-circuit before
+        # _parse_rows (which would just return [] anyway) so UI gets a
+        # specific UNKNOWN_VENDOR code instead of an empty OK report.
+        demographics = _extract_demographics(pages_text, vendor=None)
+        return _build_status_only_report(
+            demographics=demographics,
+            status_code="UNKNOWN_VENDOR",
+            status_message="Lab vendor format not recognized.",
+        )
     raw_rows = _parse_rows(pages_text, vendor=vendor)
 
     # --- Stage 3: LabRowNormalizer ---
@@ -398,6 +476,20 @@ def parse(pdf_path: Path | str, *, db_path: Path | str | None = None) -> dict:
             extraction_warnings.append(f"unknown_test:{raw['raw_name']}")
             continue
         normalized_rows.append({**raw, "canonical_name": canonical})
+
+    # Phase 2 D-10 / INTERPRET-05: TOO_MANY_ANALYTES guard. >25 normalized
+    # rows triggers a whole-report deferral so the model never sees a wall of
+    # uncurated analytes. Threshold mirrors the spec.
+    if len(normalized_rows) > 25:
+        demographics = _extract_demographics(pages_text, vendor=vendor)
+        return _build_status_only_report(
+            demographics=demographics,
+            status_code="TOO_MANY_ANALYTES",
+            status_message=(
+                f"Unusually many values ({len(normalized_rows)}); "
+                f"discuss with clinician."
+            ),
+        )
 
     # --- Stage 4: RangeEvaluator ---
     demographics = _extract_demographics(pages_text, vendor=vendor)
@@ -1003,29 +1095,46 @@ def _num(s: str | None) -> float | int | None:
 
 def _evaluate_row(row: dict, *, demographics: dict, db_path: Path | str | None,
                   warnings: list[str]) -> dict:
-    """Stage 4: compute three-state status; row-printed range first, KB fallback second."""
+    """Stage 4: compute three-state status; row-printed range first, KB fallback second.
+
+    Phase 2 D-12: every emit path also assigns a `defer_reason` short-code
+    (null for non-deferring rows). The 9-entry vocabulary lives in
+    .planning/specs/EXTRACTION-SPEC.md and is mirrored in test_fixture_manifests.py.
+    """
     canonical = row["canonical_name"]
     value = row["value"]
     units = row["units"]
     ref_low = row["ref_low"]
     ref_high = row["ref_high"]
 
-    # Auto-defer tumor markers / genetic tests (INTERPRET-04 mirror).
-    if canonical in _AUTO_DEFER_CANONICAL:
-        return _emit_row(canonical, row, ref_low=None, ref_high=None,
-                         ref_source="none", status="unknown")
+    # Auto-defer tumor markers / genetic tests / pathology (INTERPRET-04). KB
+    # lookup is preferred (D-11); _CANONICAL_DEFAULT_CATEGORIES is the legacy
+    # 8-entry fallback so both paths agree until the KB table lands.
+    auto_defer_category = _lookup_auto_defer_category(canonical, db_path)
+    if auto_defer_category is not None:
+        return _emit_row(
+            canonical, row, ref_low=None, ref_high=None,
+            ref_source="none", status="unknown",
+            defer_reason=f"auto_defer:{auto_defer_category}",
+        )
 
-    # Missing units (INTERPRET-05): the row still gets a status decision if
-    # it has a printed range, but if it has neither units nor range it defers.
+    # Non-numeric result (e.g., "Negative" / "Positive" / "Detected"). The
+    # row carries no comparable value; defer with the dedicated short-code.
     if value is None:
-        return _emit_row(canonical, row, ref_low=ref_low, ref_high=ref_high,
-                         ref_source="none", status="unknown")
+        return _emit_row(
+            canonical, row, ref_low=ref_low, ref_high=ref_high,
+            ref_source="none", status="unknown",
+            defer_reason="non_numeric_result",
+        )
 
-    # Printed range path.
+    # Printed range path (INTERPRET-02 primary).
     if ref_low is not None or ref_high is not None:
         status = _classify_status(value, ref_low, ref_high)
-        return _emit_row(canonical, row, ref_low=ref_low, ref_high=ref_high,
-                         ref_source="report", status=status)
+        return _emit_row(
+            canonical, row, ref_low=ref_low, ref_high=ref_high,
+            ref_source="report", status=status,
+            defer_reason=None,
+        )
 
     # No printed range -- KB fallback (lazy import to avoid hard dep on KB
     # build during unit tests).
@@ -1046,19 +1155,34 @@ def _evaluate_row(row: dict, *, demographics: dict, db_path: Path | str | None,
             kb_units = kb.get("units")
             if kb_units and units and kb_units.lower() != units.lower():
                 warnings.append(f"mismatched_units:{canonical}")
-                return _emit_row(canonical, row, ref_low=None, ref_high=None,
-                                 ref_source="none", status="unknown")
+                return _emit_row(
+                    canonical, row, ref_low=None, ref_high=None,
+                    ref_source="none", status="unknown",
+                    defer_reason="mismatched_units",
+                )
             kb_low = kb.get("ref_low")
             kb_high = kb.get("ref_high")
             status = _classify_status(value, kb_low, kb_high)
-            return _emit_row(canonical, row, ref_low=kb_low, ref_high=kb_high,
-                             ref_source="kb-fallback", status=status)
+            return _emit_row(
+                canonical, row, ref_low=kb_low, ref_high=kb_high,
+                ref_source="kb-fallback", status=status,
+                defer_reason=None,
+            )
 
-    # No printed range AND no KB hit -> defer.
+    # No printed range AND no KB hit -> defer. Units presence determines
+    # which short-code applies (D-12).
     if not units:
         warnings.append(f"missing_units:{canonical}")
-    return _emit_row(canonical, row, ref_low=None, ref_high=None,
-                     ref_source="none", status="unknown")
+        return _emit_row(
+            canonical, row, ref_low=None, ref_high=None,
+            ref_source="none", status="unknown",
+            defer_reason="missing_units",
+        )
+    return _emit_row(
+        canonical, row, ref_low=None, ref_high=None,
+        ref_source="none", status="unknown",
+        defer_reason="range_unavailable",
+    )
 
 
 def _classify_status(value: float, ref_low: float | None,
@@ -1072,11 +1196,15 @@ def _classify_status(value: float, ref_low: float | None,
 
 
 def _emit_row(canonical: str, raw: dict, *, ref_low, ref_high, ref_source,
-              status) -> dict:
+              status, defer_reason: str | None = None) -> dict:
     """Stage 5 helper: emit one EvaluatedRow dict matching the schema.
 
     definition + definition_citation come from the bundled _DEFINITION_DB
     (MedlinePlus authority); when no entry exists they are None.
+
+    Phase 2 D-12: defer_reason is one of the 9 short-codes in
+    .planning/specs/EXTRACTION-SPEC.md (or None for non-deferring rows). The
+    schema requires the field on every EvaluatedRow.
     """
     entry = _DEFINITION_DB.get(canonical)
     definition = entry[0] if entry else None
@@ -1092,6 +1220,7 @@ def _emit_row(canonical: str, raw: dict, *, ref_low, ref_high, ref_source,
         "status": status,
         "definition": definition,
         "definition_citation": definition_citation,
+        "defer_reason": defer_reason,
     }
 
 
@@ -1147,8 +1276,17 @@ def _extract_demographics(pages_text: list[str], *, vendor: str | None) -> dict:
 
 
 def _assemble_report(rows: list[dict], demographics: dict,
-                     warnings: list[str], vendor: str | None) -> dict:
-    """Stage 5: emit the full PreparsedReport dict per the schema."""
+                     warnings: list[str], vendor: str | None,
+                     *, status_code: str = "OK",
+                     status_message: str | None = None) -> dict:
+    """Stage 5: emit the full PreparsedReport dict per the schema.
+
+    Phase 2 D-10: every report carries a top-level `report_status` envelope.
+    Successful parses set `code='OK'`; the three short-circuit paths
+    (IMAGE_ONLY, UNKNOWN_VENDOR, TOO_MANY_ANALYTES) call
+    `_build_status_only_report` instead, which forwards a non-OK code here
+    with rows=[] and citations=[].
+    """
     has_outside_range = any(r["status"] == "OUTSIDE_RANGE" for r in rows)
     has_unknown = any(r["status"] == "unknown" for r in rows)
 
@@ -1182,9 +1320,35 @@ def _assemble_report(rows: list[dict], demographics: dict,
             "sex": demographics.get("sex"),
         },
         "citations": citations,
+        "report_status": {"code": status_code, "message": status_message},
         # extraction_warnings is NOT in PreparsedReport.schema.json — the test
         # canonicalizer strips it before the byte-comparable diff.
         "extraction_warnings": warnings,
+    }
+
+
+def _build_status_only_report(*, demographics: dict, status_code: str,
+                              status_message: str | None) -> dict:
+    """Emit a PreparsedReport-shaped dict for non-OK report_status paths.
+
+    Phase 2 D-10: IMAGE_ONLY / UNKNOWN_VENDOR / TOO_MANY_ANALYTES all return
+    rows=[] + citations=[] + has_outside_range=False + has_unknown=False
+    alongside a populated report_status envelope. UI consumes the code +
+    message directly; the model is never invoked on these paths.
+    """
+    return {
+        "rows": [],
+        "has_outside_range": False,
+        "has_unknown": False,
+        "profile_used": {
+            "age": demographics.get("age"),
+            "sex": demographics.get("sex"),
+        },
+        "citations": [],
+        "report_status": {"code": status_code, "message": status_message},
+        # No analytes to warn about; preserve the side-channel for parity
+        # with the OK path (canonicalizer strips it before byte-diff).
+        "extraction_warnings": [],
     }
 
 

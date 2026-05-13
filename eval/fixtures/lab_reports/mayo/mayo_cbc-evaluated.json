@@ -59,9 +59,14 @@
     "age": 27,
     "sex": "male"
   },
+  "report_status": {
+    "code": "OK",
+    "message": null
+  },
   "rows": [
     {
       "canonical_name": "hemoglobin",
+      "defer_reason": null,
       "definition": "Hemoglobin is a protein in your red blood cells that carries oxygen from your lungs to the rest of your body. Low hemoglobin can be a sign of anemia.",
       "definition_citation": "https://medlineplus.gov/lab-tests/hemoglobin-test/",
       "raw_name": "HEMOGLOBIN",
@@ -74,6 +79,7 @@
     },
     {
       "canonical_name": "white blood cell count",
+      "defer_reason": null,
       "definition": "A white blood cell (WBC) count measures the number of white blood cells in your blood. White blood cells are part of your immune system and help fight infections.",
       "definition_citation": "https://medlineplus.gov/lab-tests/white-blood-count-wbc/",
       "raw_name": "TOTAL LEUKOCYTE COUNT",
@@ -86,6 +92,7 @@
     },
     {
       "canonical_name": "neutrophils",
+      "defer_reason": null,
       "definition": "Neutrophils are the most common type of white blood cell and a key part of your immune response to infections. They are typically reported as part of a complete blood count (CBC) with differential.",
       "definition_citation": "https://medlineplus.gov/lab-tests/blood-differential-test/",
       "raw_name": "NEUTROPHILS",
@@ -98,6 +105,7 @@
     },
     {
       "canonical_name": "lymphocytes",
+      "defer_reason": null,
       "definition": "Lymphocytes are a type of white blood cell that helps your immune system fight infections. They include T cells, B cells, and natural killer (NK) cells.",
       "definition_citation": "https://medlineplus.gov/lab-tests/blood-differential-test/",
       "raw_name": "LYMPHOCYTE",
@@ -110,6 +118,7 @@
     },
     {
       "canonical_name": "eosinophils",
+      "defer_reason": null,
       "definition": "Eosinophils are a type of white blood cell. They help fight off infections and play a role in allergic reactions.",
       "definition_citation": "https://medlineplus.gov/lab-tests/blood-differential-test/",
       "raw_name": "EOSINOPHILS",
@@ -122,6 +131,7 @@
     },
     {
       "canonical_name": "monocytes",
+      "defer_reason": null,
       "definition": "Monocytes are a type of white blood cell that helps fight infection and remove damaged tissue. They are part of a complete blood count (CBC) with differential.",
       "definition_citation": "https://medlineplus.gov/lab-tests/blood-differential-test/",
       "raw_name": "MONOCYTES",
@@ -134,6 +144,7 @@
     },
     {
       "canonical_name": "basophils",
+      "defer_reason": null,
       "definition": "Basophils are the rarest type of white blood cell. They release chemicals such as histamine and play a role in allergic reactions and inflammation.",
       "definition_citation": "https://medlineplus.gov/lab-tests/blood-differential-test/",
       "raw_name": "BASOPHILS",
@@ -146,6 +157,7 @@
     },
     {
       "canonical_name": "platelet count",
+      "defer_reason": null,
       "definition": "Platelets are blood cells that help your body form clots to stop bleeding. A platelet count measures the number of platelets in your blood.",
       "definition_citation": "https://medlineplus.gov/lab-tests/platelet-tests/",
       "raw_name": "PLATELET COUNT",
@@ -158,6 +170,7 @@
     },
     {
       "canonical_name": "red blood cell count",
+      "defer_reason": null,
       "definition": "A red blood cell (RBC) count measures the number of red blood cells in your blood. Red blood cells carry oxygen from your lungs to the rest of your body.",
       "definition_citation": "https://medlineplus.gov/lab-tests/red-blood-cell-count/",
       "raw_name": "TOTAL RBC COUNT",
@@ -170,6 +183,7 @@
     },
     {
       "canonical_name": "hematocrit",
+      "defer_reason": null,
       "definition": "Hematocrit is the percentage of your blood that is made up of red blood cells. It is part of a complete blood count and helps screen for anemia and other conditions.",
       "definition_citation": "https://medlineplus.gov/lab-tests/hematocrit-test/",
       "raw_name": "HEMATOCRIT VALUE, HCT",
@@ -182,6 +196,7 @@
     },
     {
       "canonical_name": "mean corpuscular volume",
+      "defer_reason": null,
       "definition": "Mean corpuscular volume (MCV) measures the average size of your red blood cells. It is part of a complete blood count and helps diagnose different types of anemia.",
       "definition_citation": "https://medlineplus.gov/lab-tests/mcv-blood-test-mean-corpuscular-volume/",
       "raw_name": "MEAN CORPUSCULAR VOLUME, MCV",
@@ -194,6 +209,7 @@
     },
     {
       "canonical_name": "mean corpuscular hemoglobin",
+      "defer_reason": null,
       "definition": "Mean corpuscular hemoglobin (MCH) measures the average amount of hemoglobin in each red blood cell. It is reported on a complete blood count alongside MCV and MCHC.",
       "definition_citation": "https://medlineplus.gov/lab-tests/red-blood-cell-indices/",
       "raw_name": "MEAN CELL HAEMOGLOBIN, MCH",
@@ -206,6 +222,7 @@
     },
     {
       "canonical_name": "mean corpuscular hemoglobin concentration",
+      "defer_reason": null,
       "definition": "Mean corpuscular hemoglobin concentration (MCHC) measures the average concentration of hemoglobin inside red blood cells. It is reported on a complete blood count alongside MCV and MCH.",
       "definition_citation": "https://medlineplus.gov/lab-tests/red-blood-cell-indices/",
       "raw_name": "MEAN CELL HAEMOGLOBIN CON, MCHC",

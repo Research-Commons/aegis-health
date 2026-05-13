@@ -15,9 +15,14 @@
     "age": null,
     "sex": null
   },
+  "report_status": {
+    "code": "OK",
+    "message": null
+  },
   "rows": [
     {
       "canonical_name": "hemoglobin a1c",
+      "defer_reason": null,
       "definition": "A hemoglobin A1c test measures your average blood sugar level over the past 3 months. It is used to diagnose and monitor type 2 diabetes and prediabetes.",
       "definition_citation": "https://medlineplus.gov/a1c.html",
       "raw_name": "Hemoglobin A1c",
@@ -30,6 +35,7 @@
     },
     {
       "canonical_name": "estimated average glucose",
+      "defer_reason": "range_unavailable",
       "definition": "Estimated average glucose (eAG) translates your hemoglobin A1c result into the same units used for everyday glucose meters. It is a derived value calculated from your A1c.",
       "definition_citation": "https://medlineplus.gov/a1c.html",
       "raw_name": "Estim. Avg Glu (eAG)",
