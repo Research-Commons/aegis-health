@@ -14,7 +14,7 @@ import java.io.File
  * On first launch the pre-built `aegis_kb.sqlite` is copied from assets
  * to internal storage. All tool functions query through this class.
  */
-class KBDatabase(private val context: Context) {
+class KBDatabase(private val context: Context) : KBQueries {
 
     companion object {
         private const val TAG = "KBDatabase"
@@ -254,6 +254,177 @@ class KBDatabase(private val context: Context) {
             }
         }
         return rows
+    }
+
+    // ============================================================================
+    // Phase 2 — ReportReader: lab range + auto-defer query helpers
+    // ============================================================================
+
+    /**
+     * Adult / pediatric / sex-stratified reference-range lookup.
+     *
+     * Mirrors tools/tools/lookup_lab_reference_range.py (Python reference).
+     * Pediatric path tried first when age<18. Per the Phase 2 D-08 / INTERPRET-03
+     * contract, a pediatric MISS returns null instead of falling through to the
+     * adult query — RangeEvaluator (Plan 02-11) uses the distinction to emit
+     * defer_reason="kb_no_pediatric" rather than silent adult-fallback. This is
+     * an intentional divergence from the Python reference's pediatric-rebind
+     * behavior (Phase 1 decision 12).
+     *
+     * INTERPRET-02: PDF range is primary; this is the KB-fallback path.
+     */
+    override fun queryLabReferenceRange(testName: String, age: Int?, sex: String?): Map<String, String>? {
+        if (age != null && age < 18) {
+            val ped = queryPediatricRange(testName, age, sex)
+            if (ped != null) return ped
+            return null
+        }
+
+        val key = testName.lowercase().trim()
+        val population = classifyPopulation(age, sex)
+
+        return try {
+            val cursor = rawQuery(
+                """SELECT test_name, ref_low, ref_high, units, population, citation
+                   FROM lab_reference_ranges
+                   WHERE LOWER(test_name) = ?
+                     AND population IN (?, 'all')
+                   ORDER BY CASE population WHEN ? THEN 0 ELSE 1 END
+                   LIMIT 1""",
+                arrayOf(key, population, population),
+            )
+            cursor.use {
+                if (it.moveToFirst()) cursorToMap(it) else null
+            }
+        } catch (_: android.database.sqlite.SQLiteException) {
+            null
+        }
+    }
+
+    /**
+     * Pediatric-specific range query (INTERPRET-03). Returns null on miss.
+     *
+     * Schema uses age_low/age_high INTEGER + sex TEXT (NOT age_band per the
+     * 02-05-PLAN body — that was a planning-time SQL drift; the production
+     * schema in kb/kb/schema.sql:202-213 has the integer-bound shape mirrored
+     * here). Query semantics match the validated Python reference in
+     * tools/tools/lookup_lab_reference_range.py:50-61.
+     */
+    override fun queryPediatricRange(testName: String, age: Int?, sex: String?): Map<String, String>? {
+        val key = testName.lowercase().trim()
+        val sexNorm = sex?.trim()?.lowercase().orEmpty()
+        return try {
+            val cursor = rawQuery(
+                """SELECT test_name, ref_low, ref_high, units, citation
+                   FROM reference_ranges_pediatric
+                   WHERE LOWER(test_name) = ?
+                     AND (age_low IS NULL OR ? = '' OR age_low <= CAST(? AS INTEGER))
+                     AND (age_high IS NULL OR ? = '' OR age_high >= CAST(? AS INTEGER))
+                     AND (sex = 'all' OR ? = '' OR sex = ?)
+                   LIMIT 1""",
+                arrayOf(
+                    key,
+                    age?.toString().orEmpty(), age?.toString().orEmpty(),
+                    age?.toString().orEmpty(), age?.toString().orEmpty(),
+                    sexNorm, sexNorm,
+                ),
+            )
+            cursor.use {
+                if (it.moveToFirst()) cursorToMap(it) else null
+            }
+        } catch (_: android.database.sqlite.SQLiteException) {
+            null
+        }
+    }
+
+    /**
+     * Pregnancy-specific range query (INTERPRET-03). Returns null on miss.
+     *
+     * Schema uses trimester INTEGER (1|2|3 or NULL for "all trimesters") per
+     * kb/kb/schema.sql:218-229. Query mirrors the validated Python reference
+     * in tools/tools/lookup_lab_reference_range.py:149-156. The plan body's
+     * "trimester_$N" / "pregnancy_all" string keys were planning-time drift.
+     */
+    override fun queryPregnancyRange(testName: String, trimester: Int?): Map<String, String>? {
+        val key = testName.lowercase().trim()
+        val triArg = trimester?.toString().orEmpty()
+        return try {
+            val cursor = rawQuery(
+                """SELECT test_name, trimester, ref_low, ref_high, units, citation
+                   FROM reference_ranges_pregnancy
+                   WHERE LOWER(test_name) = ?
+                     AND (trimester = CAST(? AS INTEGER) OR trimester IS NULL)
+                   ORDER BY CASE WHEN trimester = CAST(? AS INTEGER) THEN 0 ELSE 1 END
+                   LIMIT 1""",
+                arrayOf(key, triArg, triArg),
+            )
+            cursor.use {
+                if (it.moveToFirst()) cursorToMap(it) else null
+            }
+        } catch (_: android.database.sqlite.SQLiteException) {
+            null
+        }
+    }
+
+    /**
+     * D-11 / INTERPRET-04: tumor-marker / genetic / pathology-grade auto-defer lookup.
+     * Returns the category string ("tumor_marker" | "genetic" | "pathology") on hit,
+     * null on miss. Wrapped in try/catch for SQLiteException because old/stale KB
+     * builds may predate the auto_defer_tests table (Plan 02-03 lands it).
+     */
+    override fun queryAutoDefer(canonicalName: String): String? {
+        return try {
+            val cursor = rawQuery(
+                "SELECT category FROM auto_defer_tests WHERE LOWER(canonical_name) = ? LIMIT 1",
+                arrayOf(canonicalName.lowercase().trim()),
+            )
+            cursor.use {
+                if (it.moveToFirst()) it.getString(0) else null
+            }
+        } catch (_: android.database.sqlite.SQLiteException) {
+            null
+        }
+    }
+
+    /**
+     * F-05 / INTERPRET-01 BORDERLINE: clinical_thresholds rows for the given canonical.
+     *
+     * Returns null on table-missing (LM-2 graceful miss) or empty result. The empty-list
+     * vs null distinction is intentionally collapsed at the caller level (RangeEvaluator)
+     * since both mean "no threshold available".
+     *
+     * Schema in kb/kb/schema.sql:174-185 — populated by
+     * kb/kb/sources/curated_lab_ranges.py CURATED_CLINICAL_THRESHOLDS list.
+     */
+    override fun queryClinicalThresholds(canonicalName: String): List<Map<String, String>>? {
+        return try {
+            val cursor = rawQuery(
+                """SELECT test_name, threshold_tier, low_cutoff, high_cutoff, units, citation
+                   FROM clinical_thresholds
+                   WHERE LOWER(test_name) = ?""",
+                arrayOf(canonicalName.lowercase().trim()),
+            )
+            cursor.use {
+                val rows = mutableListOf<Map<String, String>>()
+                while (it.moveToNext()) {
+                    rows += cursorToMap(it)
+                }
+                if (rows.isEmpty()) null else rows
+            }
+        } catch (_: android.database.sqlite.SQLiteException) {
+            null
+        }
+    }
+
+    // ---- Population classification helper (mirrors Python _classify_population) ----
+
+    private fun classifyPopulation(age: Int?, sex: String?): String {
+        if (age != null && age < 18) return "pediatric"
+        return when (sex?.trim()?.lowercase()) {
+            "f", "female" -> "adult_female"
+            "m", "male"   -> "adult_male"
+            else          -> "adult"
+        }
     }
 
     // ── Cursor utilities ────────────────────────────────────────────────
