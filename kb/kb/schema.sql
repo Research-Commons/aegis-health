@@ -227,3 +227,26 @@ CREATE TABLE IF NOT EXISTS reference_ranges_pregnancy (
 );
 CREATE INDEX IF NOT EXISTS idx_preg_ref_name ON reference_ranges_pregnancy(test_name COLLATE NOCASE);
 CREATE INDEX IF NOT EXISTS idx_preg_ref_tri  ON reference_ranges_pregnancy(trimester);
+
+-- ---------------------------------------------------------------------------
+-- Phase 2 — ReportReader: auto-defer canonical test list (D-11)
+-- ---------------------------------------------------------------------------
+-- Single source of truth shared by Python (tools/parsers/lab_report_parser.py)
+-- and Kotlin (android/.../reportreader/RangeEvaluator.kt) for tumor-marker,
+-- genetic, and pathology-grade tests that bypass range evaluation and route
+-- directly to defer with category-specific defer_reason ("auto_defer:tumor_marker"
+-- etc.) per D-12.
+--
+-- canonical_name: matches LabRowNormalizer canonical output (case-preserved
+--                 per _alias_map.py convention).
+-- category:       one of 'tumor_marker' | 'genetic' | 'pathology'.
+-- citation:       per-row public-domain source URL or short-code-anchored
+--                 reference; matches the per-row citation discipline of
+--                 curated_lab_ranges.py.
+
+CREATE TABLE IF NOT EXISTS auto_defer_tests (
+    canonical_name TEXT PRIMARY KEY,
+    category       TEXT NOT NULL CHECK (category IN ('tumor_marker', 'genetic', 'pathology')),
+    citation       TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_auto_defer_name ON auto_defer_tests(canonical_name COLLATE NOCASE);
