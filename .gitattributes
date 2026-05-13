@@ -1,0 +1,28 @@
+# Aegis Health — line-ending policy
+#
+# Phase 2 ReportReader contract: the Kotlin pipeline output (PreparsedReport
+# canonicalized via JsonCanonicalizer.kt per D-06) must byte-match the live
+# ground-truth JSONs at eval/fixtures/lab_reports/{vendor}/*-evaluated.json
+# AND their mirrored copies at android/app/src/androidTest/assets/lab_reports/.
+#
+# These files were produced by Python `json.dumps(obj, sort_keys=True,
+# indent=2, ensure_ascii=False) + "\n"` on Unix CI/dev machines and ship with
+# LF line endings. On Windows with `core.autocrlf=true`, Git would otherwise
+# convert them to CRLF on checkout, breaking the byte-identical contract for
+# JsonCanonicalizerTest (JVM) and LabReportPipelineFixtureTest (androidTest).
+#
+# Pin all evaluated-result JSON fixtures and androidTest assets to LF so the
+# bytes on every contributor's disk match the bytes the canonicalizer will
+# emit, regardless of OS.
+
+# Lab-report ground-truth JSONs (Phase 2 byte-identical contract)
+eval/fixtures/lab_reports/**/*-evaluated.json text eol=lf
+android/app/src/androidTest/assets/lab_reports/**/*-evaluated.json text eol=lf
+
+# Manifests + license observations near the fixtures stay LF for consistency
+eval/fixtures/lab_reports/**/MANIFEST.md text eol=lf
+android/app/src/androidTest/assets/lab_reports/**/MANIFEST.md text eol=lf
+
+# PreparsedReport schema + EXTRACTION-SPEC.md are the authoritative spec
+# documents these JSONs validate against — keep them LF too.
+.planning/specs/PreparsedReport.schema.json text eol=lf
