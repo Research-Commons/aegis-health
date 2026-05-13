@@ -1,6 +1,6 @@
 package com.aegis.health.tools
 
-import com.aegis.health.db.KBDatabase
+import com.aegis.health.db.KBQueries
 import com.aegis.health.models.LabReferenceRange
 import com.aegis.health.models.LookupLabReferenceRangeResult
 
@@ -12,13 +12,17 @@ import com.aegis.health.models.LookupLabReferenceRangeResult
  * its own reference range (INTERPRET-02).
  *
  * Surface shape mirrors LookupTerm.kt exactly (D-01).
+ *
+ * F-02: depends on KBQueries (JVM-clean interface from Plan 02-05), NOT on
+ * concrete KBDatabase. KBDatabase implements KBQueries so production call
+ * sites pass-through unchanged; Plan 02-13 tests inject a FakeKb implementation.
  */
 object LookupLabReferenceRange {
     fun lookup(
         testName: String,
         age: Int? = null,
         sex: String? = null,
-        db: KBDatabase,
+        db: KBQueries,
     ): LookupLabReferenceRangeResult {
         if (testName.isBlank()) {
             return LookupLabReferenceRangeResult(error = "Empty test_name provided")
