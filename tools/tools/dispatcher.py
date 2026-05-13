@@ -10,6 +10,7 @@ from tools.tools.check_warnings import check_warnings
 from tools.tools.decompose_product import decompose_product
 from tools.tools.get_drug_info import get_drug_info
 from tools.tools.get_guideline import get_guideline
+from tools.tools.lookup_lab_reference_range import lookup_lab_reference_range
 from tools.tools.lookup_term import lookup_term
 from tools.tools.normalize_drug import normalize_drug
 
@@ -22,6 +23,7 @@ _TOOL_REGISTRY: dict[str, Any] = {
     "check_warnings": check_warnings,
     "lookup_term": lookup_term,
     "get_guideline": get_guideline,
+    "lookup_lab_reference_range": lookup_lab_reference_range,
 }
 
 

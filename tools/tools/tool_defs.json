@@ -120,5 +120,31 @@
         "required": ["age", "sex"]
       }
     }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "lookup_lab_reference_range",
+      "description": "Look up the normal reference range for a common lab test (CBC components, BMP/CMP analytes, lipid panel, A1C). Optionally age- and sex-stratified. Returns ref_low, ref_high, units, and a citation. Use only when the lab report does not print its own reference range.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_name": {
+            "type": "string",
+            "description": "Canonical lab test name (e.g., 'LDL cholesterol', 'hemoglobin', 'A1C')."
+          },
+          "age": {
+            "type": "integer",
+            "description": "Patient age in years."
+          },
+          "sex": {
+            "type": "string",
+            "enum": ["male", "female", "m", "f"],
+            "description": "Patient sex; required for sex-stratified analytes."
+          }
+        },
+        "required": ["test_name"]
+      }
+    }
   }
 ]
