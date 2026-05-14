@@ -142,8 +142,17 @@ fun RangeBar(
             val width = constraints.maxWidth
             val height = placeable.height
             layout(width, height) {
-                if (v == null || hi == lo) {
-                    // Defensive: missing value or zero-width range, center the dot.
+                // WR-02: harden defensive guard against non-finite inputs
+                // (NaN / +-Infinity from adversarial JsonPrimitive("NaN")
+                // cells) and inverted ranges (hi < lo). Without this, the
+                // (v - lo) / (hi - lo) math yields NaN which propagates
+                // through coerceIn and toInt() to either x = 0 or
+                // Int.MIN_VALUE depending on overflow — dot drifts to the
+                // left edge or off-screen. hi <= lo subsumes the old hi == lo
+                // check and also catches inverted ranges.
+                if (v == null || !v.isFinite() || !lo.isFinite() || !hi.isFinite() || hi <= lo) {
+                    // Defensive: missing/non-finite value or zero-or-negative-width
+                    // range, center the dot.
                     placeable.place(x = (width / 2) - (placeable.width / 2), y = 0)
                     return@layout
                 }
