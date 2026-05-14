@@ -309,10 +309,13 @@ fun ReportReaderScreen(
 // ── Subcomposables (file-private) ─────────────────────────────────────────
 
 @Composable
-private fun LandingState(onPick: () -> Unit) {
+private fun LandingState(
+    onPick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val colors = LocalAegisColors.current
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
