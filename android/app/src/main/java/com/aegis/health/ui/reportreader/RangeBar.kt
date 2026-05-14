@@ -124,6 +124,10 @@ fun RangeBar(
         )
         // Dot — placed via a custom Layout so we can compute fractional offset
         // against the actual measured track width.
+        // WR-01: Layout must align CenterStart inside the Box so the 8.dp dot
+        // sits ON the 2.dp track, not 3.dp above it. Without this modifier the
+        // Layout defaults to TopStart and the dot floats above the centered
+        // track — silently subverting the D-02 "dot on the track" mandate.
         Layout(
             content = {
                 Box(
@@ -132,6 +136,7 @@ fun RangeBar(
                         .background(dotColor, CircleShape),
                 )
             },
+            modifier = Modifier.align(Alignment.CenterStart),
         ) { measurables, constraints ->
             val placeable = measurables[0].measure(constraints.copy(minWidth = 0, minHeight = 0))
             val width = constraints.maxWidth
