@@ -1,0 +1,17 @@
+# Aegis Health — SAFETY-05 permission baseline
+#
+# Single source of truth for the merged-manifest <uses-permission> set.
+# Updated only when an INTENTIONAL permission addition lands; SAFETY-05
+# forbids accidental additions.
+#
+# Captured: 2026-05-14 (Phase 3 baseline)
+# Pre-Phase-3 state: CAMERA only.
+#
+# INTERNET and ACCESS_NETWORK_STATE are stripped via tools:node="remove"
+# in AndroidManifest.xml and MUST NOT appear in this baseline. Their
+# presence in the live merged manifest would be a SAFETY-05 violation.
+#
+# Format: one permission name per line, sorted alphabetically, blank
+# lines and comment lines (starting with #) ignored by the audit test.
+
+android.permission.CAMERA

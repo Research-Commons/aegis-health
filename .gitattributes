@@ -26,3 +26,10 @@ android/app/src/androidTest/assets/lab_reports/**/MANIFEST.md text eol=lf
 # PreparsedReport schema + EXTRACTION-SPEC.md are the authoritative spec
 # documents these JSONs validate against — keep them LF too.
 .planning/specs/PreparsedReport.schema.json text eol=lf
+
+# Phase 3 SAFETY-05 baseline (Plan 03-08): PermissionAuditTest reads this
+# file at runtime via androidTest assets and trims each line before
+# comparison. The test absorbs lone trailing \r characters, but pinning
+# this file to LF keeps the on-disk bytes identical to the bytes the
+# audit semantics describe — robust to future test-side changes.
+android/app/src/androidTest/assets/permission_baseline.txt text eol=lf
