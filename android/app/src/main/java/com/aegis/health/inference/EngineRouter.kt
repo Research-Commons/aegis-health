@@ -58,4 +58,32 @@ object EngineRouter {
         val engine = selected ?: LiteRtLmEngine.also { selected = it }
         engine.initialize(context)
     }
+
+    /**
+     * Phase 4 D-07 — belt-and-suspenders cold-start warm-up triggered from the
+     * HomeScreen ReportReader tile tap. AegisApp.onCreate already runs an eager
+     * pre-warm in the background; this is the second trigger that overlaps with
+     * the user's "Pick a lab report PDF" reading + SAF picker interaction window
+     * on slow cold starts.
+     *
+     * Idempotent in two ways:
+     *   1. If [initialize] hasn't completed yet (selected == null OR not ready),
+     *      this is a no-op — the caller is racing AegisApp startup; bail rather
+     *      than throw.
+     *   2. If the engine is ready, [LiteRtLmEngine.startConversation] forces the
+     *      model pages hot by creating a conversation; the engine's own
+     *      mutex.withLock + conversation?.close() guarantees repeated calls are
+     *      safe.
+     *
+     * Mode is "reportreader" so the tool catalog (emptyList() per Wave 1's
+     * OpenApiToolDefs change) matches what the actual synthesis turn will use —
+     * keeps the prefill cache warm for the exact prompt that will run next.
+     *
+     * Callers should wrap in runCatching — warmUp is an optimization, not a
+     * requirement; a failure here must not crash the UI.
+     */
+    suspend fun warmUp() {
+        if (!isReady) return
+        active.startConversation("reportreader", includeTools = false)
+    }
 }
