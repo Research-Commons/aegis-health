@@ -54,6 +54,7 @@ import com.aegis.health.ui.home.HomeScreen
 import com.aegis.health.ui.onboarding.OnboardingScreen
 import com.aegis.health.ui.profile.ProfileEditorScreen
 import com.aegis.health.ui.profile.ProfileScreen
+import com.aegis.health.ui.reportreader.ReportReaderScreen
 import com.aegis.health.ui.startup.StartupErrorScreen
 import com.aegis.health.ui.startup.StartupLoadingScreen
 import com.aegis.health.ui.theme.AegisHealthTheme
@@ -67,6 +68,7 @@ private object Routes {
     const val DrugSafe = "drugsafe"
     const val Consent = "consent"
     const val Partner = "partner"
+    const val ReportReader = "reportreader"
     const val Bench = "bench"
     const val Deferral = "deferral"
 }
@@ -156,6 +158,12 @@ fun AegisNavHost() {
             }
             composable(Routes.DrugSafe) {
                 DrugSafeScreen(
+                    onBack = { navController.popBackStack() },
+                    onDefer = { navController.navigate(Routes.Deferral) },
+                )
+            }
+            composable(Routes.ReportReader) {
+                ReportReaderScreen(
                     onBack = { navController.popBackStack() },
                     onDefer = { navController.navigate(Routes.Deferral) },
                 )
