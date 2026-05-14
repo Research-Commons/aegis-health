@@ -248,38 +248,45 @@ private fun RecentRow(
     modifier: Modifier = Modifier,
 ) {
     val colors = LocalAegisColors.current
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp, horizontal = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
+    // WR-06: wrap the content Row and the hairline divider in a Column that
+    // owns the caller-supplied modifier, so any modifier (padding, weight,
+    // alignment) covers BOTH siblings. Previously the modifier was applied
+    // only to the Row and the divider rendered outside its scope, giving
+    // a future caller's modifier inconsistent coverage and a subtle bug.
+    Column(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp, horizontal = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .background(colors.surfaceAlt, RoundedCornerShape(9.dp)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(icon, null, tint = colors.onSurfaceMuted, modifier = Modifier.size(16.dp))
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(title, style = MaterialTheme.typography.bodyMedium, color = colors.onSurface)
+                Text(sub, style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceMuted)
+            }
+            Icon(
+                Icons.Default.ChevronRight,
+                null,
+                tint = colors.onSurfaceMuted,
+                modifier = Modifier.size(18.dp),
+            )
+        }
         Box(
             modifier = Modifier
-                .size(32.dp)
-                .background(colors.surfaceAlt, RoundedCornerShape(9.dp)),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(icon, null, tint = colors.onSurfaceMuted, modifier = Modifier.size(16.dp))
-        }
-        Column(modifier = Modifier.weight(1f)) {
-            Text(title, style = MaterialTheme.typography.bodyMedium, color = colors.onSurface)
-            Text(sub, style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceMuted)
-        }
-        Icon(
-            Icons.Default.ChevronRight,
-            null,
-            tint = colors.onSurfaceMuted,
-            modifier = Modifier.size(18.dp),
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(colors.hairline),
         )
     }
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(colors.hairline),
-    )
 }
 
 private fun greetingForNow(): String {
