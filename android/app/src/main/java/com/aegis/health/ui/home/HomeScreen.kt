@@ -37,12 +37,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aegis.health.AegisApp
 import com.aegis.health.db.history.HistoryEntity
 import com.aegis.health.db.history.formatRelative
+import com.aegis.health.inference.EngineRouter
 import com.aegis.health.ui.common.IconHeaderButton
 import com.aegis.health.ui.common.OnDeviceChip
 import com.aegis.health.ui.common.SectionLabel
 import com.aegis.health.ui.common.ShieldMark
 import com.aegis.health.ui.theme.AegisSpacing
 import com.aegis.health.ui.theme.LocalAegisColors
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 
 @Composable
@@ -145,7 +148,19 @@ fun HomeScreen(
                 body = "Pick a lab report PDF. We flag values outside the printed range and explain what each test measures.",
                 accent = colors.secondary,
                 accentSoft = colors.secondarySoft,
-                onClick = { onOpen("reportreader") },
+                onClick = {
+                    // Phase 4 D-07 — fire-and-forget engine warm-up on tile tap. The
+                    // user spends a few seconds reading the LandingState "Pick a lab
+                    // report PDF" card + launching SAF, which hides the warm-up cost
+                    // on cold starts. runCatching swallows any failure so an
+                    // EngineRouter-not-ready race doesn't crash the UI. AegisApp's
+                    // appScope is a SupervisorJob — a warm-up exception won't tear
+                    // down sibling coroutines.
+                    AegisApp.instance.appScope.launch(Dispatchers.IO) {
+                        runCatching { EngineRouter.warmUp() }
+                    }
+                    onOpen("reportreader")
+                },
             )
         }
 
