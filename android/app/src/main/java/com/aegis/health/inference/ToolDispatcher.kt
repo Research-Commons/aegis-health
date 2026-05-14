@@ -5,6 +5,9 @@ import com.aegis.health.AegisApp
 import com.aegis.health.camera.DrugNameExtractor
 import com.aegis.health.models.AegisResponse
 import com.aegis.health.models.Citation
+import com.aegis.health.models.EvaluatedRow
+import com.aegis.health.models.Flag
+import com.aegis.health.models.PreparsedReport
 import com.aegis.health.models.ToolCall
 import com.aegis.health.models.ToolResult
 import com.aegis.health.tools.CheckWarnings
@@ -14,6 +17,8 @@ import com.aegis.health.tools.GetGuideline
 import com.aegis.health.tools.GetGuidelineResult
 import com.aegis.health.tools.LookupTerm
 import com.aegis.health.tools.NormalizeDrug
+import com.aegis.health.ui.reportreader.AegisResponseBuilder
+import com.aegis.health.ui.reportreader.DeferReasonCopy
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -22,6 +27,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
@@ -132,6 +138,7 @@ object ToolDispatcher {
                 "normalize_drug" -> compactNormalizeDrugResult(element)
                 "decompose_product" -> compactDecomposeProductResult(element)
                 "get_drug_info" -> compactDrugInfoResult(element)
+                "read_lab_report" -> compactReadLabReportResult(element)
                 else -> compactGenericJson(element)
             }
             compact.toString()
@@ -232,6 +239,80 @@ object ToolDispatcher {
     private fun compactGuidelineRecommendations(element: JsonElement): JsonElement {
         val arr = element as? JsonArray ?: return element
         return JsonArray(arr.map { it.selectObject("title", "grade", "description", "population", "citation") })
+    }
+
+    /**
+     * Compacts a `read_lab_report` synthetic tool_result for the model context.
+     * Per CONTEXT.md D-03 Claude's Discretion (lines 259-278): keep `rows`,
+     * `has_outside_range`, `has_unknown`, `profile_used`, `citations`; DROP
+     * `report_status` (synthesis only fires when code == "OK"). Each row is
+     * compacted in turn — definition + definition_citation are dropped for
+     * IN_RANGE rows (the model never narrates them) and kept for every other
+     * status so the model has plain-language grounding for flagged values.
+     * Implements the compaction half of SAFETY-02 (model sees only structured
+     * PreparsedReport, never raw PDF text) + EXPLAIN-01 (per-row MedlinePlus
+     * citation retention for non-IN_RANGE rows).
+     */
+    private fun compactReadLabReportResult(element: JsonElement): JsonElement {
+        val obj = element as? JsonObject ?: return element
+        return obj.select(
+            "rows",
+            "has_outside_range",
+            "has_unknown",
+            "profile_used",
+            "citations",
+            transform = mapOf(
+                "rows" to ::compactEvaluatedRows,
+                // PreparsedReport.citations is List<LabCitation> with {label, url}
+                // shape — distinct from AegisResponse.Citation's {source, text}
+                // shape compactCitations targets. Use the dedicated LabCitation
+                // compactor below so the model actually sees the citation data
+                // (Rule 1: reusing compactCitations here would silently drop every
+                // citation because the keys don't match).
+                "citations" to ::compactLabCitations,
+                "profile_used" to ::compactProfileUsed,
+            ),
+        )
+    }
+
+    private fun compactLabCitations(element: JsonElement): JsonElement {
+        val arr = element as? JsonArray ?: return element
+        return JsonArray(arr.map { it.selectObject("label", "url") })
+    }
+
+    private fun compactEvaluatedRows(element: JsonElement): JsonElement {
+        val arr = element as? JsonArray ?: return element
+        return JsonArray(arr.map { compactEvaluatedRow(it) })
+    }
+
+    private fun compactEvaluatedRow(element: JsonElement): JsonElement {
+        val obj = element as? JsonObject ?: return element
+        val status = (obj["status"] as? JsonPrimitive)?.contentOrNull
+        // Always keep: canonical_name, value, units, ref_low, ref_high, status,
+        // ref_source, defer_reason. Definition fields kept only for non-IN_RANGE
+        // rows (CONTEXT.md D-03 Discretion lines 259-266) — the model uses them
+        // to narrate flagged values without hallucinating definitions.
+        val keepDefinitions = status != "IN_RANGE"
+        val keys = buildList {
+            add("canonical_name")
+            add("value")
+            add("units")
+            add("ref_low")
+            add("ref_high")
+            add("status")
+            add("ref_source")
+            add("defer_reason")
+            if (keepDefinitions) {
+                add("definition")
+                add("definition_citation")
+            }
+        }
+        return obj.select(*keys.toTypedArray())
+    }
+
+    private fun compactProfileUsed(element: JsonElement): JsonElement {
+        val obj = element as? JsonObject ?: return element
+        return obj.select("age", "sex")
     }
 
     private fun compactDrugInfoList(element: JsonElement): JsonElement {
@@ -400,6 +481,57 @@ object ToolDispatcher {
         return HealthPartnerResult(response = response, guidelines = guidelines)
     }
 
+    /**
+     * Fast path for the ReportReader screen. [PreparsedReport] is already
+     * validated upstream by Phase 2's `ReportReaderPipeline` + `RangeEvaluator`;
+     * the model never sees raw PDF text. Per SAFETY-02, this function builds a
+     * synthetic `<|tool_call>call:read_lab_report{...}<tool_call|>` /
+     * `<|tool_response>response:read_lab_report{...}<tool_response|>` turn from
+     * the structured PreparsedReport and feeds it through the same
+     * [runPrecomputedToolSynthesis] helper DrugSafe / HealthPartner use.
+     *
+     * The model owns only the `explanation` field of the returned [AegisResponse]
+     * — every other slot is re-emitted by [enforceReportReaderContract] from
+     * the PreparsedReport (D-03). On sanitization reject the explanation falls
+     * back to [AegisResponseBuilder.FIXED_EXPLANATION] and the reject code
+     * lands on the BatteryProbe span (D-04 telemetry).
+     *
+     * Wrapped in `BatteryProbe.around("reportreader_fastpath", ...)` so the
+     * synthesis turn's per-call charge / voltage / temperature delta records
+     * with `parent_span_id` chaining through to the inner
+     * `precomputed_tool_synthesis` span (BatteryProbe.SpanElement in
+     * CoroutineContext makes the chain automatic).
+     *
+     * Latency target: under 180000 ms (3 min) for a 12-row lipid+CMP on
+     * SD8G2 / CPU(threads=5) per ROADMAP Phase 4 SC-3.
+     */
+    suspend fun runReportReaderFastPath(
+        report: PreparsedReport,
+        onProgress: (ProgressEvent) -> Unit = {},
+    ): AegisResponse = BatteryProbe.around(
+        label = "reportreader_fastpath",
+        initialMetadata = mapOf(
+            "rows" to JsonPrimitive(report.rows.size),
+            "has_outside_range" to JsonPrimitive(report.has_outside_range),
+            "has_unknown" to JsonPrimitive(report.has_unknown),
+        ),
+    ) { _ ->
+        onProgress(ProgressEvent.Step("Reading report"))
+        val toolResult = ToolResult(
+            name = "read_lab_report",
+            result = json.encodeToString(report),
+        )
+        val nativeToolCall = formatReadLabReportCall(report)
+        runPrecomputedToolSynthesis(
+            mode = "reportreader",
+            userInput = "Summarize the flagged values in this lab report:",
+            nativeToolCall = nativeToolCall,
+            toolResult = toolResult,
+            onProgress = onProgress,
+            report = report,
+        )
+    }
+
     private data class DrugSafeFastPathArgs(
         val drugs: List<String>,
         val age: Int?,
@@ -458,6 +590,7 @@ object ToolDispatcher {
         nativeToolCall: String,
         toolResult: ToolResult,
         onProgress: (ProgressEvent) -> Unit,
+        report: PreparsedReport? = null,
     ): AegisResponse = BatteryProbe.around(
         label = "precomputed_tool_synthesis",
         initialMetadata = mapOf(
@@ -517,7 +650,7 @@ object ToolDispatcher {
         span.put("model_turns", 1)
         span.put("tool_calls_total", 1)
         span.put("terminated_at_max", false)
-        parseAegisResponse(modelOutput, mode, backfillCitations)
+        parseAegisResponse(modelOutput, mode, backfillCitations, report, span)
     }
 
     private fun formatCheckWarningsCall(args: DrugSafeFastPathArgs): String {
@@ -536,6 +669,30 @@ object ToolDispatcher {
             parts += "conditions:${formatNativeStringList(conditions)}"
         }
         return "<|tool_call>call:get_guideline{${parts.joinToString(",")}}<tool_call|>"
+    }
+
+    /**
+     * Builds the synthetic `<|tool_call>call:read_lab_report{...}<tool_call|>`
+     * header for the ReportReader fast path. Keys off `profile_used` when
+     * present so the model sees demographic context (per PATTERNS.md §A1
+     * delta #4); always carries the three summary counts so the model knows
+     * the report size before reading the tool-response body.
+     *
+     * `read_lab_report` is a SYNTHETIC virtual tool name — it is NOT in the
+     * registry, and `OpenApiToolDefs.forMode("reportreader") = emptyList()`
+     * (Plan 04-01) ensures the model has no live tool to actually call.
+     * The header exists only inside the synthesis-turn transcript so the
+     * model recognizes the canonical "after-tool-result synthesis" shape.
+     */
+    private fun formatReadLabReportCall(report: PreparsedReport): String {
+        val parts = mutableListOf<String>()
+        val profile = report.profile_used
+        profile.age?.let { parts += "age:$it" }
+        profile.sex?.takeIf { it.isNotBlank() }?.let { parts += "sex:${formatNativeString(it)}" }
+        parts += "rows:${report.rows.size}"
+        parts += "outside_range:${report.has_outside_range}"
+        parts += "has_unknown:${report.has_unknown}"
+        return "<|tool_call>call:read_lab_report{${parts.joinToString(",")}}<tool_call|>"
     }
 
     private fun formatNativeStringList(values: List<String>): String =
@@ -767,6 +924,8 @@ object ToolDispatcher {
         modelOutput: String,
         mode: String = "drugsafe",
         backfillCitations: List<Citation> = emptyList(),
+        report: PreparsedReport? = null,
+        span: BatteryProbe.SpanContext? = null,
     ): AegisResponse {
         val cleaned = cleanFinalResponse(modelOutput)
         if (containsToolCallFragment(cleaned)) {
@@ -781,7 +940,13 @@ object ToolDispatcher {
         val jsonStr = extractFirstBalancedJsonObject(cleaned)
         if (jsonStr != null) {
             try {
-                return enforceModeContract(json.decodeFromString<AegisResponse>(jsonStr), mode, backfillCitations)
+                return enforceModeContract(
+                    json.decodeFromString<AegisResponse>(jsonStr),
+                    mode,
+                    backfillCitations,
+                    report,
+                    span,
+                )
             } catch (e: Exception) {
                 Log.d(TAG, "JSON parse failed, attempting repair before ProseParser fallback", e)
                 val repaired = repairCommonJsonMalformations(jsonStr)
@@ -791,6 +956,8 @@ object ToolDispatcher {
                             json.decodeFromString<AegisResponse>(repaired),
                             mode,
                             backfillCitations,
+                            report,
+                            span,
                         )
                     } catch (e2: Exception) {
                         Log.w(TAG, "Repaired JSON parse also failed, falling back to ProseParser", e2)
@@ -800,7 +967,13 @@ object ToolDispatcher {
         }
 
         Log.d(TAG, "Routing non-JSON output through ProseParser")
-        return enforceModeContract(ProseParser.parse(cleaned.ifBlank { modelOutput }, mode), mode, backfillCitations)
+        return enforceModeContract(
+            ProseParser.parse(cleaned.ifBlank { modelOutput }, mode),
+            mode,
+            backfillCitations,
+            report,
+            span,
+        )
     }
 
     private fun cleanFinalResponse(modelOutput: String): String {
@@ -845,13 +1018,49 @@ object ToolDispatcher {
         return null
     }
 
+    /**
+     * Dispatches the response through a mode-specific contract.
+     *
+     * - `reportreader` → [enforceReportReaderContract]: DISCARDS the model's
+     *   `flags[]`, `citations[]`, `defer_to_professional`, and `confidence`
+     *   (D-03 strict override; SAFETY-01). Only the sanitized `explanation`
+     *   field survives. Requires the [report] argument to be non-null in
+     *   production — a null report routes through the FIXED_EXPLANATION
+     *   fail-safe.
+     * - `consentreader` / `consent` / `healthpartner` → pass-through (the
+     *   model's response shape is already authoritative for those modes).
+     * - All other modes (default DrugSafe) → [enforceDrugSafeContract]: the
+     *   original flag/citation cleanup + backfill logic unchanged.
+     *
+     * `report` and `span` default to null so DrugSafe / HealthPartner /
+     * ConsentReader / agentic-loop callers are unaffected. They're populated
+     * only by [runReportReaderFastPath] → [runPrecomputedToolSynthesis] →
+     * [parseAegisResponse].
+     */
     private fun enforceModeContract(
         response: AegisResponse,
         mode: String,
         backfillCitations: List<Citation> = emptyList(),
+        report: PreparsedReport? = null,
+        span: BatteryProbe.SpanContext? = null,
     ): AegisResponse {
-        if (!isDrugSafeMode(mode)) return response
+        return when (mode.lowercase()) {
+            "reportreader" -> enforceReportReaderContract(response, report, span)
+            "consentreader", "consent", "healthpartner" -> response
+            else -> enforceDrugSafeContract(response, backfillCitations)
+        }
+    }
 
+    /**
+     * Preserves the Phase 1-3 DrugSafe override block verbatim. Factored out of
+     * the original [enforceModeContract] early-return so the new when-switch
+     * leaves DrugSafe behavior byte-for-byte identical (existing unit tests
+     * still pass).
+     */
+    private fun enforceDrugSafeContract(
+        response: AegisResponse,
+        backfillCitations: List<Citation>,
+    ): AegisResponse {
         val flags = response.flags.map { flag ->
             val cleaned = humanizeCitationSource(flag.citation)
             if (cleaned.isBlank()) {
@@ -906,8 +1115,212 @@ object ToolDispatcher {
         return response.copy(flags = flags, citations = citations)
     }
 
+    /**
+     * D-03 strict override for ReportReader synthesis. The model owns ONLY the
+     * `explanation` field. Every other AegisResponse slot is re-emitted from
+     * the [report] (which the Kotlin pipeline already validated upstream) so
+     * the user can never see a model hallucination on `flags`, `citations`,
+     * `defer_to_professional`, or `confidence` (SAFETY-01).
+     *
+     * The flag severity + description formulas mirror
+     * `AegisResponseBuilder.severityForStatus` + `AegisResponseBuilder.flagMessage`
+     * verbatim. Those are private to AegisResponseBuilder; we replicate the
+     * formulas here rather than widening visibility because the production
+     * fallback path (D-05) also reuses `AegisResponseBuilder.build(report)` —
+     * keeping both in sync is the contract.
+     *
+     * The model's `explanation` is piped through [sanitizeExplanation] (D-04
+     * four-step cascade). On reject we emit `synthesis_sanitization_reason=<code>`
+     * to the active [BatteryProbe.SpanContext] so Phase 5 EVAL-04 can grep the
+     * telemetry log for which class of model output was suppressed.
+     *
+     * If [report] is null (caller bug — runReportReaderFastPath should always
+     * pass it), we return the FIXED_EXPLANATION envelope as a fail-safe so
+     * the user never sees a model-emitted hallucination.
+     */
+    private fun enforceReportReaderContract(
+        response: AegisResponse,
+        report: PreparsedReport?,
+        span: BatteryProbe.SpanContext?,
+    ): AegisResponse {
+        if (report == null) {
+            Log.w(TAG, "enforceReportReaderContract called without report; falling back to FIXED_EXPLANATION envelope")
+            span?.put("synthesis_sanitization_reason", "missing_report")
+            return AegisResponse(
+                confidence = 0.6,
+                defer_to_professional = true,
+                flags = emptyList(),
+                citations = emptyList(),
+                explanation = AegisResponseBuilder.FIXED_EXPLANATION,
+            )
+        }
+
+        // D-03: flags re-emitted from PreparsedReport.rows filtered by status;
+        // model flags[] DISCARDED entirely.
+        val flags = report.rows
+            .filter { it.status != "IN_RANGE" }
+            .map { row ->
+                Flag(
+                    severity = when (row.status) {
+                        "OUTSIDE_RANGE" -> 4
+                        "BORDERLINE" -> 3
+                        "unknown" -> 2
+                        else -> 1
+                    },
+                    description = flagDescriptionForRow(row),
+                    citation = row.definition_citation.orEmpty(),
+                )
+            }
+
+        // D-03: citations backfilled from PreparsedReport.citations; model
+        // citations[] DISCARDED — citation surface is the highest-risk
+        // hallucination vector and gets zero opportunity.
+        val citations = report.citations.map { lc ->
+            Citation(source = lc.label, text = lc.url)
+        }
+
+        // D-03: defer flag = Kotlin-computed; model value DISCARDED.
+        val deferToProfessional = report.has_outside_range || report.has_unknown
+
+        // D-04: sanitize the model explanation; fall back to FIXED_EXPLANATION
+        // on reject. The reject reason lands on the active BatteryProbe span
+        // for Phase 5 EVAL-04 telemetry audit.
+        val (explanation, rejectReason) = sanitizeExplanation(response.explanation)
+        if (rejectReason != null) {
+            span?.put("synthesis_sanitization_reason", rejectReason)
+        }
+
+        return AegisResponse(
+            confidence = 0.6,                       // D-03 fixed floor
+            defer_to_professional = deferToProfessional,
+            flags = flags,
+            citations = citations,
+            explanation = explanation,
+        )
+    }
+
+    /**
+     * Mirror of `AegisResponseBuilder.flagMessage` (private there). Phase 4
+     * replicates the formula rather than widening visibility on the UI-layer
+     * builder so the two implementations stay self-contained. Keep this in
+     * sync with `AegisResponseBuilder.flagMessage` — any future change must
+     * touch both (Phase 5's regression eval would catch drift between the
+     * production prose and the D-05 fallback prose).
+     */
+    private fun flagDescriptionForRow(row: EvaluatedRow): String {
+        val valueText = (row.value as? JsonPrimitive)?.contentOrNull
+        val units = row.units?.takeIf { it.isNotBlank() } ?: ""
+        return when (row.status) {
+            "unknown" -> {
+                val reasonText = row.defer_reason?.let { DeferReasonCopy.lookup(it) }
+                    ?: "A clinician can review this result."
+                "${row.canonical_name} — $reasonText"
+            }
+            else -> {
+                val tail = listOfNotNull(valueText, units.takeIf { it.isNotEmpty() })
+                    .joinToString(" ")
+                if (tail.isNotEmpty()) {
+                    "${row.canonical_name}: $tail — outside printed range"
+                } else {
+                    "${row.canonical_name} — outside printed range"
+                }
+            }
+        }
+    }
+
+    /**
+     * D-04 explanation sanitization. Order matters — empty / structural-leak /
+     * diagnostic-phrase / length-cap. Don't reorder: the length-cap step is
+     * allowed to mutate the string and we want rejects to fire before
+     * truncation has a chance to mask them.
+     *
+     * Returns a [Pair] of `(explanation_to_use, reject_code_or_null)`. Reject
+     * codes are exactly four literal strings — `"empty"`, `"format_leak"`,
+     * `"diagnostic_phrase"`, `"too_long_truncated"` — because Phase 5 EVAL-04
+     * and REGULATORY.md telemetry grep on them. Any variation breaks the audit.
+     *
+     * Marked `internal` (not `private`) so JVM tests in the same module can
+     * invoke it directly without reflection.
+     */
+    internal fun sanitizeExplanation(raw: String): Pair<String, String?> {
+        val trimmed = raw.trim()
+
+        // 1. Empty / whitespace-only.
+        if (trimmed.isEmpty()) {
+            return AegisResponseBuilder.FIXED_EXPLANATION to "empty"
+        }
+
+        // 2. Structural-token leak. SFT v4 has no ReportReader training, so
+        // format leaks are a known risk on this novel-mode prompt.
+        for (token in SafetyBoundaryPhrases.STRUCTURAL_LEAK_TOKENS) {
+            if (trimmed.contains(token)) {
+                return AegisResponseBuilder.FIXED_EXPLANATION to "format_leak"
+            }
+        }
+        if (containsBalancedJsonObject(trimmed)) {
+            return AegisResponseBuilder.FIXED_EXPLANATION to "format_leak"
+        }
+
+        // 3. Diagnostic phrase — both legs must match on the same string per
+        // D-04. A diagnostic verb alone (e.g. "this means your LDL is high")
+        // is allowed; a disease noun alone (some lab analytes legitimately
+        // appear in description text) is allowed. Together they signal a
+        // declarative-diagnosis claim, which is out of envelope.
+        val verbHit = SafetyBoundaryPhrases.DIAGNOSTIC_VERB_REGEX.containsMatchIn(trimmed)
+        val nounHit = SafetyBoundaryPhrases.DISEASE_NOUN_REGEX.containsMatchIn(trimmed)
+        if (verbHit && nounHit) {
+            return AegisResponseBuilder.FIXED_EXPLANATION to "diagnostic_phrase"
+        }
+
+        // 4. Length cap. Truncate at the last sentence boundary within bound;
+        // if none, hard-cut at 280 with no ellipsis (D-04 step 1).
+        if (trimmed.length > 280) {
+            val window = trimmed.substring(0, 280)
+            val lastBoundary = maxOf(
+                window.lastIndexOf('.'),
+                window.lastIndexOf('!'),
+                window.lastIndexOf('?'),
+            )
+            val truncated = if (lastBoundary >= 0) {
+                window.substring(0, lastBoundary + 1)
+            } else {
+                window
+            }
+            return truncated to "too_long_truncated"
+        }
+
+        return trimmed to null
+    }
+
+    /**
+     * Detects a balanced `{...}` substring anywhere in [text]. Used by
+     * [sanitizeExplanation] step 2 to catch the model leaking a partial JSON
+     * envelope into the explanation field. A simple depth-counter is
+     * sufficient — we only need ONE balanced pair, not full JSON parsing,
+     * and this is cheap enough to run on every synthesis turn.
+     */
+    private fun containsBalancedJsonObject(text: String): Boolean {
+        var start = -1
+        var depth = 0
+        for (i in text.indices) {
+            when (text[i]) {
+                '{' -> {
+                    if (depth == 0) start = i
+                    depth++
+                }
+                '}' -> {
+                    if (depth > 0) {
+                        depth--
+                        if (depth == 0 && start in 0..i) return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
     private fun isDrugSafeMode(mode: String): Boolean {
-        return mode.lowercase() !in setOf("consentreader", "consent", "healthpartner")
+        return mode.lowercase() !in setOf("consentreader", "consent", "healthpartner", "reportreader")
     }
 
     private fun invalidFinalResponse(
@@ -986,6 +1399,7 @@ object ToolDispatcher {
         "drugsafe" -> "Composing safety report…"
         "healthpartner" -> "Building care checklist…"
         "consentreader", "consent" -> "Simplifying clauses…"
+        "reportreader" -> "Composing lab summary…"
         else -> "Composing answer…"
     }
 
