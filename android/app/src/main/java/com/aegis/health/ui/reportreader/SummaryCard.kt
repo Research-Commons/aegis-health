@@ -27,7 +27,7 @@ import com.aegis.health.ui.theme.LocalAegisColors
  * Phase 3 D-03 / D-04 — top-of-report summary card with three zones:
  *
  *   1. Count headline: "X of N values are outside the printed range".
- *      Count framing per D-03 — never narrative ("X values to discuss").
+ *      Count framing per D-03 — never narrative prose framing.
  *
  *   2. Chip strip — one chip per OUTSIDE_RANGE row only (D-04). BORDERLINE
  *      and unknown rows do NOT promote to summary chips; they stay in the
