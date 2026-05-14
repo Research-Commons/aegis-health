@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.aegis.health.AegisApp
 import com.aegis.health.db.history.HistoryEntity
 import com.aegis.health.models.PreparsedReport
+import com.aegis.health.models.ReportStatus
 import com.aegis.health.reportreader.ReportReaderPipeline
 import com.aegis.health.ui.common.PrimaryButton
 import com.aegis.health.ui.common.ScreenHeader
@@ -105,33 +106,61 @@ fun ReportReaderScreen(
         scope.launch {
             isLoading = true
             report = null
-            val parsed = withContext(Dispatchers.IO) {
-                ReportReaderPipeline.parseFromUri(uri, context, AegisApp.instance.database)
-            }
-            // History insertion on successful OK parse only (PATTERNS.md §S-5).
-            // Non-OK parses do NOT insert history.
-            if (parsed.report_status.code == "OK") {
-                val flaggedCount = parsed.rows.count { it.status != "IN_RANGE" }
-                val sevKey =
-                    if (parsed.has_outside_range) HistoryEntity.SEV_CRIT
-                    else if (parsed.has_unknown) HistoryEntity.SEV_LOW
-                    else if (flaggedCount > 0) HistoryEntity.SEV_MOD
-                    else HistoryEntity.SEV_INFO
-                withContext(Dispatchers.IO) {
-                    AegisApp.instance.historyDb.history().insert(
-                        HistoryEntity(
-                            kind = HistoryEntity.KIND_REPORTREADER,
-                            title = "Lab Report",
-                            sub = "$flaggedCount flagged of ${parsed.rows.size} values",
-                            severityKey = sevKey,
-                            createdAt = System.currentTimeMillis(),
-                            payloadJson = "",
-                        ),
-                    )
+            try {
+                val parsed = withContext(Dispatchers.IO) {
+                    ReportReaderPipeline.parseFromUri(uri, context, AegisApp.instance.database)
                 }
+                // History insertion on successful OK parse only (PATTERNS.md §S-5).
+                // Non-OK parses do NOT insert history.
+                if (parsed.report_status.code == "OK") {
+                    val flaggedCount = parsed.rows.count { it.status != "IN_RANGE" }
+                    val sevKey =
+                        if (parsed.has_outside_range) HistoryEntity.SEV_CRIT
+                        else if (parsed.has_unknown) HistoryEntity.SEV_LOW
+                        else if (flaggedCount > 0) HistoryEntity.SEV_MOD
+                        else HistoryEntity.SEV_INFO
+                    withContext(Dispatchers.IO) {
+                        AegisApp.instance.historyDb.history().insert(
+                            HistoryEntity(
+                                kind = HistoryEntity.KIND_REPORTREADER,
+                                title = "Lab Report",
+                                sub = "$flaggedCount flagged of ${parsed.rows.size} values",
+                                severityKey = sevKey,
+                                createdAt = System.currentTimeMillis(),
+                                payloadJson = "",
+                            ),
+                        )
+                    }
+                }
+                report = parsed
+            } catch (ce: kotlinx.coroutines.CancellationException) {
+                // Honour structured-concurrency cancellation: do not swallow it
+                // into a UI state. Re-throw so the launching coroutine
+                // terminates as the parent scope expects.
+                throw ce
+            } catch (t: Throwable) {
+                // CR-01: post-extract pipeline stages (LabValueParser, RangeEvaluator,
+                // KBDatabase queries, vendor extractors, ReportAssembler) are not
+                // exception-free. Without this catch, any unexpected throw cancels
+                // the coroutine while isLoading is still true and the screen sticks
+                // on "Reading your report…" with no recovery path.
+                //
+                // Surface the failure as a non-OK empty state so the user can retry
+                // or hand off to a clinician. Mirrors PdfTextExtractor's own
+                // defer-on-crash contract from PdfTextExtractor.kt.
+                android.util.Log.e("ReportReaderScreen", "parseFromUri crashed", t)
+                report = PreparsedReport(
+                    rows = emptyList(),
+                    report_status = ReportStatus(
+                        code = "UNKNOWN_VENDOR",
+                        message = "We could not read this report. Try another PDF or discuss it with a clinician.",
+                    ),
+                )
+            } finally {
+                // Load-bearing: even if the catch path's assignment to `report`
+                // throws (OOM, etc.), `isLoading` must reset or the UI freezes.
+                isLoading = false
             }
-            report = parsed
-            isLoading = false
         }
     }
 
