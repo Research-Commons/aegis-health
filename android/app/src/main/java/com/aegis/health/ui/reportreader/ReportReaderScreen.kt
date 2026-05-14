@@ -243,7 +243,16 @@ fun ReportReaderScreen(
                             }
                         },
                         onClinicianCta = {
-                            DeferralStore.pending = AegisResponseBuilder.build(currentReport)
+                            // Phase 4 D-02 + D-06: lazy synthesis. Stage the
+                            // PreparsedReport instead of building the
+                            // AegisResponse synchronously; DeferralScreen's
+                            // LaunchedEffect will run
+                            // ToolDispatcher.runReportReaderFastPath and
+                            // populate DeferralStore.pending once inference
+                            // completes. The fallback path (D-05) reuses
+                            // AegisResponseBuilder.build(currentReport) —
+                            // visible there, not here.
+                            DeferralStore.pendingReport = currentReport
                             onDefer()
                         },
                         modifier = Modifier.fillMaxWidth(),
