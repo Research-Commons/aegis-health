@@ -17,6 +17,7 @@ data class HistoryEntity(
         const val KIND_DRUGSAFE = "drugsafe"
         const val KIND_CONSENT = "consent"
         const val KIND_PARTNER = "partner"
+        const val KIND_REPORTREADER = "reportreader"
 
         const val SEV_CRIT = "Crit"
         const val SEV_MOD = "Mod"
