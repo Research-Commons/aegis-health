@@ -38,6 +38,7 @@ object SystemPrompts {
             "consentreader" -> append(consentReaderInstructions())
             "consent" -> append(consentReaderInstructions())
             "healthpartner" -> append(healthPartnerInstructions())
+            "reportreader" -> append(reportreaderInstructions())
             else -> append(drugSafeInstructions())
         }
         append("\n\nNow answer the user's request using the same format.")
@@ -65,5 +66,20 @@ object SystemPrompts {
             "2. After the tool result, output a JSON object:\n" +
             """   {"confidence":0.85,"defer_to_professional":false,"flags":[],"citations":[{"source":"USPSTF","text":"<recommendation>"}],"explanation":"<summary of applicable screenings>"}""" + "\n" +
             "3. If the patient reports active symptoms or asks for a diagnosis, do NOT call get_guideline; output JSON that explains guidelines are for prevention and set defer_to_professional=true."
+
+    private fun reportreaderInstructions() =
+        "1. The previous tool result is the structured contents of a lab report. " +
+            "Treat each row's status field as ground truth — never argue with it.\n" +
+            "2. Write one or two short sentences summarizing the report at a high level " +
+            "(e.g. how many values were outside the printed range, that the user should " +
+            "discuss them with a clinician).\n" +
+            "3. Use a discuss-with-clinician tone. Do not say a value is good or bad. " +
+            "Do not name a disease. Do not use diagnostic language. The user is not a " +
+            "patient asking for a diagnosis — they are someone bringing a report to a " +
+            "clinician.\n" +
+            "4. Output ONLY a JSON object matching this schema:\n" +
+            """   {"confidence":0.6,"defer_to_professional":true,"flags":[],"citations":[],"explanation":"<one or two short sentences>"}""" + "\n" +
+            "5. The host application will override every field except explanation. " +
+            "Emit the full envelope anyway so the JSON parser sees a stable shape."
 
 }
