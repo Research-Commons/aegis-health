@@ -108,17 +108,18 @@ object AegisResponseBuilder {
     }
 
     /**
-     * Severity for non-OK report_status — TOO_MANY_ANALYTES and IMAGE_ONLY
-     * are surfacing as severity 2 (review) since they don't carry a
-     * row-level value to flag; UNKNOWN_VENDOR likewise. Phase 4 may
-     * refine this; for Phase 3 it's a safe placeholder.
+     * Severity for non-OK report_status — TOO_MANY_ANALYTES, IMAGE_ONLY, and
+     * UNKNOWN_VENDOR all surface as severity 2 (review) since they don't
+     * carry a row-level value to flag.
+     *
+     * WR-03: collapsed from a dead `when` block (every branch returned 2) to
+     * a constant. The previous shape risked drift — if Phase 4 changes one
+     * branch but forgets the others, no test fixture would catch it. Phase 4
+     * can re-introduce per-code stratification with a unit test asserting the
+     * mapping, making the placeholder/non-placeholder boundary visible.
      */
-    private fun severityForStatusCode(statusCode: String): Int = when (statusCode) {
-        "TOO_MANY_ANALYTES" -> 2
-        "IMAGE_ONLY"        -> 2
-        "UNKNOWN_VENDOR"    -> 2
-        else                -> 2
-    }
+    @Suppress("UNUSED_PARAMETER")
+    private fun severityForStatusCode(statusCode: String): Int = 2
 
     /**
      * Per-row flag description string. Per D-08 field table:
