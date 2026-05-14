@@ -87,6 +87,7 @@ object AegisToolDefs {
     fun forMode(mode: String): List<ToolProvider> {
         return when (mode.lowercase()) {
             "consentreader", "consent" -> emptyList()
+            "reportreader" -> emptyList()
             "healthpartner" -> healthPartner
             "drugsafe" -> drugSafe
             else -> all
