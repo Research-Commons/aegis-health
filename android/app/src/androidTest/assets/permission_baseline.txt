@@ -1,8 +1,9 @@
 # Aegis Health — SAFETY-05 permission baseline
 #
 # Single source of truth for the merged-manifest <uses-permission> set.
-# Updated only when an INTENTIONAL permission addition lands; SAFETY-05
-# forbids accidental additions.
+# Updated only when an INTENTIONAL permission addition lands OR an
+# AndroidX-injected exception is explicitly approved (see "Exceptions"
+# section below). SAFETY-05 forbids accidental additions.
 #
 # Captured: 2026-05-14 (Phase 3 baseline)
 # Pre-Phase-3 state: CAMERA only.
@@ -14,4 +15,25 @@
 # Format: one permission name per line, sorted alphabetically, blank
 # lines and comment lines (starting with #) ignored by the audit test.
 
+# --- Intentional, user-visible permissions ---
 android.permission.CAMERA
+
+# --- Exceptions (AndroidX auto-injected, signature-level, app-namespaced) ---
+#
+# DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION is auto-injected by androidx.core
+# 1.9.0+ (and by AndroidX libraries that register dynamic non-exported
+# BroadcastReceivers — WorkManager, ProcessLifecycleOwner, etc.). It is:
+#   * signature-level (protectionLevel=signature) — only grantable to apps
+#     signed with the same certificate as the declaring app;
+#   * namespaced under com.aegis.health.* — cannot be requested by other
+#     apps under any circumstance;
+#   * Google's recommended hardening for non-exported receivers.
+#
+# Stripping it via tools:node="remove" would weaken AndroidX broadcast-
+# receiver protection. Documented as an SAFETY-05 exception per user
+# decision on 2026-05-14 after the Phase 3 audit run on SM-S918B.
+#
+# DO NOT extend this exception list without explicit user approval. The
+# bar is: signature-level + app-namespaced + injected by a first-party
+# AndroidX library + no alternative hardening path.
+com.aegis.health.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION

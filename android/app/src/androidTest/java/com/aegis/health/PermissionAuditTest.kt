@@ -31,6 +31,16 @@ import org.junit.runner.RunWith
  *   3. Document the addition in REGULATORY.md (Phase 5 audit) and the
  *      milestone STATE.md.
  *
+ * Drift NOT caused by intentional addition:
+ *   * Default — add `tools:node="remove"` in AndroidManifest.xml for the
+ *     offending permission. This is the SAFETY-05 mandate.
+ *   * Exception — signature-level + app-namespaced permissions auto-
+ *     injected by first-party AndroidX libraries (e.g.
+ *     DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION) may be whitelisted in
+ *     permission_baseline.txt under the "Exceptions" section, but ONLY
+ *     with explicit user approval and an in-file comment documenting
+ *     why stripping would weaken security.
+ *
  * Run individually (memory pin feedback_gradle_connected_androidtest_filter):
  *   ./gradlew :app:connectedDebugAndroidTest \
  *     -Pandroid.testInstrumentationRunnerArguments.class=com.aegis.health.PermissionAuditTest
