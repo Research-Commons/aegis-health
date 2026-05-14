@@ -145,7 +145,7 @@ fun StartupErrorScreen(
             )
             Spacer(Modifier.height(6.dp))
             Text(
-                message.ifBlank { "Expected: /Android/data/com.aegis.health/files/gemma4-e4b.litertlm" },
+                message.ifBlank { "Expected: /Android/data/com.aegis.health/files/aegis_model.litertlm" },
                 style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
                 color = colors.onSurfaceMuted,
             )
