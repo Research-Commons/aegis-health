@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Medication
+import androidx.compose.material.icons.filled.Science
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -137,6 +138,15 @@ fun HomeScreen(
                 accentSoft = colors.accentSoft,
                 onClick = { onOpen("partner") },
             )
+            FeatureCard(
+                icon = Icons.Default.Science,
+                title = "ReportReader",
+                tag = "LAB REPORTS",
+                body = "Pick a lab report PDF. We flag values outside the printed range and explain what each test measures.",
+                accent = colors.secondary,
+                accentSoft = colors.secondarySoft,
+                onClick = { onOpen("reportreader") },
+            )
         }
 
         Spacer(Modifier.height(20.dp))
@@ -164,6 +174,7 @@ private fun iconForKind(kind: String): ImageVector = when (kind) {
     HistoryEntity.KIND_DRUGSAFE -> Icons.Default.Medication
     HistoryEntity.KIND_CONSENT -> Icons.Default.Description
     HistoryEntity.KIND_PARTNER -> Icons.Default.Favorite
+    HistoryEntity.KIND_REPORTREADER -> Icons.Default.Science
     else -> Icons.Default.Medication
 }
 
