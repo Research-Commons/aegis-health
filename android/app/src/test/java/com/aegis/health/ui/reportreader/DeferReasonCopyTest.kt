@@ -84,6 +84,12 @@ class DeferReasonCopyTest {
             lower.contains("good") || lower.contains("bad"),
         )
         assertFalse("Fallback must not use exclamation", result.contains("!"))
+        // WR-04: fallback must also recommend clinician follow-up to honour
+        // the file-level KDoc contract and stay consistent with ENTRIES.
+        assertTrue(
+            "Fallback must recommend clinician follow-up",
+            lower.contains("clinician"),
+        )
     }
 
     @Test

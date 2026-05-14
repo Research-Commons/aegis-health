@@ -29,5 +29,5 @@ object DeferReasonCopy {
     )
 
     fun lookup(shortCode: String): String =
-        ENTRIES[shortCode] ?: "Discuss with your doctor."
+        ENTRIES[shortCode] ?: "A clinician can review this result."
 }

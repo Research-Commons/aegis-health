@@ -131,8 +131,11 @@ object AegisResponseBuilder {
         val units = row.units?.takeIf { it.isNotBlank() } ?: ""
         return when (row.status) {
             "unknown" -> {
+                // WR-04: calm-tone "clinician" fallback to match the
+                // DeferReasonCopy.lookup contract and the file-level KDoc
+                // ("every entry recommends clinician review explicitly").
                 val reasonText = row.defer_reason?.let { DeferReasonCopy.lookup(it) }
-                    ?: "Discuss with your doctor."
+                    ?: "A clinician can review this result."
                 "${row.canonical_name} — $reasonText"
             }
             else -> {
