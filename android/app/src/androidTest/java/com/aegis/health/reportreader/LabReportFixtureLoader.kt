@@ -17,11 +17,19 @@ import java.io.InputStream
  */
 object LabReportFixtureLoader {
     val vendors: List<String> = listOf(
+        // Phase 2 — 5 byte-identical fixtures (D-04 contract).
         "labcorp",
         "quest",
         "mayo",
         "hospital_lis",
         "urgent_care",
+        // Phase 4.1 — 3 synthetic vendor fixtures (D-15 field-level + generic smoke).
+        // Each directory contains exactly 1 *.pdf (and a MANIFEST.md the .pdf filter
+        // skips). No *-evaluated.json under these dirs — Phase 4.1 uses field-level
+        // invariants, not byte-identical GT (D-11 limit). See 04.1-5-01-SUMMARY.md.
+        "tata1mg",
+        "drlalpathlabs",
+        "generic",
     )
 
     fun pdfStream(vendor: String): InputStream {

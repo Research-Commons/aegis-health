@@ -172,6 +172,22 @@ LAB_TERM_ALIASES: dict[str, str] = {
     # ---------- Endocrine ----------
     "tsh":                           "thyroid-stimulating hormone",
     "thyroid-stimulating hormone":   "thyroid-stimulating hormone",
+
+    # Phase 4.1 D-10: British / Indian-lab variants -- all canonicals already exist.
+    "haemoglobin":                   "hemoglobin",
+    "haemoglobin a1c":               "hemoglobin a1c",
+    "glycated haemoglobin":          "hemoglobin a1c",
+    "leucocyte":                     "white blood cell count",
+    "leucocytes":                    "white blood cell count",
+    "total leucocyte count":         "white blood cell count",
+    "tlc":                           "white blood cell count",
+    "haematocrit":                   "hematocrit",
+    "haematocrit value":             "hematocrit",
+    "erythrocyte count":             "red blood cell count",
+    "random blood sugar":            "glucose",
+    "rbs":                           "glucose",
+    "fasting blood sugar":           "glucose",
+    "fbs":                           "glucose",
 }
 
 

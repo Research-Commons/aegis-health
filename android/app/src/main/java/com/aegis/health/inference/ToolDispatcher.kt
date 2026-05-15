@@ -1138,7 +1138,7 @@ object ToolDispatcher {
      * pass it), we return the FIXED_EXPLANATION envelope as a fail-safe so
      * the user never sees a model-emitted hallucination.
      */
-    private fun enforceReportReaderContract(
+    internal fun enforceReportReaderContract(
         response: AegisResponse,
         report: PreparsedReport?,
         span: BatteryProbe.SpanContext?,
@@ -1179,8 +1179,29 @@ object ToolDispatcher {
             Citation(source = lc.label, text = lc.url)
         }
 
-        // D-03: defer flag = Kotlin-computed; model value DISCARDED.
-        val deferToProfessional = report.has_outside_range || report.has_unknown
+        // Phase 4.1 D-07: GENERIC_FALLBACK sub-clause.
+        // When the underlying PreparsedReport carries the catch-all
+        // GENERIC_FALLBACK status code, extraction provenance is uncertain
+        // (permissive regex behind a 3-layer defense: per-row units-or-range
+        // gate, aggregate ≥3 floor, alias-map silent-drop). Force clinician
+        // handoff and lower the confidence floor regardless of model output.
+        // All other D-03 overrides (flags, citations, sanitization) above
+        // and below this block continue to apply unchanged.
+        val isGenericFallback = report.report_status.code == "GENERIC_FALLBACK"
+
+        // D-03 / D-07: defer flag = Kotlin-computed; model value DISCARDED.
+        val deferToProfessional = if (isGenericFallback) {
+            true                                              // D-07: unconditional defer
+        } else {
+            report.has_outside_range || report.has_unknown    // D-03 baseline
+        }
+
+        // D-03 / D-07: confidence floor = Kotlin-computed; model value DISCARDED.
+        val confidence: Double = if (isGenericFallback) {
+            0.4                                               // D-07: lowered floor
+        } else {
+            0.6                                               // D-03 baseline
+        }
 
         // D-04: sanitize the model explanation; fall back to FIXED_EXPLANATION
         // on reject. The reject reason lands on the active BatteryProbe span
@@ -1191,7 +1212,7 @@ object ToolDispatcher {
         }
 
         return AegisResponse(
-            confidence = 0.6,                       // D-03 fixed floor
+            confidence = confidence,
             defer_to_professional = deferToProfessional,
             flags = flags,
             citations = citations,

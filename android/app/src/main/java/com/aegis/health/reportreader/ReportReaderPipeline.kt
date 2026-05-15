@@ -75,6 +75,10 @@ object ReportReaderPipeline {
         // Stage 2 — LabValueParser: vendor dispatch + row extraction.
         val parsed = LabValueParser.parse(pdf.pages)
         if (parsed.vendorKey == null) {
+            // Defensive belt: post-Phase 4.1, GenericExtractor catch-all means
+            // vendorKey is never null. This branch remains as a safety net.
+            // The aggregate-floor gate below is the primary <3-row UNKNOWN_VENDOR
+            // fire-point for the generic-fallback path.
             // EXTRACT-01: UNKNOWN_VENDOR short-circuit. Page-1 fingerprint did
             // not match any registered VendorExtractor.
             return ReportAssembler.assemble(
@@ -89,7 +93,30 @@ object ReportReaderPipeline {
         // Unknown rawNames are silently dropped (Python parity); INTERPRET-04
         // auto-defer is handled downstream in RangeEvaluator via queryAutoDefer.
         val normalized = LabRowNormalizer.normalizeRows(parsed.rows)
-        if (normalized.size > LabRowNormalizer.ROW_COUNT_DEFER_THRESHOLD) {
+
+        // Phase 4.1 D-02: status-code dispatch (aggregate-floor +
+        // GENERIC_FALLBACK + TOO_MANY_ANALYTES + OK) collapsed into a single
+        // pure predicate so JVM unit tests can exercise the precedence cascade
+        // without a real PDF stream. Order is load-bearing per RESEARCH.md
+        // "Anti-Patterns to Avoid":
+        //   1. generic + <3 rows                   -> UNKNOWN_VENDOR (empties rows)
+        //   2. *       + >ROW_COUNT_DEFER_THRESHOLD -> TOO_MANY_ANALYTES (empties rows)
+        //   3. generic + [3..threshold]            -> GENERIC_FALLBACK (rows populated)
+        //   4. named   + [1..threshold]            -> OK (Phase 2 unchanged)
+        val decision = selectStatusCodeAndMessage(
+            vendorKey = parsed.vendorKey,
+            normalizedRowCount = normalized.size,
+        )
+
+        if (decision.statusCode == "UNKNOWN_VENDOR") {
+            return ReportAssembler.assemble(
+                rows = emptyList(),
+                profile = profile,
+                statusCode = "UNKNOWN_VENDOR",
+                statusMessage = decision.statusMessage,
+            )
+        }
+        if (decision.statusCode == "TOO_MANY_ANALYTES") {
             // INTERPRET-05: TOO_MANY_ANALYTES short-circuit. Checked here
             // (post-Stage 3, pre-Stage 4) because the threshold is a row-count
             // concern, not a per-row evaluation concern. Mirrors Python parser:
@@ -107,8 +134,93 @@ object ReportReaderPipeline {
         val evaluated = normalized.map { RangeEvaluator.evaluate(it, profile, isPregnant, db) }
 
         // Stage 5 — ReportAssembler: LM-5 citation dedup + final envelope.
-        return ReportAssembler.assemble(rows = evaluated, profile = profile)
+        // Phase 4.1 D-05: select status code by vendorKey. Generic-fallback
+        // carries the explicit banner-copy message consumed by Wave 4
+        // ReportReaderScreen banner; named vendors continue with the implicit
+        // OK / null-message path (Phase 2 byte-identical contract preserved).
+        return ReportAssembler.assemble(
+            rows = evaluated,
+            profile = profile,
+            statusCode = decision.statusCode,
+            statusMessage = decision.statusMessage,
+        )
     }
+
+    /**
+     * Phase 4.1 D-02 + D-05 — pure status-code + message selector.
+     *
+     * Extracted from [parse] so JVM unit tests can exercise the precedence
+     * cascade without a real PDF stream + KBDatabase. The dispatch is
+     * load-bearing per RESEARCH.md "Anti-Patterns to Avoid" and is the
+     * single source of truth for the Wave 4 banner / Wave 5 fixture
+     * contracts.
+     *
+     * Precedence (load-bearing):
+     *   1. `generic + count<3`            -> UNKNOWN_VENDOR (rows emptied,
+     *      Phase 2 D-10 strict-empty invariant preserved)
+     *   2. `count > ROW_COUNT_DEFER_THRESHOLD` (any vendor) -> TOO_MANY_ANALYTES
+     *      (rows emptied; Phase 2 unchanged)
+     *   3. `generic + 3<=count<=ROW_COUNT_DEFER_THRESHOLD` -> GENERIC_FALLBACK
+     *      (rows populated; banner-copy message attached)
+     *   4. otherwise -> OK (rows populated; Phase 2 byte-identical for the
+     *      5 named fixtures)
+     *
+     * @return [StatusDecision] carrying the chosen code, the banner-copy
+     *   message (null for OK and TOO_MANY_ANALYTES — pipeline interpolates
+     *   count for the latter), and a `dropRows` flag indicating whether
+     *   the assembled report must carry rows=emptyList() (Phase 2 D-10
+     *   strict-empty invariant).
+     */
+    fun selectStatusCodeAndMessage(
+        vendorKey: String,
+        normalizedRowCount: Int,
+    ): StatusDecision {
+        // 1. Aggregate-floor (D-02): generic + <3 rows -> UNKNOWN_VENDOR.
+        //    Must fire BEFORE TOO_MANY_ANALYTES so the <3-row case routes to
+        //    UNKNOWN_VENDOR rather than slipping into GENERIC_FALLBACK / OK.
+        if (vendorKey == "generic" && normalizedRowCount < 3) {
+            return StatusDecision(
+                statusCode = "UNKNOWN_VENDOR",
+                statusMessage = "Lab vendor format not recognized.",
+                dropRows = true,
+            )
+        }
+        // 2. TOO_MANY_ANALYTES (any vendor; Phase 2 precedence preserved).
+        if (normalizedRowCount > LabRowNormalizer.ROW_COUNT_DEFER_THRESHOLD) {
+            return StatusDecision(
+                statusCode = "TOO_MANY_ANALYTES",
+                statusMessage = null, // pipeline interpolates the row count
+                dropRows = true,
+            )
+        }
+        // 3. GENERIC_FALLBACK (D-05): generic + [3..threshold].
+        if (vendorKey == "generic") {
+            return StatusDecision(
+                statusCode = "GENERIC_FALLBACK",
+                statusMessage =
+                    "Lab vendor not recognized -- best-effort extraction; verify each row against your PDF.",
+                dropRows = false,
+            )
+        }
+        // 4. Happy path (Phase 2 unchanged): named vendor + reasonable row count.
+        return StatusDecision(
+            statusCode = "OK",
+            statusMessage = null,
+            dropRows = false,
+        )
+    }
+
+    /** Phase 4.1 D-02 + D-05 status-code dispatch result. */
+    data class StatusDecision(
+        val statusCode: String,
+        val statusMessage: String?,
+        /**
+         * True when [ReportAssembler] MUST receive rows=emptyList() to honour
+         * the Phase 2 D-10 strict-empty invariant for non-OK / non-GENERIC_FALLBACK
+         * statuses.
+         */
+        val dropRows: Boolean,
+    )
 
     /**
      * INPUT-01 (F-03 remediation): SAF-friendly bridge.

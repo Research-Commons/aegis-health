@@ -17,13 +17,14 @@ import java.io.File
  *      entry-count sentinel).
  *   2. python_alias_map_matches_kotlin_alias_map -- subprocesses Python via
  *      [PythonRunner] (F-08 remediation; helper owned by Plan 02-06) and
- *      diffs the 126-entry alias map key-by-key. Build fails on any drift.
+ *      diffs the 140-entry alias map key-by-key (126 base + 14 Phase 4.1 D-10
+ *      British/Indian variants). Build fails on any drift.
  */
 class LabRowNormalizerTest {
 
     @Test
-    fun entry_count_is_126() {
-        assertEquals(126, LabRowNormalizer.LAB_TERM_ALIASES.size)
+    fun entry_count_is_140() {
+        assertEquals(140, LabRowNormalizer.LAB_TERM_ALIASES.size)
     }
 
     @Test

@@ -33,3 +33,12 @@ android/app/src/androidTest/assets/lab_reports/**/MANIFEST.md text eol=lf
 # this file to LF keeps the on-disk bytes identical to the bytes the
 # audit semantics describe — robust to future test-side changes.
 android/app/src/androidTest/assets/permission_baseline.txt text eol=lf
+
+# Phase 4.1 Wave 5 (Plan 04.1-5-01): synthesize_fixture.py emits
+# byte-deterministic PDFs that the androidTest pipeline asserts against.
+# Mark all PDFs binary so Git's autocrlf=true contributors do NOT rewrite
+# lone LF bytes inside the PDF object stream into CRLF on checkout, which
+# would corrupt the file and break LabReportSynthesisFixtureTest. Git's
+# auto-detection of NUL bytes usually catches this for existing fixtures,
+# but the explicit attribute is the correctness guarantee.
+*.pdf binary

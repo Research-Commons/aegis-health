@@ -43,6 +43,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
+ * Phase 4.1 D-08 — centralized "this report has user-visible rows below the
+ * banner" predicate. True for both `"OK"` (named-vendor extraction succeeded)
+ * and `"GENERIC_FALLBACK"` (catch-all GenericExtractor matched + aggregate-
+ * floor >= 3 rows survived alias-map normalization).
+ *
+ * Used as the render-branch gate for the rows-present surface in
+ * [ReportReaderScreen]. Keeps the OK ↔ GENERIC_FALLBACK widening in a single
+ * place so future status-code additions don't scatter conditionals across the
+ * LazyColumn cascade.
+ */
+private val PreparsedReport.hasRows: Boolean
+    get() = this.report_status.code == "OK" || this.report_status.code == "GENERIC_FALLBACK"
+
+/**
  * Phase 3 — ReportReader screen, full composition (Plan 03-06).
  *
  * Replaces the Plan 03-01 skeleton with the full LazyColumn-root composition.
@@ -50,13 +64,17 @@ import kotlinx.coroutines.withContext
  *
  *   • report == null && !isLoading: landing state (SAF picker CTA).
  *   • isLoading: inline "Reading your report…" caption.
- *   • report != null && report.report_status.code == "OK": populated state
- *       (LazyColumn root: NotADiagnosisPanel → SummaryCard → LabRow items).
- *   • report != null && report.report_status.code != "OK": empty-state
+ *   • report != null && report.hasRows (OK or GENERIC_FALLBACK): populated state
+ *       (LazyColumn root: NotADiagnosisPanel → [GenericFallbackBanner if
+ *       GENERIC_FALLBACK] → SummaryCard → LabRow items). Phase 4.1 D-08
+ *       widens the OK-only branch to also include GENERIC_FALLBACK so the
+ *       catch-all extractor's rows surface to the user.
+ *   • report != null && !report.hasRows: empty-state
  *       (NotADiagnosisPanel → ReportEmptyState).
  *
  * NotADiagnosisPanel is always rendered at the top per D-07 — both populated
- * and empty branches show it above the rest.
+ * and empty branches show it above the rest. GenericFallbackBanner (Phase
+ * 4.1 D-06) sits at slot [2] above SummaryCard when GENERIC_FALLBACK.
  *
  * Three deferral CTAs all route through AegisResponseBuilder + DeferralStore
  * + the parent's defer callback for navigation:
@@ -72,9 +90,10 @@ import kotlinx.coroutines.withContext
  * chip-tap callback offsets the OUTSIDE_RANGE index by the header-slot count
  * to land on the correct row.
  *
- * History (D-08): a HistoryEntity row with KIND_REPORTREADER is inserted on
- * successful OK parse only — non-OK parses do NOT insert history (per
- * PATTERNS.md §S-5).
+ * History (D-08 + Phase 4.1 R-03): a HistoryEntity row with KIND_REPORTREADER
+ * is inserted on successful OK or GENERIC_FALLBACK parse — non-rows-present
+ * parses do NOT insert history (per PATTERNS.md §S-5). GENERIC_FALLBACK
+ * provenance is encoded in the persisted report_status.code if/when read back.
  *
  * Memory pin (project_kbdatabase_startup_race): this screen ALWAYS reads
  * AegisApp.instance.database; it never instantiates a parallel KBDatabase.
@@ -110,9 +129,14 @@ fun ReportReaderScreen(
                 val parsed = withContext(Dispatchers.IO) {
                     ReportReaderPipeline.parseFromUri(uri, context, AegisApp.instance.database)
                 }
-                // History insertion on successful OK parse only (PATTERNS.md §S-5).
-                // Non-OK parses do NOT insert history.
-                if (parsed.report_status.code == "OK") {
+                // Phase 4.1 R-03: GENERIC_FALLBACK reports also persist to
+                // HistoryEntity (same path as OK; supplements D-08). No new
+                // entity column — provenance is encoded in the persisted
+                // `report_status.code` if/when read back, and the in-app
+                // safety surface (banner + always-defer + 0.4 confidence)
+                // is the durable signal on every read.
+                // Non-OK / non-GENERIC_FALLBACK parses do NOT insert history.
+                if (parsed.report_status.code in setOf("OK", "GENERIC_FALLBACK")) {
                     val flaggedCount = parsed.rows.count { it.status != "IN_RANGE" }
                     val sevKey =
                         if (parsed.has_outside_range) HistoryEntity.SEV_CRIT
@@ -192,6 +216,21 @@ fun ReportReaderScreen(
             NotADiagnosisPanel(modifier = Modifier.fillMaxWidth())
         }
 
+        // Phase 4.1 D-06 + R-01: generic-fallback banner at slot [2].
+        // Renders only when the report was extracted via the catch-all
+        // GenericExtractor (i.e. unknown vendor, slot-7 catch-all matched +
+        // aggregate-floor >= 3 rows survived). Sits between the always-on
+        // NotADiagnosisPanel ([1]) and the SummaryCard / LandingState /
+        // Loading caption ([3]) so the "best-effort extraction" framing is
+        // read BEFORE the row summary.
+        report?.let { current ->
+            if (current.report_status.code == "GENERIC_FALLBACK") {
+                item {
+                    GenericFallbackBanner(modifier = Modifier.fillMaxWidth())
+                }
+            }
+        }
+
         when {
             isLoading -> {
                 item {
@@ -216,18 +255,33 @@ fun ReportReaderScreen(
                 }
             }
 
-            report!!.report_status.code == "OK" -> {
+            report!!.hasRows -> {
                 val currentReport = report!!
                 val outsideRows = currentReport.rows.filter { it.status == "OUTSIDE_RANGE" }
 
                 // SummaryCard sits in a header slot — count it when offsetting
-                // chip-tap targets. The lazy-slot layout above SummaryCard:
+                // chip-tap targets. Lazy-slot layout differs based on whether
+                // the Phase 4.1 GenericFallbackBanner is rendered:
+                //
+                // OK (banner absent, headerSlotCount = 3):
                 //   [0] ScreenHeader item
                 //   [1] NotADiagnosisPanel item
                 //   [2] SummaryCard item
-                //   [3..] LabRow items (one per row in currentReport.rows)
-                // chip-tap target index = 3 + currentReport.rows.indexOf(targetRow)
-                val headerSlotCount = 3
+                //   [3..] LabRow items
+                //
+                // GENERIC_FALLBACK (banner present, headerSlotCount = 4):
+                //   [0] ScreenHeader item
+                //   [1] NotADiagnosisPanel item
+                //   [2] GenericFallbackBanner item
+                //   [3] SummaryCard item
+                //   [4..] LabRow items
+                //
+                // Phase 4.1 Pitfall 1 fix — without this dynamic count the
+                // chip-tap animateScrollToItem target would be off-by-one on
+                // generic-fallback reports and scroll to the row ABOVE the
+                // intended OUTSIDE_RANGE row.
+                val headerSlotCount =
+                    if (currentReport.report_status.code == "GENERIC_FALLBACK") 4 else 3
 
                 item {
                     SummaryCard(

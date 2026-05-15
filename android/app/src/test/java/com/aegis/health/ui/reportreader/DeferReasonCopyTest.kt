@@ -104,4 +104,45 @@ class DeferReasonCopyTest {
             DeferReasonCopy.lookup("auto_defer:tumor_marker"),
         )
     }
+
+    /**
+     * Phase 4.1 D-06 + RESEARCH.md Pitfall 4 — GenericFallbackBanner copy must
+     * satisfy the same UI-03 calm-tone invariant that [DeferReasonCopy.ENTRIES]
+     * satisfies, plus a positive "verify"-affordance requirement (the banner
+     * exists to tell the user the rows below are best-effort and need PDF
+     * verification, so the verb "verify" MUST appear).
+     *
+     * The constant is hoisted as a top-level `const val` at the bottom of
+     * [GenericFallbackBanner.kt] so future grep audits can locate it; this
+     * test scans the same hoisted constant.
+     */
+    @Test
+    fun banner_copy_uses_calm_vocabulary() {
+        val copy = GENERIC_FALLBACK_BANNER_COPY
+        // Test 4: non-blank.
+        assertTrue("GENERIC_FALLBACK_BANNER_COPY must not be blank", copy.isNotBlank())
+
+        // Test 1: forbidden-word list mirrors no_entry_uses_good_bad_or_panic_framing.
+        val forbidden = listOf("good", "bad", "abnormal", "critical", "warning", "alert", "danger")
+        val lower = copy.lowercase()
+        forbidden.forEach { word ->
+            assertFalse(
+                "GENERIC_FALLBACK_BANNER_COPY contains forbidden word '$word' — UI-03 calm-by-default violation",
+                lower.contains(word),
+            )
+        }
+
+        // Test 2: no exclamation marks — UI-03 calm tone.
+        assertFalse(
+            "GENERIC_FALLBACK_BANNER_COPY must not contain exclamation points — UI-03 calm tone",
+            copy.contains("!"),
+        )
+
+        // Test 3: positive verify-affordance assertion (D-06 + CONTEXT.md
+        // Claude Discretion: must include "verify against your PDF" affordance).
+        assertTrue(
+            "GENERIC_FALLBACK_BANNER_COPY must contain the verify-affordance substring 'verify'",
+            lower.contains("verify"),
+        )
+    }
 }

@@ -3,7 +3,8 @@ package com.aegis.health.reportreader
 /**
  * Phase 2 - Stage 3: alias map -> canonical name normalization.
  *
- * LM-4: 126 entries, generated mechanically from tools/parsers/_alias_map.py.
+ * LM-4: 140 entries (126 base + 14 Phase 4.1 D-10 British/Indian variants),
+ * generated mechanically from tools/parsers/_alias_map.py.
  * DO NOT hand-edit. Regenerate via the helper command in
  * .planning/phases/02-kotlin-pre-parse-pipeline-no-model/02-PATTERNS.md LM-4.
  *
@@ -142,6 +143,21 @@ object LabRowNormalizer {
         "alt (alanine aminotransferase)" to "ALT",
         "tsh" to "thyroid-stimulating hormone",
         "thyroid-stimulating hormone" to "thyroid-stimulating hormone",
+        // Phase 4.1 D-10: British / Indian-lab variants -- all canonicals already exist.
+        "haemoglobin" to "hemoglobin",
+        "haemoglobin a1c" to "hemoglobin a1c",
+        "glycated haemoglobin" to "hemoglobin a1c",
+        "leucocyte" to "white blood cell count",
+        "leucocytes" to "white blood cell count",
+        "total leucocyte count" to "white blood cell count",
+        "tlc" to "white blood cell count",
+        "haematocrit" to "hematocrit",
+        "haematocrit value" to "hematocrit",
+        "erythrocyte count" to "red blood cell count",
+        "random blood sugar" to "glucose",
+        "rbs" to "glucose",
+        "fasting blood sugar" to "glucose",
+        "fbs" to "glucose",
     )
 
     /** Pre-normalization row from VendorExtractor. */

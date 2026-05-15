@@ -1,0 +1,10 @@
+# Phase 4.1 Wave 5 (Plan 04.1-5-01): pinned dev/build deps for the synthetic
+# lab-report-fixture generator (tools/parsers/synthesize_fixture.py).
+#
+# Authoritative dependency declaration lives in pyproject.toml. This file
+# exists per Plan 04.1-5-01 artifact contract so the synthesize_fixture.py
+# generator has a single-line `pip install -r requirements.txt` entry point.
+# Keep in sync with pyproject.toml's `[project.optional-dependencies] dev`.
+
+reportlab>=4.0,<5.0
+pdfminer.six>=20221105

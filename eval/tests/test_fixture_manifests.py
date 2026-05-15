@@ -194,3 +194,39 @@ def test_d12_defer_reason_vocabulary_is_exactly_9_entries():
         f"D-12 vocabulary changed (size={len(_D12_VOCABULARY)}); "
         f"update EXTRACTION-SPEC.md and the schema description in lockstep."
     )
+
+
+# ---------------------------------------------------------------------------
+# Phase 4.1 D-05 schema-enforcement test.
+#
+# Wave 1 invariant: the JSON Schema MUST accept the new 5th report_status.code
+# value "GENERIC_FALLBACK" BEFORE any Kotlin code emits it (Pitfall 5 / D-05
+# wave-1 ordering). The new androidTest fixtures introduced later in Phase 4.1
+# live OUTSIDE eval/fixtures/lab_reports/ (per D-14/D-11 androidTest-only
+# fixture scope) so EXPECTED_VENDORS stays at 5 -- this test stands alone,
+# does NOT touch any existing fixture, and validates against a minimal in-memory
+# sample dict.
+# ---------------------------------------------------------------------------
+
+
+def test_schema_accepts_generic_fallback_status_code():
+    """D-05: schema enum must accept GENERIC_FALLBACK as the 5th report_status.code value."""
+    _require_corpus()
+    import jsonschema
+
+    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    validator = jsonschema.Draft202012Validator(schema)
+
+    sample = {
+        "rows": [],
+        "has_outside_range": False,
+        "has_unknown": False,
+        "profile_used": {"age": None, "sex": None},
+        "citations": [],
+        "report_status": {"code": "GENERIC_FALLBACK", "message": "test"},
+    }
+    errors = list(validator.iter_errors(sample))
+    assert not errors, (
+        "schema rejected a GENERIC_FALLBACK sample (D-05 wave-1 invariant):\n"
+        + "\n".join(f"  - {e.message}" for e in errors)
+    )

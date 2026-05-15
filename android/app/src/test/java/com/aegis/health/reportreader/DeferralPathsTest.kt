@@ -26,19 +26,33 @@ class DeferralPathsTest {
         assertEquals(25, LabRowNormalizer.ROW_COUNT_DEFER_THRESHOLD)
     }
 
-    // -- EXTRACT-01: UNKNOWN_VENDOR fingerprint dispatch miss --
+    // -- EXTRACT-01: UNKNOWN_VENDOR fingerprint dispatch (post-Phase-4.1) --
 
     @Test
-    fun vendor_registry_returns_null_on_unknown_page1() {
-        val nothingMatches = "this page has no recognizable lab vendor header at all"
-        val result = VendorRegistry.fingerprintMatches(nothingMatches)
-        assertEquals(null, result)
+    fun vendor_registry_resolves_to_generic_on_unknown_page1_post_phase_4_1() {
+        // Phase 4.1 R-02: GenericExtractor sits at slot 7 as the catch-all.
+        // VendorRegistry.fingerprintMatches NEVER returns null post-Phase-4.1
+        // because GenericExtractor.fingerprintMatches returns true
+        // unconditionally per D-03. The Phase-2 ReportReaderPipeline UNKNOWN_VENDOR
+        // null-branch remains as a defensive belt (see ReportReaderPipeline.kt
+        // comment above the branch); the primary <3-row UNKNOWN_VENDOR
+        // fire-point is now the aggregate-floor gate in
+        // ReportReaderPipeline.selectStatusCodeAndMessage.
+        val nothingNamedMatches = "this page has no recognizable lab vendor header at all"
+        val result = VendorRegistry.fingerprintMatches(nothingNamedMatches)
+        assertEquals(
+            "Post-Phase-4.1, fingerprint miss falls through to GenericExtractor (slot 7).",
+            "generic",
+            result?.vendorKey,
+        )
     }
 
     @Test
     fun vendor_registry_matches_labcorp_on_lipid_panel_header() {
-        // Sanity check: positive case still resolves -- ensures the null
-        // result above came from header mismatch, not a broken registry.
+        // Sanity check: positive case still resolves to labcorp -- ensures the
+        // generic-fallback above came from named-vendor fingerprint miss, not a
+        // broken registry. Phase 2 byte-identical contract preserved: named
+        // vendors at slots 2..6 still claim their PDFs ahead of GenericExtractor.
         val labcorpPage1 = "LIPID PANEL\nCHOLESTEROL, TOTAL 151 125-200 mg/dL"
             .lowercase()
         val result = VendorRegistry.fingerprintMatches(labcorpPage1)
