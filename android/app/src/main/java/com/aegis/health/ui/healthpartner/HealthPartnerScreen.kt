@@ -52,13 +52,16 @@ import com.aegis.health.ui.deferral.DeferralStore
 import com.aegis.health.ui.profile.ProfileStore
 import com.aegis.health.ui.common.AegisTextField
 import com.aegis.health.ui.common.DeferralBanner
+import com.aegis.health.ui.common.FailureInfo
 import com.aegis.health.ui.common.GhostButton
 import com.aegis.health.ui.common.GradePill
-import com.aegis.health.ui.common.LoadingPanel
+import com.aegis.health.ui.common.MonotonicFlagList
 import com.aegis.health.ui.common.PrimaryButton
 import com.aegis.health.ui.common.ScreenHeader
 import com.aegis.health.ui.common.SectionLabel
+import com.aegis.health.ui.common.SeverityCard
 import com.aegis.health.ui.common.Tag
+import com.aegis.health.ui.common.ToolStepper
 import com.aegis.health.ui.theme.AegisSpacing
 import com.aegis.health.ui.theme.LocalAegisColors
 import kotlinx.coroutines.Dispatchers
@@ -97,6 +100,36 @@ fun HealthPartnerScreen(
     val checked = remember { mutableStateMapOf<Int, Boolean>() }
     val progress = remember { mutableStateListOf<String>() }
 
+    // Plan 06-03 — STREAM-01 + STREAM-02 + ROADMAP SC-1 / SC-2.
+    //
+    // FlagPreview events from ToolDispatcher.runHealthPartnerFastPath land
+    // here as the synthesis turn streams. Cleared on each new "Build my
+    // plan" tap; replaced by the real per-row guidance once `response`
+    // populates downstream. Dedup is routed through
+    // MonotonicFlagList.appendIfNew (ROADMAP SC-5 / M2 mitigation —
+    // never-shrink invariant) — the SAME helper Plan 06-02 wires into
+    // ReportReaderScreen, so neither screen forks the dedup heuristic
+    // (the JVM wiring-parity test in
+    // `FlagPreviewWiringParityTest.kt` structurally enforces this on
+    // every test run).
+    //
+    // HealthPartner's domain emits zero FlagPreview events on the
+    // typical "45yo male preventive" fixture (06-RESEARCH.md §Pitfall
+    // #2) — the rail below is hidden behind `flagPreviews.isNotEmpty()`
+    // so this is a data-driven absence, not a UI-conditional absence
+    // (Open Q #2 resolution from planning_context).
+    //
+    // D-13 single-buffer-owner invariant: this list holds typed
+    // `ToolDispatcher.ProgressEvent.FlagPreview` events only — never any
+    // reference to the dispatcher's engine-internal decode buffer (the
+    // SC-4 grep gate enforces this structurally).
+    val flagPreviews = remember { mutableStateListOf<ToolDispatcher.ProgressEvent.FlagPreview>() }
+    // Phase 7 D-04c — typed side channel for ProgressEvent.StepFailure events.
+    // ToolStepper renders the calm-tone ⚠ chip when an entry exists at the step index.
+    // Mirrors DrugSafeScreen.kt's `failures` state declaration verbatim — STREAM-02
+    // wiring-parity invariant (Phase 6 Plan 06-03 FlagPreviewWiringParityTest).
+    val failures = remember { mutableStateMapOf<Int, FailureInfo>() }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -133,6 +166,8 @@ fun HealthPartnerScreen(
                             gaps = emptyList()
                             checked.clear()
                             progress.clear()
+                            flagPreviews.clear()
+                            failures.clear()
 
                             val condList = conditions.splitTrim()
                             val medList = medications.splitTrim()
@@ -143,32 +178,81 @@ fun HealthPartnerScreen(
                                 if (familyHistory.isNotBlank()) append(", Family history: $familyHistory")
                             }
 
-                            val r = ToolDispatcher.runHealthPartnerFastPath(
-                                age = age,
-                                sex = sex,
-                                conditions = condList,
-                                userInput = profileDesc,
-                                onProgress = { it.applyTo(progress) },
-                            )
-                            response = r.response
-                            recommendations = r.guidelines.recommendations
-                            gaps = buildList {
-                                addAll(r.guidelines.gaps)
-                                if (familyHistory.isBlank()) add("No family history provided — genetic risk factors not assessed.")
-                            }
-                            withContext(Dispatchers.IO) {
-                                AegisApp.instance.historyDb.history().insert(
-                                    HistoryEntity(
-                                        kind = HistoryEntity.KIND_PARTNER,
-                                        title = "Prevention plan · age $age",
-                                        sub = "${recommendations.size} rec${if (recommendations.size == 1) "" else "s"}",
-                                        severityKey = HistoryEntity.SEV_INFO,
-                                        createdAt = System.currentTimeMillis(),
-                                        payloadJson = Json.encodeToString(r.response),
-                                    ),
+                            try {
+                                val r = ToolDispatcher.runHealthPartnerFastPath(
+                                    age = age,
+                                    sex = sex,
+                                    conditions = condList,
+                                    userInput = profileDesc,
+                                    onProgress = { event ->
+                                        // Phase 7 D-04c — typed `when` with explicit
+                                        // StepFailure branch routing through the
+                                        // screen-scope `failures` side channel.
+                                        // FlagPreview retains its Phase 6 Plan 06-03
+                                        // `MonotonicFlagList.appendIfNew` consumer
+                                        // (STREAM-02 wiring-parity invariant — the
+                                        // JVM `FlagPreviewWiringParityTest.bothScreens_
+                                        // useMonotonicFlagList_appendIfNew_noPerModeForks`
+                                        // structurally enforces this shape). The
+                                        // `else` branch covers Step + Update via the
+                                        // shared `applyTo` contract.
+                                        when (event) {
+                                            is ToolDispatcher.ProgressEvent.FlagPreview -> {
+                                                val next = MonotonicFlagList.appendIfNew(
+                                                    flagPreviews.toList(),
+                                                    event,
+                                                )
+                                                if (next.size > flagPreviews.size) flagPreviews.add(event)
+                                            }
+                                            is ToolDispatcher.ProgressEvent.StepFailure -> {
+                                                val idx = (progress.size - 1).coerceAtLeast(0)
+                                                failures[idx] = FailureInfo(event.label, event.reason)
+                                            }
+                                            else -> event.applyTo(progress)
+                                        }
+                                    },
                                 )
+                                response = r.response
+                                recommendations = r.guidelines.recommendations
+                                gaps = buildList {
+                                    addAll(r.guidelines.gaps)
+                                    if (familyHistory.isBlank()) add("No family history provided — genetic risk factors not assessed.")
+                                }
+                                withContext(Dispatchers.IO) {
+                                    AegisApp.instance.historyDb.history().insert(
+                                        HistoryEntity(
+                                            kind = HistoryEntity.KIND_PARTNER,
+                                            title = "Prevention plan · age $age",
+                                            sub = "${recommendations.size} rec${if (recommendations.size == 1) "" else "s"}",
+                                            severityKey = HistoryEntity.SEV_INFO,
+                                            createdAt = System.currentTimeMillis(),
+                                            payloadJson = Json.encodeToString(r.response),
+                                        ),
+                                    )
+                                }
+                            } catch (ce: kotlinx.coroutines.CancellationException) {
+                                // Honour structured-concurrency cancellation (Phase 7
+                                // CR-02; ReportReaderScreen.kt:417-420 reference).
+                                throw ce
+                            } catch (t: Throwable) {
+                                // Plan 07-07 CR-02 — secondary guard for OOM / JNI
+                                // crash / withContext IO failure / history-insert
+                                // exception. Plan 07-06's catch-and-emit-StepFailure
+                                // path covers the tool-throws case; this catch is
+                                // the screen-side belt-and-suspenders so the user is
+                                // NEVER stranded on an infinite spinner.
+                                android.util.Log.e("HealthPartnerScreen", "fast-path crashed", t)
+                                // Populate the failures map at the latest step index
+                                // so STEP-06's calm-tone ⚠ chip renders on the row
+                                // that was running when the exception fired.
+                                val idx = (progress.size - 1).coerceAtLeast(0)
+                                failures[idx] = FailureInfo(
+                                    label = progress.getOrNull(idx) ?: "Prevention plan check",
+                                    reason = t.message ?: "On-device check failed",
+                                )
+                            } finally {
+                                isLoading = false
                             }
-                            isLoading = false
                         }
                     }
                 },
@@ -189,12 +273,40 @@ fun HealthPartnerScreen(
         }
 
         if (isLoading) {
-            LoadingPanel(
+            ToolStepper(
                 label = "Building your prevention plan…",
                 steps = progress,
-                autoAdvance = false,
                 modifier = Modifier.fillMaxWidth(),
+                failures = failures,
             )
+
+            // Plan 06-03 streaming preview rail (STREAM-01 / STREAM-02 /
+            // ROADMAP SC-1, SC-2). Mirrors DrugSafeScreen.kt:248-262 and the
+            // ReportReaderScreen.kt rail from Plan 06-02 verbatim — the rail
+            // shape is shared so any future change must be made in all three
+            // sites simultaneously. Renders only when
+            // `flagPreviews.isNotEmpty()`; HealthPartner's domain typically
+            // emits zero flags on common preventive fixtures (06-RESEARCH.md
+            // §Pitfall #2), so the empty branch is the typical case — not a
+            // failure mode. Cards disappear when `isLoading` flips to false;
+            // the settled checklist + DeferralBanner take over via the
+            // AnimatedVisibility block below. No per-item placement animation
+            // modifier per 06-RESEARCH.md §Anti-Patterns (M2 flicker).
+            if (flagPreviews.isNotEmpty()) {
+                Spacer(Modifier.height(18.dp))
+                val flagWord = if (flagPreviews.size == 1) "flag" else "flags"
+                SectionLabel("Streaming · ${flagPreviews.size} $flagWord so far")
+                Spacer(Modifier.height(10.dp))
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    flagPreviews.forEach { preview ->
+                        SeverityCard(
+                            severity = preview.severity,
+                            description = preview.description,
+                            citation = preview.citation,
+                        )
+                    }
+                }
+            }
         }
 
         AnimatedVisibility(visible = response != null && !isLoading, enter = fadeIn()) {
@@ -484,7 +596,7 @@ private fun GapsCard(items: List<String>) {
             Text(
                 "· $gap",
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (colors.isDark) colors.onSurfaceMuted else androidx.compose.ui.graphics.Color(0xFF3B3733),
+                color = colors.onWarmSurfaceMuted,
                 modifier = Modifier.padding(top = if (i == 0) 0.dp else 4.dp),
             )
         }

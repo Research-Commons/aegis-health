@@ -25,6 +25,18 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 /**
+ * Host-driven early-stop reasons surfaced from the inference callback.
+ * File-scope (`internal`) so the package-mate `ToolCallBoundaryDetector`
+ * can return this enum directly. Telemetry consumers inside [LiteRtLmEngine]
+ * (`stop_reason` span tags and Log lines) read `.label`; do not rename
+ * those constants without updating dashboards.
+ */
+internal enum class HostStopReason(val label: String) {
+    TOOL_CALL("tool_call"),
+    JSON_CLOSE("json_close"),
+}
+
+/**
  * Primary on-device inference backend. Runs the Gemma 4 E4B tool-calling
  * LiteRT-LM artifact through LiteRT-LM 0.10.0.
  *
@@ -211,6 +223,7 @@ object LiteRtLmEngine : InferenceEngine {
                 // cleanly with sb.toString().
                 val hostStop = java.util.concurrent.atomic.AtomicReference<HostStopReason?>(null)
                 val jsonClose = JsonCloseDetector()
+                val toolBoundary = ToolCallBoundaryDetector()
                 val callback = object : MessageCallback {
                     override fun onMessage(message: Message) {
                         if (pieces == 0) {
@@ -230,13 +243,20 @@ object LiteRtLmEngine : InferenceEngine {
                         }
                         if (hostStop.get() != null) return
 
-                        // tool_call boundary: cheap substring check on the
-                        // accumulated buffer. Stays correct if a piece
-                        // splits the marker across two callbacks.
-                        if (sb.indexOf("<tool_call|>") >= 0 &&
-                            hostStop.compareAndSet(null, HostStopReason.TOOL_CALL)
+                        // tool_call boundary: delegated to ToolCallBoundaryDetector
+                        // for split-token tolerance (D-11 / D-12 / INFRA-05 /
+                        // Phase 5 SC-2). Detector returns the typed
+                        // HostStopReason.TOOL_CALL sentinel exactly once on
+                        // the first piece that completes the closing
+                        // <tool_call|> marker (the engine's `sb` is not
+                        // shared with the detector — D-13 invariant; the
+                        // detector keeps its own tiny sliding-window buffer
+                        // internally).
+                        val toolReason = toolBoundary.advance(piece)
+                        if (toolReason != null &&
+                            hostStop.compareAndSet(null, toolReason)
                         ) {
-                            Log.i(TAG, "Stopping decode at <tool_call|> boundary after $pieces pieces")
+                            Log.i(TAG, "Stopping decode at ${toolReason.label} boundary after $pieces pieces")
                             runCatching { conv.cancelProcess() }
                             return
                         }
@@ -254,9 +274,12 @@ object LiteRtLmEngine : InferenceEngine {
                         // Once `<|tool_call>` has appeared in the buffer, the
                         // tool_call boundary check above owns termination of
                         // this turn; json_close only matters for synthesis
-                        // turns, where `<|tool_call>` never appears.
-                        val inToolCallTurn = sb.indexOf("<|tool_call>") >= 0
-                        if (!inToolCallTurn &&
+                        // turns, where `<|tool_call>` never appears. The
+                        // suppression flag now lives in
+                        // ToolCallBoundaryDetector.hasSeenOpeningMarker()
+                        // (replaces the prior `sb.indexOf("<|tool_call>") >= 0`
+                        // inline re-scan).
+                        if (!toolBoundary.hasSeenOpeningMarker() &&
                             jsonClose.advance(piece) &&
                             hostStop.compareAndSet(null, HostStopReason.JSON_CLOSE)
                         ) {
@@ -354,11 +377,6 @@ object LiteRtLmEngine : InferenceEngine {
     }
 
     // ── Host-driven early-stop helpers ──────────────────────────────────
-
-    private enum class HostStopReason(val label: String) {
-        TOOL_CALL("tool_call"),
-        JSON_CLOSE("json_close"),
-    }
 
     /**
      * Stateful brace-balanced JSON detector. [advance] consumes one

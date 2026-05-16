@@ -31,7 +31,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.aegis.health.models.EvaluatedRow
-import com.aegis.health.ui.common.PrimaryButton
+import com.aegis.health.ui.common.GhostButton
 import com.aegis.health.ui.theme.AegisSpacing
 import com.aegis.health.ui.theme.LocalAegisColors
 import kotlinx.serialization.json.JsonPrimitive
@@ -189,9 +189,10 @@ fun LabRow(
                 }
 
                 // D-05 Discuss CTA — ONLY on flagged rows (status != IN_RANGE).
+                // Phase 8 D-01d: per-row subordinate variant (GhostButton); SummaryCard CTA stays PrimaryButton (loud, card-level).
                 if (row.status != "IN_RANGE") {
                     Spacer(Modifier.height(AegisSpacing.md))
-                    PrimaryButton(
+                    GhostButton(
                         text = "Discuss with your doctor",
                         onClick = { onDiscuss(row) },
                         modifier = Modifier.fillMaxWidth(),

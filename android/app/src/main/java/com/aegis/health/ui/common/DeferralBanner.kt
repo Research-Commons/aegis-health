@@ -21,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aegis.health.ui.theme.LocalAegisColors
 
@@ -69,13 +68,13 @@ fun DeferralBanner(
         Text(
             title,
             style = MaterialTheme.typography.titleMedium,
-            color = if (colors.isDark) colors.onSurface else Color(0xFF1A1816),
+            color = colors.onWarmSurface,
         )
         Spacer(Modifier.height(4.dp))
         Text(
             body,
             style = MaterialTheme.typography.bodyMedium,
-            color = if (colors.isDark) colors.onSurfaceMuted else Color(0xFF3B3733),
+            color = colors.onWarmSurfaceMuted,
         )
         Spacer(Modifier.height(10.dp))
         Row(

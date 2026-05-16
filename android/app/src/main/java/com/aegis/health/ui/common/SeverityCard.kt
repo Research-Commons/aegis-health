@@ -107,7 +107,7 @@ fun SeverityCard(
             Text(
                 resolvedTitle,
                 style = MaterialTheme.typography.titleLarge,
-                color = if (colors.isDark) colors.onSurface else Color(0xFF1A1816),
+                color = colors.onWarmSurface,
             )
         }
         if (resolvedBody.isNotBlank()) {
@@ -115,7 +115,7 @@ fun SeverityCard(
             Text(
                 resolvedBody,
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (colors.isDark) colors.onSurfaceMuted else Color(0xFF3B3733),
+                color = colors.onWarmSurfaceMuted,
             )
         }
 

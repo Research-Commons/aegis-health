@@ -99,10 +99,20 @@ fun Tag(
 }
 
 /**
- * Privacy strip on Home screen: "Local · Offline · Private".
+ * Hero value-prop strip on HomeScreen.
+ *
+ * Phase 9 HOME-01 (D-01b + D-01c + D-01g): renamed in place from the v1.0
+ * privacy chip + label swap to the SC-1 verbatim phrase. Everything else
+ * (icon, accent tint, padding, shape, dark-mode-only hairline border) is
+ * byte-equivalent to the prior chip — only the Composable name and the
+ * Text literal changed.
+ *
+ * The chip body uses middle-dot separators (`·`, U+00B7) and a trailing
+ * period after each pillar, matching SC-1 verbatim. The wording is N1-safe.
+ * Permanent regression: `HomeScreenStructureTest.homeScreenHasNoForbiddenN1WordsOrBenchTile`.
  */
 @Composable
-fun OnDeviceChip(modifier: Modifier = Modifier) {
+fun ValuePropChip(modifier: Modifier = Modifier) {
     val colors = LocalAegisColors.current
     val tint = colors.accent
     val tintBg = if (colors.isDark) colors.accentSoft else colors.chip
@@ -117,7 +127,7 @@ fun OnDeviceChip(modifier: Modifier = Modifier) {
     ) {
         Icon(Icons.Default.WifiOff, contentDescription = null, tint = tint, modifier = Modifier.size(16.dp))
         Text(
-            "Local · Offline · Private",
+            "Offline · KB-grounded · Cite-or-defer.",
             style = MaterialTheme.typography.labelLarge,
             color = tint,
         )

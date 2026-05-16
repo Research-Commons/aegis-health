@@ -11,6 +11,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.aegis.health.ui.theme.LocalAegisColors
+import com.aegis.health.ui.theme.statusLabel
+import com.aegis.health.ui.theme.tokenForStatus
 
 /**
  * Phase 3 D-01 — three-state status chip with a fourth review state for
@@ -21,9 +23,8 @@ import com.aegis.health.ui.theme.LocalAegisColors
  * the neutral recessed-surface tone + muted ink — no color at all. Only
  * flagged rows warm up.
  *
- * Status string must come from `EvaluatedRow.status` verbatim. Unknown
- * status values default to the IN_RANGE styling defensively (never crash
- * the LazyColumn for an unrecognized wire-format value).
+ * Status mapping is delegated to `tokenForStatus` + `statusLabel` in
+ * `ui/theme/Theme.kt` (Phase 8 D-02; single source of mapping).
  */
 @Composable
 fun StatusBadge(
@@ -31,12 +32,8 @@ fun StatusBadge(
     modifier: Modifier = Modifier,
 ) {
     val colors = LocalAegisColors.current
-    val (bg, fg, label) = when (status) {
-        "OUTSIDE_RANGE" -> Triple(colors.sevCritBg, colors.sevCritFg, "Outside range")
-        "BORDERLINE"    -> Triple(colors.sevModBg,  colors.sevModFg,  "Borderline")
-        "unknown"       -> Triple(colors.sevLowBg,  colors.sevLowFg,  "Review")
-        else            -> Triple(colors.surfaceAlt, colors.onSurfaceMuted, "In range")
-    }
+    val (bg, fg) = tokenForStatus(status, colors)
+    val label = statusLabel(status)
     Text(
         text = label,
         modifier = modifier

@@ -414,7 +414,9 @@ private fun BindingClauseCard(text: String) {
         Text(
             "“$text”",
             style = MaterialTheme.typography.bodyMedium.copy(fontStyle = FontStyle.Italic),
-            color = if (colors.isDark) colors.onSurface else androidx.compose.ui.graphics.Color(0xFF3B3733),
+            // Phase 8 D-04a (asymmetric site collapse): pre-migration this site used `colors.onSurface` in dark and the warm-muted hex `0xFF3B3733` in light.
+            // The dark branch byte-shifts from full-ink → muted-ink. BindingClauseCard body text is italicized + already muted in light; the dark-mode shift is intentional and visually subordinate to the card's sevModBg tint.
+            color = colors.onWarmSurfaceMuted,
         )
     }
 }

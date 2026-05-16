@@ -27,25 +27,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aegis.health.AegisApp
+import com.aegis.health.StartupState
 import com.aegis.health.db.history.HistoryEntity
 import com.aegis.health.db.history.formatRelative
-import com.aegis.health.inference.EngineRouter
 import com.aegis.health.ui.common.IconHeaderButton
-import com.aegis.health.ui.common.OnDeviceChip
+import com.aegis.health.ui.common.ValuePropChip
 import com.aegis.health.ui.common.SectionLabel
 import com.aegis.health.ui.common.ShieldMark
 import com.aegis.health.ui.theme.AegisSpacing
 import com.aegis.health.ui.theme.LocalAegisColors
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.time.LocalTime
 
 @Composable
@@ -55,6 +55,11 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
 ) {
     val colors = LocalAegisColors.current
+    // Phase 9 HOME-03 D-03b — single top-of-Composable StateFlow subscription
+    // (P9-C recomposition discipline). The brand-row pill below reads this
+    // value; placing the collectAsState() inside the brand-row Column would
+    // re-register the subscription on every brand-row recomposition.
+    val startupState by AegisApp.instance.startup.collectAsState()
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -72,11 +77,18 @@ fun HomeScreen(
                     style = MaterialTheme.typography.titleSmall,
                     color = colors.onSurfaceMuted,
                 )
-                Text(
-                    "v0.4 · Gemma 4 E4B",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = colors.onSurfaceMuted,
-                )
+                // Phase 9 HOME-03 D-03a/b/c/d/e — model-ready confirmation pill.
+                // Strict predicate `is StartupState.Ready` is defense-in-depth
+                // against any future StartupGate refactor that might demote the
+                // pill to "always-green" (D-03b). Calm muted tokens — surfaceAlt
+                // bg + onSurfaceMuted ink — same pair Phase 8 LabRow IN_RANGE
+                // affirmation uses (D-03c, WCAG AA pre-cleared, no green per
+                // Phase 3 D-01 carry-over). ✓ is Unicode U+2713 baked into the
+                // text string, no Icon Composable (D-03d). v0.4 build-version
+                // subtitle intentionally dropped (D-03e).
+                if (startupState is StartupState.Ready) {
+                    StatusPill(text = "Gemma 4 ✓")
+                }
             }
             Box(modifier = Modifier.weight(1f))
             IconHeaderButton(
@@ -107,8 +119,8 @@ fun HomeScreen(
 
         Spacer(Modifier.height(18.dp))
 
-        // ── Privacy strip ──
-        OnDeviceChip(modifier = Modifier.fillMaxWidth())
+        // ── Value-prop strip ──
+        ValuePropChip(modifier = Modifier.fillMaxWidth())
 
         Spacer(Modifier.height(24.dp))
 
@@ -149,16 +161,12 @@ fun HomeScreen(
                 accent = colors.secondary,
                 accentSoft = colors.secondarySoft,
                 onClick = {
-                    // Phase 4 D-07 — fire-and-forget engine warm-up on tile tap. The
-                    // user spends a few seconds reading the LandingState "Pick a lab
-                    // report PDF" card + launching SAF, which hides the warm-up cost
-                    // on cold starts. runCatching swallows any failure so an
-                    // EngineRouter-not-ready race doesn't crash the UI. AegisApp's
-                    // appScope is a SupervisorJob — a warm-up exception won't tear
-                    // down sibling coroutines.
-                    AegisApp.instance.appScope.launch(Dispatchers.IO) {
-                        runCatching { EngineRouter.warmUp() }
-                    }
+                    // Phase 4 D-07 — fire-and-forget engine warm-up on tile tap.
+                    // Hides cold-start cost behind LandingState + SAF picker.
+                    // Phase 9 D-05a — full warm-up rationale + idempotency notes
+                    // live on AegisApp.warmUpEngine() KDoc; HomeScreen reaches
+                    // engine state only via that wrapper (HOME-05 grep gate).
+                    AegisApp.instance.warmUpEngine()
                     onOpen("reportreader")
                 },
             )
@@ -208,7 +216,15 @@ private fun FeatureCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(colors.surface, RoundedCornerShape(18.dp))
+            // Phase 9 HOME-02 D-02c (P9-A fix): clip BEFORE background so the
+            // .clickable indication (Material ripple) is bounded by the same
+            // 18.dp rounded corner as the fill. Without this, the ripple draws
+            // as a rectangle and bleeds past the visual tile bounds. The
+            // .border drawer below still takes an explicit shape — the clip
+            // layer doesn't affect it. See PATTERNS.md §HomeScreen.kt
+            // FeatureCard ripple-on-rounded fix + §Modifier order convention.
+            .clip(RoundedCornerShape(18.dp))
+            .background(colors.surface)
             .let {
                 if (colors.isDark) it.border(1.dp, colors.hairline, RoundedCornerShape(18.dp))
                 else it
@@ -311,5 +327,36 @@ private fun greetingForNow(): String {
         h < 12 -> "Good morning"
         h < 18 -> "Good afternoon"
         else -> "Good evening"
+    }
+}
+
+/**
+ * Phase 9 HOME-03 — model-ready confirmation pill rendered in the brand row
+ * when `AegisApp.instance.startup.collectAsState() is StartupState.Ready`.
+ *
+ * Visual idiom mirrors Chips.kt PillTag (full-pill RoundedCornerShape(99.dp),
+ * 10dp/5dp inset, labelMedium typography) but uses the D-03c muted token pair
+ * (`surfaceAlt` bg + `onSurfaceMuted` ink) — same pair Phase 8 LabRow IN_RANGE
+ * uses, WCAG AA pre-cleared. No green, no Icon Composable — the ✓ glyph is
+ * Unicode U+2713 baked into the `text` string. Display-only: no onClick, no
+ * Modifier.clickable (D-03d). Private + single-use, scoped to HomeScreen.kt
+ * per PATTERNS.md Pattern 3 Option 2 ("purpose-built, not a generalization
+ * of PillTag").
+ */
+@Composable
+private fun StatusPill(text: String) {
+    val colors = LocalAegisColors.current
+    Row(
+        modifier = Modifier
+            .background(colors.surfaceAlt, RoundedCornerShape(99.dp))
+            .padding(horizontal = 10.dp, vertical = 5.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        Text(
+            text,
+            style = MaterialTheme.typography.labelMedium,
+            color = colors.onSurfaceMuted,
+        )
     }
 }

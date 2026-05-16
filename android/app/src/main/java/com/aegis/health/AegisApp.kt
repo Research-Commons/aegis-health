@@ -70,6 +70,30 @@ class AegisApp : Application() {
         }
     }
 
+    /**
+     * Phase 4 D-07 — belt-and-suspenders cold-start engine warm-up triggered
+     * from HomeScreen's ReportReader tile tap. Idempotent in two ways:
+     *   1. EngineRouter.warmUp() bails fast if !isReady (no-op while the
+     *      eager AegisApp.onCreate startup is still running).
+     *   2. LiteRtLmEngine.startConversation uses a mutex + conversation?.close()
+     *      so repeated calls collapse safely.
+     *
+     * Wrapped in runCatching so a warm-up exception cannot tear down sibling
+     * coroutines on the SupervisorJob-scoped appScope.
+     *
+     * Phase 9 D-05a — relocated from HomeScreen.kt:159-161 to keep ui/home/
+     * free of EngineRouter symbols (HOME-05 grep gate; PITFALLS C5). UI
+     * screens reach engine state ONLY through AegisApp.instance.startup;
+     * direct EngineRouter / KBDatabase / LiteRtLmEngine reads under
+     * ui/home/ or ui/startup/ are structurally forbidden by
+     * HomeScreenStructureTest.noEngineSymbolsLeakIntoHomeOrStartupModules.
+     */
+    fun warmUpEngine() {
+        appScope.launch(Dispatchers.IO) {
+            runCatching { EngineRouter.warmUp() }
+        }
+    }
+
     companion object {
         private const val TAG = "AegisApp"
 

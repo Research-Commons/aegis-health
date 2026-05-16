@@ -71,23 +71,27 @@ fun SummaryCard(
             .fillMaxWidth()
             .background(colors.surface, RoundedCornerShape(18.dp))
             .border(1.dp, colors.hairline, RoundedCornerShape(18.dp))
-            .padding(AegisSpacing.lg),
+            .padding(AegisSpacing.xl),
     ) {
         // ── Zone 1: Headline (count framing per D-03) ──
         Text(
             text = "$outsideCount of $totalCount values are outside the printed range",
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
             color = colors.onSurface,
         )
 
-        Spacer(Modifier.height(AegisSpacing.md))
+        Spacer(Modifier.height(AegisSpacing.lg))
 
         // ── Zone 2: Chip strip ──
-        // D-04: OUTSIDE_RANGE rows only. When empty (all-clear), render a
-        // small invisible spacer to preserve vertical rhythm — do NOT
-        // collapse, do NOT switch to celebratory copy.
+        // D-04: OUTSIDE_RANGE rows only. Phase 8 D-01c — when empty (all-clear), render a
+        // muted bodySmall "All values in range" line (honest affirmation, no celebration,
+        // no checkmark). Preserves the chip-strip-as-OUTSIDE_RANGE-only invariant.
         if (outsideCount == 0) {
-            Spacer(Modifier.height(28.dp))
+            Text(
+                text = "All values in range",
+                style = MaterialTheme.typography.bodySmall,
+                color = colors.onSurfaceMuted,
+            )
         } else {
             Row(
                 modifier = Modifier.horizontalScroll(rememberScrollState()),
@@ -104,7 +108,7 @@ fun SummaryCard(
             }
         }
 
-        Spacer(Modifier.height(AegisSpacing.md))
+        Spacer(Modifier.height(AegisSpacing.lg))
 
         // ── Zone 3: CTA ──
         // Text is fixed per D-04 all-clear case. NEVER varies on count.

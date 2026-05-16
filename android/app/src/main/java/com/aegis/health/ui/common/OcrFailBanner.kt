@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aegis.health.ui.theme.AegisSpacing
 import com.aegis.health.ui.theme.LocalAegisColors
@@ -55,7 +54,7 @@ fun OcrFailBanner(
             Text(
                 message,
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (colors.isDark) colors.onSurfaceMuted else Color(0xFF3B3733),
+                color = colors.onWarmSurfaceMuted,
             )
             if (onRetry != null) {
                 Spacer(Modifier.height(8.dp))

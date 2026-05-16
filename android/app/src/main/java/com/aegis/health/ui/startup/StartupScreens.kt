@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,9 +36,9 @@ import com.aegis.health.ui.common.ShieldMark
 import com.aegis.health.ui.theme.LocalAegisColors
 
 /**
- * Cold-start splash. The progress bar is decorative — actual progress is
- * tracked by AegisApp's StartupState flow, but the bundle has no granular
- * progress signal so a fixed 64% indicator matches the design language.
+ * Cold-start splash. The indeterminate LinearProgressIndicator matches the
+ * lack of granular progress signal from the LiteRT-LM bundle; the latency
+ * subtitle is honest per PITFALLS C4 (no fake percentage). HOME-04 D-04a/b.
  */
 @Composable
 fun StartupLoadingScreen(modifier: Modifier = Modifier) {
@@ -62,34 +63,30 @@ fun StartupLoadingScreen(modifier: Modifier = Modifier) {
                 color = colors.onSurface,
             )
             Spacer(Modifier.height(14.dp))
-            Box(
-                modifier = Modifier
-                    .width(220.dp)
-                    .height(3.dp)
-                    .background(colors.hairline, RoundedCornerShape(99.dp)),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(0.64f)
-                        .height(3.dp)
-                        .background(colors.accent, RoundedCornerShape(99.dp)),
-                )
-            }
+            LinearProgressIndicator(
+                modifier = Modifier.width(220.dp),
+                color = colors.accent,
+                trackColor = colors.hairline,
+            )
             Spacer(Modifier.height(14.dp))
             Text(
-                "Loading Gemma 4 E4B · 64%",
+                "Loading on-device model — ~30s on first launch",
                 style = MaterialTheme.typography.bodySmall,
                 color = colors.onSurfaceMuted,
             )
         }
-        Text(
-            "ON-DEVICE · NO NETWORK",
-            style = MaterialTheme.typography.labelSmall,
-            color = colors.onSurfaceMuted,
+        Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 50.dp),
-        )
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                "ON-DEVICE · NO NETWORK",
+                style = MaterialTheme.typography.labelSmall,
+                color = colors.onSurfaceMuted,
+            )
+        }
     }
 }
 

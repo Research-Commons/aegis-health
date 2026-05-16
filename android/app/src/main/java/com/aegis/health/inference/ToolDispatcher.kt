@@ -19,6 +19,7 @@ import com.aegis.health.tools.LookupTerm
 import com.aegis.health.tools.NormalizeDrug
 import com.aegis.health.ui.reportreader.AegisResponseBuilder
 import com.aegis.health.ui.reportreader.DeferReasonCopy
+import kotlinx.coroutines.delay
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -46,6 +47,11 @@ object ToolDispatcher {
     private const val TURN_CLOSE = "<turn|>\n"
     private const val TURN_OPEN_MODEL = "<|turn>model\n"
     private const val TURN_OPEN_USER = "<|turn>user\n"
+
+    // Stagger between intermediate fast-path Step emissions. AnimatedVisibility's
+    // enter cascade (350ms fadeIn + expandVertically) reads as a sequential
+    // reveal at this spacing without making the rows look fake-typed.
+    private const val STEPPER_REVEAL_DELAY_MS = 250L
 
     private val NATIVE_TOOL_CALL_REGEX = Regex(
         """<\|tool_call>\s*call:\s*(\w+)\s*\{(.*?)\}\s*<tool_call\|>""",
@@ -400,6 +406,27 @@ object ToolDispatcher {
                 // Routed to a separate preview-list state on the UI side.
             }
         }
+
+        /**
+         * Emitted from [dispatchToolCall]'s catch block when a tool throws
+         * (Phase 7 D-04 + D-04a). The UI side (Plan 07-02 ToolStepper) routes
+         * this event through a screen-level `SnapshotStateMap<Int, FailureInfo>`
+         * side channel keyed by step index — see D-04c — so [applyTo] is a
+         * no-op here (Path A, mirroring [FlagPreview.applyTo]). This avoids
+         * the sentinel-prefix artifact that the older 07-CONTEXT.md D-04
+         * wording would have leaked into Plan 07-01's placeholder ToolStepper
+         * body's `Text(it)` between Plan 07-01 ship and Plan 07-02 ship (the
+         * planning-context Pitfall #1 atomicity concern).
+         */
+        data class StepFailure(
+            val label: String,
+            val reason: String,
+        ) : ProgressEvent() {
+            override fun applyTo(steps: MutableList<String>) {
+                // No-op (Path A — D-04c). UI consumer reads from a dedicated
+                // failures: SnapshotStateMap<Int, FailureInfo> side channel.
+            }
+        }
     }
 
     /**
@@ -412,6 +439,51 @@ object ToolDispatcher {
         userInput: String,
         onProgress: (ProgressEvent) -> Unit = {},
     ): AegisResponse {
+        // WR-06 — empty-drugs short-circuit. When the input is non-blank but
+        // DrugNameExtractor finds zero drug names, the parser would return null
+        // and silently fall through to the 155s agentic loop (which then
+        // produces an "I could not identify..." response). Surface this
+        // immediately as an explicit Step + StepFailure pair so the screen's
+        // calm-tone ⚠ chip lands instead of the user waiting 2.5 minutes.
+        //
+        // Note: this duplicates the DrugNameExtractor.extract call that runs
+        // inside parseDrugSafeFastPathInput line 578. Acceptable cost for the
+        // empty-drugs UX guard; a future refactor can hoist the extraction out
+        // of the parser. Documented per 07-06-PLAN.md WR-06 Pitfall note.
+        val trimmedInput = userInput.trim()
+
+        // Intermediate row #1 — drug-identification phase. DrugNameExtractor
+        // does real n-gram + Levenshtein work below. Always emit so the WR-06
+        // short-circuit can attach its StepFailure to this row instead of
+        // adding a duplicate row (preserves WR-01 byte-identical label shape).
+        onProgress(ProgressEvent.Step("Identifying medications"))
+        delay(STEPPER_REVEAL_DELAY_MS)
+
+        if (trimmedInput.isNotBlank()) {
+            val preExtracted = DrugNameExtractor.extract(trimmedInput, AegisApp.instance.database)
+            if (preExtracted.canonical.distinct().isEmpty()) {
+                // WR-06 — attach StepFailure to the "Identifying medications"
+                // row emitted above.
+                try {
+                    onProgress(
+                        ProgressEvent.StepFailure(
+                            label = "Identifying medications",
+                            reason = "Could not identify medication names. " +
+                                "Please list specific drug names.",
+                        )
+                    )
+                } catch (progressErr: Exception) {
+                    Log.w(TAG, "onProgress threw while reporting WR-06 StepFailure", progressErr)
+                }
+                return invalidFinalResponse(
+                    message = "Could not identify medication names. " +
+                        "Please list specific drug names.",
+                    mode = "drugsafe",
+                    backfillCitations = emptyList(),
+                )
+            }
+        }
+
         val parsed = parseDrugSafeFastPathInput(userInput)
             ?: return runAgenticLoop(
                 userInput = "Check these drugs for interactions and safety: $userInput",
@@ -419,18 +491,54 @@ object ToolDispatcher {
                 onProgress = onProgress,
             )
 
-        onProgress(ProgressEvent.Step("Checking interactions"))
-        val result = ToolResult(
-            name = "check_warnings",
-            result = json.encodeToString(
-                CheckWarnings.check(
-                    drugList = parsed.drugs,
-                    age = parsed.age,
-                    conditions = parsed.conditions,
-                    db = AegisApp.instance.database,
+        // Intermediate row #2 — KB record retrieval. CheckWarnings.check below
+        // does the actual SQLite SELECTs against `interactions`, `contraindications`,
+        // and `supplements`, so this row maps to real work.
+        onProgress(ProgressEvent.Step("Loading drug records from KB"))
+        delay(STEPPER_REVEAL_DELAY_MS)
+
+        val toolCall = buildCheckWarningsToolCall(parsed)
+        // WR-01 — cache the friendly label so the success-side Step and the
+        // failure-side StepFailure carry a byte-identical label. The screen's
+        // failure-row index never has to be derived from `progress.size - 1`.
+        val friendlyLabel = FriendlyToolSummarizer.summarize(toolCall)
+        onProgress(ProgressEvent.Step(friendlyLabel))
+        // CR-01 — mirror dispatchToolCall's try/catch + StepFailure shape
+        // (ToolDispatcher.kt:930-958). The direct tool invocation must NOT
+        // strand the UI when the KB throws (corrupted SQLite, OOM, KB-version
+        // skew); the calm-tone ⚠ chip becomes reachable on the fast path.
+        val result = try {
+            ToolResult(
+                name = "check_warnings",
+                result = json.encodeToString(
+                    CheckWarnings.check(
+                        drugList = parsed.drugs,
+                        age = parsed.age,
+                        conditions = parsed.conditions,
+                        db = AegisApp.instance.database,
+                    ),
                 ),
-            ),
-        )
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "DrugSafe fast-path tool call failed", e)
+            // Pitfall 5 — inner try/catch around onProgress so a throwing UI
+            // lambda cannot short-circuit the surrounding fallback contract.
+            try {
+                onProgress(
+                    ProgressEvent.StepFailure(
+                        label = friendlyLabel,
+                        reason = e.message ?: "Tool execution failed",
+                    )
+                )
+            } catch (progressErr: Exception) {
+                Log.w(TAG, "onProgress threw while reporting StepFailure", progressErr)
+            }
+            return invalidFinalResponse(
+                message = "On-device tool call failed. Please consult a healthcare professional.",
+                mode = "drugsafe",
+                backfillCitations = emptyList(),
+            )
+        }
         emitFlagPreviewsFromToolResult(result, onProgress)
 
         return runPrecomputedToolSynthesis(
@@ -459,13 +567,58 @@ object ToolDispatcher {
         userInput: String,
         onProgress: (ProgressEvent) -> Unit = {},
     ): HealthPartnerResult {
-        onProgress(ProgressEvent.Step("Pulling USPSTF guidelines"))
-        val guidelines = GetGuideline.getGuidelines(
-            age = age,
-            sex = sex,
-            conditions = conditions,
-            db = AegisApp.instance.database,
-        )
+        // Intermediate row #1 — profile-review phase. Maps to the structured-
+        // form validation already done by HealthPartnerScreen (the args have
+        // landed; we are about to use them).
+        onProgress(ProgressEvent.Step("Reviewing patient profile"))
+        delay(STEPPER_REVEAL_DELAY_MS)
+
+        // Intermediate row #2 — USPSTF lookup phase. GetGuideline.getGuidelines
+        // below issues SELECTs against the `guidelines` table.
+        onProgress(ProgressEvent.Step("Loading USPSTF recommendations"))
+        delay(STEPPER_REVEAL_DELAY_MS)
+
+        val toolCall = buildGetGuidelineToolCall(age, sex, conditions)
+        // WR-01 — cache the friendly label so the success-side Step and the
+        // failure-side StepFailure carry a byte-identical label.
+        val friendlyLabel = FriendlyToolSummarizer.summarize(toolCall)
+        onProgress(ProgressEvent.Step(friendlyLabel))
+        // CR-01 — mirror dispatchToolCall's try/catch + StepFailure shape
+        // (ToolDispatcher.kt:930-958). A throw from getGuidelines (DB
+        // corruption, schema skew) must surface the calm-tone ⚠ chip via
+        // StepFailure, not strand the UI in shimmer.
+        val guidelines = try {
+            GetGuideline.getGuidelines(
+                age = age,
+                sex = sex,
+                conditions = conditions,
+                db = AegisApp.instance.database,
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "HealthPartner fast-path tool call failed", e)
+            // Pitfall 5 — inner try/catch around onProgress.
+            try {
+                onProgress(
+                    ProgressEvent.StepFailure(
+                        label = friendlyLabel,
+                        reason = e.message ?: "Tool execution failed",
+                    )
+                )
+            } catch (progressErr: Exception) {
+                Log.w(TAG, "onProgress threw while reporting StepFailure", progressErr)
+            }
+            return HealthPartnerResult(
+                response = invalidFinalResponse(
+                    message = "On-device tool call failed. Please consult a healthcare professional.",
+                    mode = "healthpartner",
+                    backfillCitations = emptyList(),
+                ),
+                guidelines = GetGuidelineResult(
+                    recommendations = emptyList(),
+                    gaps = emptyList(),
+                ),
+            )
+        }
         val result = ToolResult(
             name = "get_guideline",
             result = json.encodeToString(guidelines),
@@ -516,7 +669,20 @@ object ToolDispatcher {
             "has_unknown" to JsonPrimitive(report.has_unknown),
         ),
     ) { _ ->
-        onProgress(ProgressEvent.Step("Reading report"))
+        // Intermediate row #1 — parsed-report review. PreparsedReport is the
+        // output of Phase 2's ReportReaderPipeline + RangeEvaluator; this row
+        // maps to the act of packaging that structured payload for the model.
+        onProgress(ProgressEvent.Step("Reviewing parsed lab report"))
+        delay(STEPPER_REVEAL_DELAY_MS)
+
+        // Intermediate row #2 — reference-range evaluation. Range evaluation
+        // already happened upstream, but this row reflects the moment the
+        // outside-range flags are surfaced to the synthesis turn.
+        onProgress(ProgressEvent.Step("Evaluating values against reference ranges"))
+        delay(STEPPER_REVEAL_DELAY_MS)
+
+        val toolCall = buildReadLabReportToolCall(report)
+        onProgress(ProgressEvent.Step(FriendlyToolSummarizer.summarize(toolCall)))
         val toolResult = ToolResult(
             name = "read_lab_report",
             result = json.encodeToString(report),
@@ -633,9 +799,9 @@ object ToolDispatcher {
                     val tokenWord = if (count == 1) "token" else "tokens"
                     val label = if (lastFlagCount > 0) {
                         val flagWord = if (lastFlagCount == 1) "flag" else "flags"
-                        "Generating response ($count $tokenWord, $lastFlagCount $flagWord found)â€¦"
+                        "Generating response ($count $tokenWord, $lastFlagCount $flagWord found)…"
                     } else {
-                        "Generating response ($count $tokenWord)â€¦"
+                        "Generating response ($count $tokenWord)…"
                     }
                     onProgress(ProgressEvent.Update(label))
                 }
@@ -693,6 +859,46 @@ object ToolDispatcher {
         parts += "outside_range:${report.has_outside_range}"
         parts += "has_unknown:${report.has_unknown}"
         return "<|tool_call>call:read_lab_report{${parts.joinToString(",")}}<tool_call|>"
+    }
+
+    // ── Plan 05-03 D-05: buildSyntheticToolCall helpers ─────────────────
+    //
+    // Each helper packages the in-scope fast-path args into a ToolCall so the
+    // step LABEL (via FriendlyToolSummarizer.summarize) and the TRANSCRIPT
+    // (via format*Call) see the same args. The transcript helpers above stay
+    // functional and continue to consume their original typed inputs; the
+    // duplication is intentional — keeping the smaller diff per D-05's note
+    // that both shapes satisfy "label and transcript see the same args."
+
+    private fun buildCheckWarningsToolCall(args: DrugSafeFastPathArgs): ToolCall {
+        val map = mutableMapOf<String, JsonElement>()
+        map["drug_list"] = JsonArray(args.drugs.map { JsonPrimitive(it) })
+        args.age?.let { map["age"] = JsonPrimitive(it) }
+        if (args.conditions.isNotEmpty()) {
+            map["conditions"] = JsonArray(args.conditions.map { JsonPrimitive(it) })
+        }
+        return ToolCall(name = "check_warnings", arguments = map)
+    }
+
+    private fun buildGetGuidelineToolCall(age: Int, sex: String, conditions: List<String>): ToolCall {
+        val map = mutableMapOf<String, JsonElement>()
+        map["age"] = JsonPrimitive(age)
+        map["sex"] = JsonPrimitive(sex)
+        if (conditions.isNotEmpty()) {
+            map["conditions"] = JsonArray(conditions.map { JsonPrimitive(it) })
+        }
+        return ToolCall(name = "get_guideline", arguments = map)
+    }
+
+    private fun buildReadLabReportToolCall(report: PreparsedReport): ToolCall {
+        val map = mutableMapOf<String, JsonElement>()
+        val profile = report.profile_used
+        profile.age?.let { map["age"] = JsonPrimitive(it) }
+        profile.sex?.takeIf { it.isNotBlank() }?.let { map["sex"] = JsonPrimitive(it) }
+        map["rows"] = JsonPrimitive(report.rows.size)
+        map["outside_range"] = JsonPrimitive(report.has_outside_range)
+        map["has_unknown"] = JsonPrimitive(report.has_unknown)
+        return ToolCall(name = "read_lab_report", arguments = map)
     }
 
     private fun formatNativeStringList(values: List<String>): String =
@@ -827,7 +1033,7 @@ object ToolDispatcher {
 
             val toolResponses = buildString {
                 for (call in toolCalls) {
-                    onProgress(ProgressEvent.Step(friendlyToolLabel(call.toolCall.name)))
+                    onProgress(ProgressEvent.Step(FriendlyToolSummarizer.summarize(call.toolCall)))
                     val toolCall = call.toolCall
                     val result = if (toolCall.name == "get_drug_info") {
                         val key = toolCall.stableKey()
@@ -837,10 +1043,10 @@ object ToolDispatcher {
                                 result = errorJson("Repeated get_drug_info call suppressed; use the existing tool result and produce final JSON."),
                             )
                         } else {
-                            dispatchToolCall(toolCall, call.rawArgs)
+                            dispatchToolCall(toolCall, call.rawArgs, onProgress = onProgress)
                         }
                     } else {
-                        dispatchToolCall(toolCall, call.rawArgs)
+                        dispatchToolCall(toolCall, call.rawArgs, onProgress = onProgress)
                     }
                     emitFlagPreviewsFromToolResult(result, onProgress)
                     accumulatedCitations += extractCitationsFromToolResult(result)
@@ -863,12 +1069,33 @@ object ToolDispatcher {
         )
     }
 
-    private fun dispatchToolCall(toolCall: ToolCall, rawArgs: String): ToolResult {
+    private fun dispatchToolCall(
+        toolCall: ToolCall,
+        rawArgs: String,
+        onProgress: (ProgressEvent) -> Unit = {},
+    ): ToolResult {
         return try {
             val result = executeToolCall(toolCall)
             ToolResult(name = toolCall.name, result = result)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to execute tool_call: ${toolCall.name}($rawArgs)", e)
+            // Phase 7 D-04a — emit a StepFailure side-channel event so the UI
+            // can render a calm-tone ⚠ chip (Plan 07-02) instead of letting the
+            // failed row silently transition to fake-success ✓ (STEP-06).
+            // Pitfall 5 (planning context): wrap the UI lambda invocation in an
+            // inner try/catch so a throwing onProgress cannot short-circuit the
+            // outer catch block and break the agentic loop's error-recovery
+            // contract (the existing ToolResult return below must always fire).
+            try {
+                onProgress(
+                    ProgressEvent.StepFailure(
+                        label = FriendlyToolSummarizer.summarize(toolCall),
+                        reason = e.message ?: "Tool execution failed",
+                    )
+                )
+            } catch (progressErr: Exception) {
+                Log.w(TAG, "onProgress threw while reporting StepFailure", progressErr)
+            }
             ToolResult(name = toolCall.name, result = errorJson(e.message ?: "Tool execution failed"))
         }
     }
@@ -1424,15 +1651,10 @@ object ToolDispatcher {
         else -> "Composing answer…"
     }
 
-    private fun friendlyToolLabel(name: String): String = when (name) {
-        "normalize_drug" -> "Normalizing drug names"
-        "decompose_product" -> "Decomposing products"
-        "check_warnings" -> "Checking interactions"
-        "lookup_term" -> "Looking up term"
-        "get_drug_info" -> "Loading drug info"
-        "get_guideline" -> "Pulling USPSTF guidelines"
-        else -> "Running $name"
-    }
+    // Plan 05-03 D-07: the legacy private name-only step-label helper has been
+    // migrated to FriendlyToolSummarizer as a private fallback. The 4
+    // ProgressEvent.Step emission sites now route through the args-aware
+    // summarizer object instead.
 
     private fun ToolCall.stableKey(): String {
         return arguments.entries.sortedBy { it.key }.joinToString(prefix = "$name:", separator = "&") { (key, value) ->
@@ -1442,6 +1664,25 @@ object ToolDispatcher {
 
     private fun errorJson(message: String): String {
         return """{"error":${JsonPrimitive(message)}}"""
+    }
+
+    /**
+     * Narrow test seam for [FlagsStreamParser]. Instantiates a fresh parser
+     * per call and delegates to [FlagsStreamParser.extractNewFlags] on the
+     * supplied buffer. Used by `FlagsStreamParserTest` to pin the SC-3
+     * split-token invariants (Phase 6 / Plan 06-01 / requirement STREAM-03)
+     * without promoting `FlagsStreamParser`, `ScanResult`, or any of the
+     * parser's private helpers to wider visibility.
+     *
+     * Visibility precedent: mirrors Phase 5 / Plan 05-02
+     * `ToolCallBoundaryDetector` — both are `internal` so the same-module
+     * JVM test suite can exercise them, while the production callers
+     * (inside `object ToolDispatcher`) continue to instantiate the
+     * `private class` directly. Do not call this from production code.
+     */
+    internal fun extractFlagPreviewsForTest(buffer: CharSequence): List<ProgressEvent.FlagPreview> {
+        val parser = FlagsStreamParser()
+        return parser.extractNewFlags(buffer)
     }
 
     /**

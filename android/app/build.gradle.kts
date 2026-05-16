@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.aegis.health"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.aegis.health"
@@ -56,7 +56,7 @@ android {
 
 dependencies {
     // Compose BOM — pin all Compose libs to a single compatible version
-    val composeBom = platform("androidx.compose:compose-bom:2024.02.00") // update as needed
+    val composeBom = platform("androidx.compose:compose-bom:2026.05.00")
     implementation(composeBom)
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -65,6 +65,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.4.0")
 
     // Core / Activity / Lifecycle
     implementation("androidx.core:core-ktx:1.12.0")

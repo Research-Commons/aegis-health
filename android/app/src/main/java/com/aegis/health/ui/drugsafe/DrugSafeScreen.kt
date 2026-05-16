@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -50,14 +51,15 @@ import com.aegis.health.ui.common.AegisChip
 import com.aegis.health.ui.common.AegisTextField
 import com.aegis.health.ui.common.ConfidenceDot
 import com.aegis.health.ui.common.DeferralBanner
+import com.aegis.health.ui.common.FailureInfo
 import com.aegis.health.ui.common.GhostButton
-import com.aegis.health.ui.common.LoadingPanel
 import com.aegis.health.ui.common.OcrFailBanner
 import com.aegis.health.ui.common.PrimaryButton
 import com.aegis.health.ui.common.ScreenHeader
 import com.aegis.health.ui.common.SectionLabel
 import com.aegis.health.ui.common.SeverityCard
 import com.aegis.health.ui.common.SummaryPill
+import com.aegis.health.ui.common.ToolStepper
 import com.aegis.health.ui.deferral.DeferralStore
 import com.aegis.health.ui.theme.AegisSpacing
 import com.aegis.health.ui.theme.LocalAegisColors
@@ -85,6 +87,9 @@ fun DrugSafeScreen(
     // streams. Cleared on each new "Check" click; replaced by the real
     // SeverityCards once `response` is populated.
     val flagPreviews = remember { mutableStateListOf<ToolDispatcher.ProgressEvent.FlagPreview>() }
+    // Phase 7 D-04c — typed side channel for ProgressEvent.StepFailure events.
+    // ToolStepper renders the calm-tone ⚠ chip when an entry exists at the step index.
+    val failures = remember { mutableStateMapOf<Int, FailureInfo>() }
     val scope = rememberCoroutineScope()
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -188,38 +193,71 @@ fun DrugSafeScreen(
                             response = null
                             progress.clear()
                             flagPreviews.clear()
-                            val r = ToolDispatcher.runDrugSafeFastPath(
-                                userInput = drugInput,
-                                onProgress = { event ->
-                                    // Route typed FlagPreview events to a
-                                    // dedicated state list so the screen can
-                                    // render preview SeverityCards mid-decode.
-                                    // Step / Update events stay on the existing
-                                    // progress label list.
-                                    if (event is ToolDispatcher.ProgressEvent.FlagPreview) {
-                                        if (flagPreviews.none { it.description == event.description && it.citation == event.citation }) {
-                                            flagPreviews.add(event)
+                            failures.clear()
+                            try {
+                                val r = ToolDispatcher.runDrugSafeFastPath(
+                                    userInput = drugInput,
+                                    onProgress = { event ->
+                                        // Phase 7 D-04c — typed `when` with explicit
+                                        // StepFailure branch routing through the
+                                        // screen-scope `failures` side channel.
+                                        // FlagPreview retains its Phase 6 inline
+                                        // dedup filter (DrugSafe's heuristic; the
+                                        // STREAM-02 wiring-parity matcher relaxes
+                                        // for DrugSafe — see 06-03 close-out). The
+                                        // `else` branch covers Step + Update via
+                                        // the shared `applyTo` contract.
+                                        when (event) {
+                                            is ToolDispatcher.ProgressEvent.FlagPreview -> {
+                                                if (flagPreviews.none { it.description == event.description && it.citation == event.citation }) {
+                                                    flagPreviews.add(event)
+                                                }
+                                            }
+                                            is ToolDispatcher.ProgressEvent.StepFailure -> {
+                                                val idx = (progress.size - 1).coerceAtLeast(0)
+                                                failures[idx] = FailureInfo(event.label, event.reason)
+                                            }
+                                            else -> event.applyTo(progress)
                                         }
-                                    } else {
-                                        event.applyTo(progress)
-                                    }
-                                },
-                            )
-                            response = r
-                            withContext(Dispatchers.IO) {
-                                AegisApp.instance.historyDb.history().insert(
-                                    HistoryEntity(
-                                        kind = HistoryEntity.KIND_DRUGSAFE,
-                                        title = drugInput.trim(),
-                                        sub = if (r.flags.isEmpty()) "No flags"
-                                              else "${r.flags.size} flag${if (r.flags.size == 1) "" else "s"}",
-                                        severityKey = severityKeyFor(r),
-                                        createdAt = System.currentTimeMillis(),
-                                        payloadJson = Json.encodeToString(r),
-                                    ),
+                                    },
                                 )
+                                response = r
+                                withContext(Dispatchers.IO) {
+                                    AegisApp.instance.historyDb.history().insert(
+                                        HistoryEntity(
+                                            kind = HistoryEntity.KIND_DRUGSAFE,
+                                            title = drugInput.trim(),
+                                            sub = if (r.flags.isEmpty()) "No flags"
+                                                  else "${r.flags.size} flag${if (r.flags.size == 1) "" else "s"}",
+                                            severityKey = severityKeyFor(r),
+                                            createdAt = System.currentTimeMillis(),
+                                            payloadJson = Json.encodeToString(r),
+                                        ),
+                                    )
+                                }
+                            } catch (ce: kotlinx.coroutines.CancellationException) {
+                                // Honour structured-concurrency cancellation (Phase 7
+                                // CR-02; ReportReaderScreen.kt:417-420 reference).
+                                throw ce
+                            } catch (t: Throwable) {
+                                // Plan 07-07 CR-02 — secondary guard for OOM / JNI
+                                // crash / withContext IO failure / history-insert
+                                // exception. Plan 07-06's catch-and-emit-StepFailure
+                                // path covers the tool-throws case; this catch is
+                                // the screen-side belt-and-suspenders so the user is
+                                // NEVER stranded on an infinite spinner.
+                                android.util.Log.e("DrugSafeScreen", "fast-path crashed", t)
+                                // Populate the failures map at the latest step index
+                                // so STEP-06's calm-tone ⚠ chip renders on the row
+                                // that was running when the exception fired.
+                                val idx = (progress.size - 1).coerceAtLeast(0)
+                                failures[idx] = FailureInfo(
+                                    label = progress.getOrNull(idx) ?: "Drug safety check",
+                                    reason = t.message ?: "On-device check failed",
+                                )
+                            } finally {
+                                isLoading = false
                             }
-                            isLoading = false
                         }
                     }
                 },
@@ -230,11 +268,11 @@ fun DrugSafeScreen(
 
         if (isLoading) {
             Spacer(Modifier.height(24.dp))
-            LoadingPanel(
+            ToolStepper(
                 label = "Analyzing ${drugs.size} medications…",
                 steps = progress,
-                autoAdvance = false,
                 modifier = Modifier.fillMaxWidth(),
+                failures = failures,
             )
 
             // Phase B: streaming preview cards. Appear as ToolDispatcher's

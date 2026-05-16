@@ -4,7 +4,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +19,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,11 +31,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.aegis.health.AegisApp
 import com.aegis.health.db.history.HistoryEntity
+import com.aegis.health.inference.ToolDispatcher
 import com.aegis.health.models.PreparsedReport
 import com.aegis.health.models.ReportStatus
 import com.aegis.health.reportreader.ReportReaderPipeline
+import com.aegis.health.ui.common.FailureInfo
+import com.aegis.health.ui.common.MonotonicFlagList
 import com.aegis.health.ui.common.PrimaryButton
 import com.aegis.health.ui.common.ScreenHeader
+import com.aegis.health.ui.common.SectionLabel
+import com.aegis.health.ui.common.SeverityCard
+import com.aegis.health.ui.common.ToolStepper
 import com.aegis.health.ui.deferral.DeferralStore
 import com.aegis.health.ui.theme.AegisSpacing
 import com.aegis.health.ui.theme.LocalAegisColors
@@ -63,7 +70,12 @@ private val PreparsedReport.hasRows: Boolean
  * Three rendering branches keyed off the parsed PreparsedReport:
  *
  *   • report == null && !isLoading: landing state (SAF picker CTA).
- *   • isLoading: inline "Reading your report…" caption.
+ *   • isLoading: ToolStepper live-tools surface (Plan 07-04 D-02b) — mounted
+ *       INSIDE this branch's `item { ... }` slot so the non-loading arms'
+ *       `headerSlotCount` math (3 or 4 with GenericFallbackBanner) stays
+ *       valid. Receives ProgressEvent.Step / FlagPreview / StepFailure from
+ *       the new onClinicianCta scope.launch invocation (D-02 Path B —
+ *       closes Phase 6 STREAM-01-followup).
  *   • report != null && report.hasRows (OK or GENERIC_FALLBACK): populated state
  *       (LazyColumn root: NotADiagnosisPanel → [GenericFallbackBanner if
  *       GENERIC_FALLBACK] → SummaryCard → LabRow items). Phase 4.1 D-08
@@ -98,9 +110,12 @@ private val PreparsedReport.hasRows: Boolean
  * Memory pin (project_kbdatabase_startup_race): this screen ALWAYS reads
  * AegisApp.instance.database; it never instantiates a parallel KBDatabase.
  *
- * Phase 3 hackathon de-risking guarantee: the model is NEVER loaded — no
- * engine, dispatcher, runtime, or synthesis-fast-path is invoked anywhere
- * in this file. Phase 4 wires the synthesis turn.
+ * Phase 7 update (Plan 07-04 D-02 Path B): the SummaryCard `onClinicianCta`
+ * now runs `ToolDispatcher.runReportReaderFastPath` directly via
+ * `scope.launch` (mirroring DrugSafeScreen.kt:184-207) instead of staging
+ * the parsed report for DeferralScreen's prior LaunchedEffect to consume.
+ * DeferralScreen reverts to deferral-only (D-02a); the synthesis fallback
+ * (`AegisResponseBuilder.build`) is now owned by this screen's catch block.
  */
 @Composable
 fun ReportReaderScreen(
@@ -115,6 +130,36 @@ fun ReportReaderScreen(
 
     var isLoading by remember { mutableStateOf(false) }
     var report by remember { mutableStateOf<PreparsedReport?>(null) }
+
+    // Plan 06-02 — STREAM-01 + STREAM-02 + ROADMAP SC-1.
+    //
+    // FlagPreview events from ToolDispatcher.runReportReaderFastPath land
+    // here as the synthesis turn streams. Cleared on each new synthesis
+    // invocation; replaced by the real SeverityCards once the settled
+    // AegisResponse / flag list renders downstream. Dedup is routed through
+    // MonotonicFlagList.appendIfNew (ROADMAP SC-5 / M2 mitigation —
+    // never-shrink invariant). D-13 single-buffer-owner invariant: this
+    // list holds typed `ToolDispatcher.ProgressEvent.FlagPreview` events
+    // only — never any reference to the dispatcher's engine-internal decode
+    // buffer (the SC-4 grep gate enforces this structurally).
+    //
+    // Plan 07-04 (D-02 Path B) closed the prior STREAM-01-followup TODO —
+    // the synthesis invocation now lives directly inside onClinicianCta
+    // below (mirroring DrugSafeScreen.kt:184-207). This makes the
+    // flagPreviews state reachable in production for the first time.
+    val flagPreviews = remember { mutableStateListOf<ToolDispatcher.ProgressEvent.FlagPreview>() }
+
+    // Plan 07-04 (D-04c) — typed side channel for ProgressEvent.StepFailure
+    // events. ToolStepper renders the calm-tone ⚠ chip when an entry exists
+    // at the step index. SnapshotStateMap → Compose recomposes only the
+    // affected step row on insertion.
+    val failures = remember { mutableStateMapOf<Int, FailureInfo>() }
+
+    // Plan 07-04 — progress label list consumed by ToolStepper inside the
+    // isLoading LazyColumn branch. Receives ProgressEvent.Step.applyTo
+    // appends; cleared on each new synthesis invocation. Phase 5 D-09
+    // consumer pattern (no Flow, no ViewModel, no typed StepItem).
+    val progress = remember { mutableStateListOf<String>() }
 
     // SAF launcher — ACTION_OPEN_DOCUMENT(application/pdf). No manifest
     // permission required (SAFETY-05; verified by Plan 03-08 PermissionAuditTest).
@@ -233,18 +278,51 @@ fun ReportReaderScreen(
 
         when {
             isLoading -> {
+                // Plan 07-04 (D-02b + Pitfall 2) — ToolStepper mounts INSIDE
+                // the isLoading branch so headerSlotCount math at the
+                // `report!!.hasRows` arm below stays unchanged (3 or 4 with
+                // GenericFallbackBanner). A sibling `if (isLoading) item { }`
+                // outside the `when` would silently bump that count by one
+                // and re-surface the Phase 4.1 Pitfall 1 chip-tap drift bug.
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = AegisSpacing.lg),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            "Reading your report…",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = colors.onSurfaceMuted,
-                        )
+                    ToolStepper(
+                        label = "Composing lab summary…",
+                        steps = progress,
+                        modifier = Modifier.fillMaxWidth(),
+                        failures = failures,
+                    )
+                }
+
+                // Plan 06-02 streaming preview rail (STREAM-01 / ROADMAP SC-1).
+                // Mirrors DrugSafeScreen.kt:248-262 verbatim, adapted only by
+                // virtue of being inside an `item { Column { ... } }` slot
+                // (LazyColumn requires composable slots, not direct Column
+                // children). Renders only when `flagPreviews.isNotEmpty()` —
+                // empty state is "no card" per 06-RESEARCH.md §Open Q #5.
+                // No per-item placement animation modifier per RESEARCH
+                // §Anti-Patterns (M2 flicker-becomes-visible-slide). The cards
+                // disappear when `isLoading` flips to false; the settled
+                // AegisResponse SeverityCards take over downstream.
+                //
+                // Plan 07-04 Pitfall 7 — this rail MUST render BELOW
+                // ToolStepper above. Do not reorder.
+                if (flagPreviews.isNotEmpty()) {
+                    item {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            Spacer(Modifier.height(18.dp))
+                            val flagWord = if (flagPreviews.size == 1) "flag" else "flags"
+                            SectionLabel("Streaming · ${flagPreviews.size} $flagWord so far")
+                            Spacer(Modifier.height(10.dp))
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                flagPreviews.forEach { preview ->
+                                    SeverityCard(
+                                        severity = preview.severity,
+                                        description = preview.description,
+                                        citation = preview.citation,
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -297,17 +375,64 @@ fun ReportReaderScreen(
                             }
                         },
                         onClinicianCta = {
-                            // Phase 4 D-02 + D-06: lazy synthesis. Stage the
-                            // PreparsedReport instead of building the
-                            // AegisResponse synchronously; DeferralScreen's
-                            // LaunchedEffect will run
-                            // ToolDispatcher.runReportReaderFastPath and
-                            // populate DeferralStore.pending once inference
-                            // completes. The fallback path (D-05) reuses
-                            // AegisResponseBuilder.build(currentReport) —
-                            // visible there, not here.
-                            DeferralStore.pendingReport = currentReport
-                            onDefer()
+                            // Plan 07-04 (D-02 Path B) — synthesis invocation
+                            // moved from DeferralScreen.kt:98 into this screen
+                            // body (closes Phase 6 STREAM-01-followup). Mirrors
+                            // DrugSafeScreen.kt:184-207 shape verbatim. The
+                            // fallback path (D-05) is preserved by porting
+                            // DeferralScreen.kt:115-128 into the catch block
+                            // below — AegisResponseBuilder.build(currentReport)
+                            // is the Phase-3-shape envelope safety net.
+                            scope.launch {
+                                isLoading = true
+                                progress.clear()
+                                flagPreviews.clear()
+                                failures.clear()
+                                try {
+                                    val r = ToolDispatcher.runReportReaderFastPath(
+                                        report = currentReport,
+                                        onProgress = { event ->
+                                            when (event) {
+                                                is ToolDispatcher.ProgressEvent.FlagPreview -> {
+                                                    val next = MonotonicFlagList.appendIfNew(
+                                                        flagPreviews.toList(),
+                                                        event,
+                                                    )
+                                                    if (next.size > flagPreviews.size) {
+                                                        flagPreviews.add(event)
+                                                    }
+                                                }
+                                                is ToolDispatcher.ProgressEvent.StepFailure -> {
+                                                    // D-04c — typed side channel; ToolStepper
+                                                    // renders the calm-tone ⚠ chip at this index.
+                                                    val idx = (progress.size - 1).coerceAtLeast(0)
+                                                    failures[idx] = FailureInfo(event.label, event.reason)
+                                                }
+                                                else -> event.applyTo(progress)
+                                            }
+                                        },
+                                    )
+                                    DeferralStore.pending = r
+                                    onDefer()
+                                } catch (ce: kotlinx.coroutines.CancellationException) {
+                                    // Honour structured-concurrency cancellation;
+                                    // ported verbatim from DeferralScreen.kt:108-114.
+                                    throw ce
+                                } catch (t: Throwable) {
+                                    // D-05 fallback path — visible-but-non-blocking.
+                                    // Mirrors DeferralScreen.kt:115-128 (synthesis
+                                    // failure collapses to Phase-3-shape envelope).
+                                    android.util.Log.e(
+                                        "ReportReaderScreen",
+                                        "synthesis failed; falling back to Phase-3 envelope",
+                                        t,
+                                    )
+                                    DeferralStore.pending = AegisResponseBuilder.build(currentReport)
+                                    onDefer()
+                                } finally {
+                                    isLoading = false
+                                }
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(),
                     )

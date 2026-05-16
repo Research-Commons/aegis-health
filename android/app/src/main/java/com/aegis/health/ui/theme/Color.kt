@@ -21,6 +21,8 @@ val AegisSurfaceLight = Color(0xFFFFFFFF)    // cards, sheets
 val AegisSurfaceAltLight = Color(0xFFF4F4F2) // recessed surfaces, tags
 val AegisOnSurfaceLight = Color(0xFF0A0A0A)  // near-black text
 val AegisOnSurfaceMutedLight = Color(0xFF5A5A5A)
+val AegisOnWarmSurfaceLight = Color(0xFF1A1816)        // warm-card body text (Phase 8 D-04b)
+val AegisOnWarmSurfaceMutedLight = Color(0xFF3B3733)   // warm-card muted body text (Phase 8 D-04b)
 val AegisHairlineLight = Color(0x1A0A0A0A)   // 0.10 alpha black
 
 val SevCrit = Color(0xFFB3503E)
@@ -58,6 +60,18 @@ val SevLowBgDark = Color(0x1F8FAFD3)
 val SevInfoDark = Color(0xFF9BC59E)
 val SevInfoBgDark = Color(0x1F9BC59E)
 
+// ── Calm-tone warning palette (Phase 7 D-03c · STEP-06) ─────────────────
+// Used by ToolStepper's failure chip when ProgressEvent.StepFailure fires.
+// AVOID SevCrit/SevCritBg here — STEP-06 mandates a calm-tone amber chip,
+// NOT red panic. Light variant is warm amber on soft cream; dark variant
+// reuses the SevModDark hue for visual harmony with the moderate severity
+// row in dark mode.
+
+val WarningFg = Color(0xFFA0671F)            // warm amber, low chroma — calm not panic
+val WarningBg = Color(0xFFFAEDD0)            // soft cream — pairs with WarningFg
+val WarningFgDark = Color(0xFFE2B86A)        // dark-variant amber accent (harmonizes with SevModDark)
+val WarningBgDark = Color(0x1FE2B86A)        // 0.12 alpha
+
 // ── Extended palette container — surfaces every token to screens ────────
 
 @Immutable
@@ -67,6 +81,8 @@ data class AegisColors(
     val surfaceAlt: Color,
     val onSurface: Color,
     val onSurfaceMuted: Color,
+    val onWarmSurface: Color,
+    val onWarmSurfaceMuted: Color,
     val hairline: Color,
     val accent: Color,
     val accentSoft: Color,
@@ -82,6 +98,8 @@ data class AegisColors(
     val sevLowBg: Color,
     val sevInfoFg: Color,
     val sevInfoBg: Color,
+    val warningFg: Color,
+    val warningBg: Color,
     val isDark: Boolean,
 )
 
@@ -91,6 +109,8 @@ val LightAegisColors = AegisColors(
     surfaceAlt = AegisSurfaceAltLight,
     onSurface = AegisOnSurfaceLight,
     onSurfaceMuted = AegisOnSurfaceMutedLight,
+    onWarmSurface = AegisOnWarmSurfaceLight,
+    onWarmSurfaceMuted = AegisOnWarmSurfaceMutedLight,
     hairline = AegisHairlineLight,
     accent = AegisCoral,
     accentSoft = AegisCoralSoft,
@@ -106,6 +126,8 @@ val LightAegisColors = AegisColors(
     sevLowBg = SevLowBg,
     sevInfoFg = SevInfo,
     sevInfoBg = SevInfoBg,
+    warningFg = WarningFg,
+    warningBg = WarningBg,
     isDark = false,
 )
 
@@ -115,6 +137,8 @@ val DarkAegisColors = AegisColors(
     surfaceAlt = AegisSurfaceAltDark,
     onSurface = AegisOnSurfaceDark,
     onSurfaceMuted = AegisOnSurfaceMutedDark,
+    onWarmSurface = AegisOnSurfaceDark,
+    onWarmSurfaceMuted = AegisOnSurfaceMutedDark,
     hairline = AegisHairlineDark,
     accent = AegisCoralDarkAccent,
     accentSoft = AegisCoralDarkSoft,
@@ -130,6 +154,8 @@ val DarkAegisColors = AegisColors(
     sevLowBg = SevLowBgDark,
     sevInfoFg = SevInfoDark,
     sevInfoBg = SevInfoBgDark,
+    warningFg = WarningFgDark,
+    warningBg = WarningBgDark,
     isDark = true,
 )
 
