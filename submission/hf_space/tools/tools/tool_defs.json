@@ -1,0 +1,167 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "normalize_drug",
+      "description": "Resolve a drug name (brand name, generic, or common misspelling) to its canonical generic name, RxCUI, and category (OTC / Rx / Controlled / Supplement).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The drug name to normalize (brand, generic, or misspelled)."
+          }
+        },
+        "required": ["name"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "decompose_product",
+      "description": "Break a combination product (e.g. NyQuil, Excedrin) into its individual active ingredients with RxCUI identifiers.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "product_name": {
+            "type": "string",
+            "description": "The name of the combination product to decompose."
+          }
+        },
+        "required": ["product_name"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_drug_info",
+      "description": "Retrieve the full drug record (name, class, category, warnings) for a given RxCUI identifier.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "rxcui": {
+            "type": "string",
+            "description": "The RxNorm Concept Unique Identifier for the drug."
+          }
+        },
+        "required": ["rxcui"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "check_warnings",
+      "description": "Analyse a list of drugs for drug-drug interactions, drug-condition contraindications, and special population risks (elderly, pregnancy, pediatric). Returns severity-graded flags and whether the case should be deferred to a healthcare professional.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "drug_list": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "List of drug names (generic or brand) to check."
+          },
+          "age": {
+            "type": "integer",
+            "description": "Patient age in years. Used for elderly (>=65) and pediatric (<12) checks."
+          },
+          "conditions": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "List of patient conditions (e.g. 'pregnancy', 'liver disease')."
+          }
+        },
+        "required": ["drug_list"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "lookup_term",
+      "description": "Look up a medical term or abbreviation and return a plain-language definition with citation.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "term": {
+            "type": "string",
+            "description": "The medical term or abbreviation to define."
+          }
+        },
+        "required": ["term"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_guideline",
+      "description": "Retrieve USPSTF preventive-care recommendations (grade A and B) that apply to a patient based on age, sex, and conditions.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "age": {
+            "type": "integer",
+            "description": "Patient age in years."
+          },
+          "sex": {
+            "type": "string",
+            "enum": ["male", "female", "m", "f"],
+            "description": "Patient sex."
+          },
+          "conditions": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Optional list of patient conditions for condition-specific screening recommendations."
+          }
+        },
+        "required": ["age", "sex"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "lookup_lab_reference_range",
+      "description": "Look up the normal reference range for a common lab test (CBC components, BMP/CMP analytes, lipid panel, A1C). Optionally age- and sex-stratified. Returns ref_low, ref_high, units, and a citation. Use only when the lab report does not print its own reference range.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_name": {
+            "type": "string",
+            "description": "Canonical lab test name (e.g., 'LDL cholesterol', 'hemoglobin', 'A1C')."
+          },
+          "age": {
+            "type": "integer",
+            "description": "Patient age in years."
+          },
+          "sex": {
+            "type": "string",
+            "enum": ["male", "female", "m", "f"],
+            "description": "Patient sex; required for sex-stratified analytes."
+          }
+        },
+        "required": ["test_name"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "explain_lab_test",
+      "description": "Return a plain-language definition of what a lab test measures (e.g., 'LDL cholesterol carries cholesterol from the liver...'). Use for the per-row narrative in lab-report explanations. Aliases like 'LDL', 'A1C', 'WBC' route automatically to canonical MedlinePlus terms.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_name": {
+            "type": "string",
+            "description": "Lab test name; aliases like 'LDL', 'HbA1c', 'WBC' accepted."
+          }
+        },
+        "required": ["test_name"]
+      }
+    }
+  }
+]
