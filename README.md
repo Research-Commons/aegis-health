@@ -2,7 +2,7 @@
 
 **Offline, on-device medical safety assistant powered by Gemma 4.**
 
-Aegis Health runs entirely on your Android phone with zero internet connection. It uses a fine-tuned **Gemma 4 E4B** (1.4 GB INT4 quantized) with native tool calling against an on-device SQLite knowledge base sourced from FDA, NLM, RxNorm, MedlinePlus, USPSTF, and NIH DSLD — all public domain. Every medical claim is cited or deferred to a clinician.
+Aegis Health runs entirely on your Android phone with zero internet connection. It uses a fine-tuned **Gemma 4 E4B** (INT8 dynamic-weight quantized, W8/A32 — ~7.7 GB on disk) with native tool calling against an on-device SQLite knowledge base sourced from FDA, NLM, RxNorm, MedlinePlus, USPSTF, and NIH DSLD — all public domain. Every medical claim is cited or deferred to a clinician.
 
 ## Four Modes
 
@@ -21,7 +21,7 @@ Aegis Health runs entirely on your Android phone with zero internet connection. 
 | [`datagen/`](datagen/) | Synthetic training data + pill-bottle renderer | `datagen/output/combined_sft.jsonl` |
 | [`training/`](training/) | Unsloth SFT pipeline (**separable**) | `training/checkpoints/aegis-sft-merged/` |
 | [`rl/`](rl/) | Unsloth + TRL GRPO pipeline (**separable**) | `rl/checkpoints/aegis-grpo-merged/` |
-| [`export/`](export/) | INT4 quantization via LiteRT-LM | `export/output/aegis_model.task` |
+| [`export/`](export/) | INT8 dynamic-weight quantization (W8/A32) via LiteRT-LM | `export/output/aegis_model.task` |
 | [`android/`](android/) | Kotlin / Jetpack Compose Android app | `android/app/build/outputs/apk/...` |
 | [`demo/`](demo/) | Web demo (FastAPI + React) | public URL |
 | [`submission/`](submission/) | Hackathon writeup + video script | |
@@ -87,7 +87,7 @@ This is the single source of truth for where every generated artifact lives and 
 | 5 | `make train-merge` | **`training/checkpoints/aegis-sft-merged/`** (full merged model) | GRPO, export |
 | 6 | `make rl` | `rl/checkpoints/grpo-e4b/` (LoRA adapters) | `make rl-merge` |
 | 7 | `make rl-merge` | **`rl/checkpoints/aegis-grpo-merged/`** (full merged model) | export |
-| 8 | `make export` | **`export/output/aegis_model.task`** (INT4 ~1.4 GB) | Android, demo |
+| 8 | `make export` | **`export/output/aegis_model.task`** (INT8 W8/A32, ~7.7 GB) | Android, demo |
 | 9 | `make assemble-android` | `android/app/src/main/assets/aegis_model.task` + `aegis_kb.sqlite` | APK build |
 
 **Where do my fine-tuned models go?**
@@ -98,8 +98,8 @@ This is the single source of truth for where every generated artifact lives and 
 | SFT merged model | `training/checkpoints/aegis-sft-merged/` | full FP16 model (~8 GB) |
 | GRPO LoRA adapters | `rl/checkpoints/grpo-e4b/` | small LoRA weights (~100 MB) |
 | GRPO merged model | `rl/checkpoints/aegis-grpo-merged/` | full FP16 model (~8 GB) |
-| Final on-device model | `export/output/aegis_model.task` | INT4 quantized (~1.4 GB) |
-| Shipped in APK | `android/app/src/main/assets/aegis_model.task` | same file, copied |
+| Final on-device model | `export/output/aegis_model.task` | INT8 W8/A32 quantized (~7.7 GB) |
+| Shipped via sideload | `/sdcard/Android/data/com.aegis.health/files/aegis_model.litertlm` | same model, pushed to device (too large to bundle inside APK) |
 
 > `training/checkpoints/` and `rl/checkpoints/` are both gitignored. Track large artifacts with Git LFS, Hugging Face Hub, or a cloud bucket -- never commit raw weights.
 
@@ -157,7 +157,8 @@ make rl-merge
 make eval-sft
 make eval-rl
 
-# 7. Quantize to INT4 for on-device deployment (~10 min, needs litert-lm)
+# 7. Quantize to INT8 W8/A32 for on-device deployment (needs litert-torch-nightly;
+#    W4 was tried first but crashes in LiteRT-LM 0.10.2 EmbeddingLookupText)
 make export              # defaults to GRPO checkpoint; use CHECKPOINT=... to override
 make benchmark
 make validate-export
