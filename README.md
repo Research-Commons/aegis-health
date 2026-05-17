@@ -2,13 +2,14 @@
 
 **Offline, on-device medical safety assistant powered by Gemma 4.**
 
-Aegis Health runs entirely on your Android phone with zero internet connection. It uses a fine-tuned Gemma 4 model with deterministic tool calling against a local knowledge base to provide cited, grounded medical safety information.
+Aegis Health runs entirely on your Android phone with zero internet connection. It uses a fine-tuned **Gemma 4 E4B** (1.4 GB INT4 quantized) with native tool calling against an on-device SQLite knowledge base sourced from FDA, NLM, RxNorm, MedlinePlus, USPSTF, and NIH DSLD — all public domain. Every medical claim is cited or deferred to a clinician.
 
-## Three Modes
+## Four Modes
 
 - **DrugSafe** — Scan a pill bottle or type drug names. Get interaction warnings, contraindication flags, and severity-coded safety cards. Every output cites FDA label data.
 - **ConsentReader** — Photograph a medical consent form. Get a plain-language summary with tappable medical terms and preserved binding clauses.
 - **HealthPartner** — Enter your health profile. Get a personalized prevention checklist grounded in USPSTF Grade A/B recommendations.
+- **ReportReader** — Upload a lab report PDF. Aegis pre-parses each row in Kotlin, evaluates against KB-grounded reference ranges, and produces a per-row safety summary with population-aware routing (pediatric / pregnancy / adult). Outside-range values surface as severity-coded cards; tumor markers, genetic results, and pathology-grade tests auto-defer to a clinician.
 
 ## Repository Layout
 
@@ -272,6 +273,7 @@ After init, run one prompt per mode to confirm everything is wired:
 | DrugSafe | `warfarin and ibuprofen, 65 year old` | High-severity bleeding-risk flag, AGS Beers + FDA citations, `defer_to_professional=true` |
 | ConsentReader | Paste any short medical consent paragraph | Plain-language rewrite; `defer_to_professional=false` unless asked whether to sign |
 | HealthPartner | `55 year old male, what preventive screenings should I get?` | USPSTF Grade A/B recommendations |
+| ReportReader | Tap the ReportReader tile → pick a lab report PDF (any vendor — LabCorp, Quest, Tata 1mg, Mayo, urgent-care) | Per-row safety summary; outside-range values flagged with severity color + FDA/KB citation; "all in range" affirmation when applicable; auto-defer on tumor markers / genetic / pathology rows |
 
 ### Verification checklist
 
@@ -282,7 +284,8 @@ Before declaring the install good:
 - [ ] `AndroidManifest.xml` has **no `INTERNET` permission** (this is the offline guarantee)
 - [ ] Airplane-mode smoke test passes on a physical device
 - [ ] DrugSafe responses include real citations (e.g., "AGS Beers Criteria", FDA labels) rather than only the generic "Aegis local safety KB" fallback
-- [ ] All three modes produce a cited response for at least one canonical demo prompt
+- [ ] All four modes produce a cited response for at least one canonical demo prompt
+- [ ] ReportReader correctly parses at least one vendor PDF and produces per-row safety summaries with no row missing a citation
 
 ### Troubleshooting
 

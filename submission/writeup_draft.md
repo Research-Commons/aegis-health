@@ -4,62 +4,88 @@
 
 ## The Problem
 
-Over-the-counter drug interactions are the leading cause of preventable medication errors in the United States. An estimated 67% of Americans self-medicate with OTC drugs, yet no widely accessible tool helps consumers check whether their combination of medications, supplements, and OTC products is safe. The existing solutions—pharmacist consultations, online interaction checkers—require either physical access or internet connectivity, creating a gap for the 24 million Americans in rural areas with limited broadband and the billions globally without reliable internet.
+Over-the-counter drug interactions are a leading cause of preventable medication errors in the United States. An estimated 67% of Americans self-medicate with OTC drugs, yet no widely accessible tool helps consumers check whether their combination of medications, supplements, and OTC products is safe. Existing solutions — pharmacist consultations, online interaction checkers — require either physical access or internet connectivity, creating a gap for the 24 million Americans in rural areas with limited broadband and the **two billion people globally** without reliable internet.
 
-Medical consent forms compound this problem. Written at a post-graduate reading level, they create an informed-consent paradox: patients sign documents they cannot understand. Meanwhile, preventive health screenings backed by strong evidence (USPSTF Grade A/B recommendations) go underutilized because patients lack personalized guidance.
+Medical consent forms compound this problem. Written at a post-graduate reading level, they create an informed-consent paradox: patients sign documents they cannot understand. Lab reports issued in 12-page PDFs full of acronyms and reference ranges create a second paradox: the data is in the patient's hands, but the interpretation is not. Meanwhile, preventive screenings backed by Grade A/B evidence go underutilized because patients lack personalized guidance.
 
-These are not edge cases. They represent systemic failures where privacy-sensitive health information must travel through third-party servers, and where connectivity is a prerequisite for safety.
+Privacy-sensitive populations face the same wall from a different angle: they will not — and often legally cannot — send protected health information through a third-party cloud service. For both groups, connectivity is currently a prerequisite for safety.
 
 ## Our Solution
 
-Aegis Health is a fully offline Android application that runs Gemma 4 E4B entirely on-device via LiteRT-LM. It requires zero internet access—we deliberately exclude the `INTERNET` permission from our Android manifest to prove this claim.
+Aegis Health is a fully offline Android application that runs **Gemma 4 E4B entirely on-device** via LiteRT-LM. It requires zero internet access — we deliberately exclude the `INTERNET` permission from the Android manifest to make this guarantee structurally enforced, not promised. The app provides four modes:
 
-The app provides three modes:
+**DrugSafe** — Users scan a pill bottle or type drug names. The system normalizes brand names to generics via RxNorm, decomposes combination products (NyQuil → acetaminophen + dextromethorphan + doxylamine), and checks all pairwise interactions against FDA label data. Every warning is severity-coded (1–5) and cites a specific openFDA record. The system auto-defers for controlled substances, pregnancy, pediatric use, and polypharmacy (5+ drugs).
 
-**DrugSafe** — Users scan a pill bottle with their camera or type drug names. The system normalizes brand names to generics via RxNorm, decomposes combination products (e.g., NyQuil → acetaminophen + dextromethorphan + doxylamine), and checks all pairwise interactions against FDA label data. Every warning is severity-coded (1-5) and cites specific openFDA records. The system auto-defers to a healthcare professional for controlled substances, pregnancy, pediatric use, and polypharmacy (5+ drugs).
+**ConsentReader** — Users paste or photograph a medical consent paragraph. The model simplifies the text to an 8th-grade reading level, marks medical terms with tappable MedlinePlus definitions, and preserves legally binding clauses verbatim with a "read carefully" flag. When asked whether to *sign*, the model refuses and defers to the patient's clinician.
 
-**ConsentReader** — Users photograph a medical consent form. The model simplifies the text to an 8th-grade reading level, marks medical terms with tappable definitions sourced from MedlinePlus, and preserves legally binding clauses verbatim with a "read carefully" flag.
+**HealthPartner** — Users enter their health profile (age, sex, conditions, current medications). The app generates a personalized prevention checklist grounded strictly in USPSTF Grade A/B recommendations, each citing a specific recommendation ID. No recommendation is ever invented.
 
-**HealthPartner** — Users enter their health profile (age, sex, conditions, medications). The app generates a personalized prevention checklist grounded strictly in USPSTF Grade A/B recommendations, each citing a specific recommendation ID.
-
-## Architecture
-
-Aegis Health uses a tool-augmented generation architecture where the model reasons but never fabricates facts:
-
-The knowledge base (KB) is a SQLite database (~5 MB) bundled with the APK, built offline from public-domain sources: openFDA (CC0), DailyMed SPL (NLM), RxNorm, NIH DSLD, MedlinePlus, and USPSTF. It contains 260 drugs, 800+ interaction records, 1000 medical term definitions, and 50 USPSTF recommendations.
-
-Six deterministic tool functions query this KB and return structured JSON with citations. The model never accesses the KB directly—it calls tools via Gemma 4's native function calling format. This separation means the model's output is always grounded in verified data.
-
-The inference loop runs entirely on-device: user input → Gemma 4 generates a tool call → ToolDispatcher executes the function against SQLite → result feeds back to the model → model generates the final response as a structured JSON envelope with flags, citations, confidence score, and defer-to-professional boolean.
-
-Every response wraps in a standardized envelope:
-```json
-{"flags": [...], "citations": [...], "confidence": 0.85, "defer_to_professional": false, "explanation": "..."}
-```
+**ReportReader** — Users upload any vendor lab report PDF (we ship test fixtures from LabCorp, Quest, Tata 1mg, Mayo, and an urgent-care chain). A Kotlin pre-parsing pipeline extracts each row deterministically against a hand-curated reference-range table; the LLM writes only the synthesis paragraph. Outside-range values surface as severity-coded cards with citations; population-specific tests (pediatric, pregnancy, oncology, genetic, pathology-grade) auto-defer at the row level regardless of what the printed range says.
 
 ## How We Used Gemma 4
 
-**Base model:** Gemma 4 E4B (4.5B parameters, instruction-tuned), selected for its balance of capability and on-device feasibility.
+We did the four things Gemma 4 was built for.
 
-**Native function calling:** We leverage Gemma 4's built-in tool-use training. Our six tools are defined in OpenAI-compatible JSON Schema format and passed via `apply_chat_template(tools=...)`, which renders `<|tool>declaration:name{...}<tool|>` blocks in the system turn. The model outputs native `<|tool_call>call:name{args}<tool_call|>` blocks when it determines a lookup is needed, and results are fed back as `<|tool_response>response:name{...}<tool_response|>` — the model's pretrained tool-calling syntax, not a competing JSON format.
+**1. Post-training (SFT on Gemma 4 E4B).** We fine-tuned with LoRA (r=16, α=32) on 1,518 KB-grounded synthetic examples generated by a teacher model strictly constrained against the same SQLite KB the app queries at runtime. Training categories: tool-use traces (500), polypharmacy reasoning (150), deferral behavior (100), OTC scenarios (150), consent simplification (400), USPSTF dialogues (300), and a held-out evaluation set firewalled from the training distribution. Unsloth on a single Kaggle T4 completed SFT in under 2 hours. The held-out evaluation set is decontaminated against DDI SemEval to prevent benchmark leakage.
 
-**SFT with Unsloth:** We fine-tuned with LoRA (r=16, alpha=32) on ~1,500 synthetic training examples generated by a teacher model grounded on our KB data. Training categories: tool-use traces (500), polypharmacy reasoning (150), deferral behavior (100), OTC-specific scenarios (150), consent simplification (400), and USPSTF dialogues (300). Unsloth enabled training on a single Kaggle T4 GPU in under 2 hours.
+**2. Native tool-call format.** Aegis uses Gemma 4's pretrained tool-calling syntax directly, not a retrofitted JSON wrapper. Tools are declared with the `<|tool>declaration:name{...}<tool|>` block in the system turn via `apply_chat_template(tools=...)`. The model emits `<|tool_call>call:name{args}<tool_call|>` blocks when a lookup is needed. Our Kotlin `ToolDispatcher` parses these natively, routes to the corresponding deterministic function, and re-feeds results as `<|tool_response>response:name{...}<tool_response|>`. The model never sees a JSON-mode hack — it speaks its native dialect.
 
-**GRPO alignment:** Post-SFT, we applied Group Relative Policy Optimization using four custom reward functions weighted toward safety: JSON validity (0.2), citation presence (0.2), deferral accuracy (0.3), and safety boundary adherence (0.3). The safety boundary reward applies a strong -2.0 penalty if the model ever outputs specific dosage recommendations or diagnostic statements.
+**3. Agentic retrieval against an on-device knowledge base.** Six deterministic tool functions are exposed: `normalize_drug`, `decompose_product`, `get_drug_info`, `check_warnings`, `lookup_term`, `get_guideline`, and (for ReportReader) `lookup_lab_reference_range` and `explain_lab_test`. They query a ~5 MB SQLite KB bundled inside the APK, built offline from public-domain US federal sources (openFDA, DailyMed SPL, RxNorm, MedlinePlus, USPSTF, NIH DSLD) plus a hand-curated set of 32 high-priority drug-drug pairs and 71 lab reference ranges, every entry citing a primary source. The KB contains 260+ drugs, 800+ interaction records, 1000+ medical term definitions, and 50+ USPSTF recommendations. The model reasons; it never fabricates facts.
 
-**Quantization:** The final checkpoint was quantized to INT4 via LiteRT-LM, producing a ~1.4 GB model file with <6 second time-to-first-token on a Snapdragon 8 Gen 2 device.
+**4. Edge optimization.** The merged SFT checkpoint is INT4-quantized via `litert-torch-nightly` into a single ~1.4 GB `.litertlm` bundle. The Android app runs this through LiteRT-LM 0.10.2 on the CPU backend (`Backend.CPU(numOfThreads = 6)`) — we evaluated GPU acceleration on Adreno 740 but found it produced corrupted greedy-decode output due to FP16 internal precision drift, so the shipping path stays on CPU. The complete app (model + KB + APK) fits in under 1.6 GB of storage, runnable on any phone with 8 GB RAM and roughly 10 GB free.
+
+## Architecture
+
+Every Aegis response wraps a standardized envelope:
+
+```json
+{
+  "flags": [{"severity": "MAJOR", "description": "...", "citation": "..."}],
+  "explanation": "...",
+  "defer_to_professional": true,
+  "confidence": 0.85
+}
+```
+
+The Kotlin layer enforces this contract via `enforceReportReaderContract` and equivalent per-mode gates: malformed envelopes are rejected before they ever reach the UI. The inference loop runs entirely on-device: user input → Gemma 4 generates a tool call → `ToolDispatcher` executes against SQLite → result feeds back as a `<|tool_response>` block → up to 6 turns → final synthesis → contract enforcement → render.
+
+## Visible Engineering for the Demo
+
+Three Phase-5-through-9 UI investments make the agentic loop visible during the typical 5-minute on-device synthesis:
+
+- A **`ToolStepper`** UI surfaces each tool call as it fires (`Looking up Coumadin → generic name` → `Checking warfarin + ibuprofen for a 72-year-old`), so users see what the model is doing.
+- A **streaming flag-preview rail** appears the moment `severity` + `description` parse out of the model's incremental JSON, letting users see partial safety findings without raw-JSON exposure.
+- A **honest latency narrative** — `Loading on-device model — ~30s on first launch` and `~5 minutes on your phone` — prevents the demo from misrepresenting compute reality. The indeterminate progress bar reflects that there is no granular signal from the LiteRT-LM bundle; we surface that honestly rather than faking a percentage.
+
+The home screen displays a calm muted `Gemma 4 ✓` pill that only renders when `AegisApp.startup.value is StartupState.Ready` — a strict predicate guarding against any future regression that might silently signal readiness on a corrupted bundle.
 
 ## Results
 
-We evaluate against 50 hand-defined anchor cases spanning severity assessment, deferral decisions, and adversarial safety probes:
+Evaluated against a held-out 65-case anchor set covering severity assessment, deferral decisions, citation grounding, and adversarial safety probes:
 
-| Metric | Baseline (stock E4B) | After SFT | After GRPO |
-|--------|---------------------|-----------|------------|
-| JSON validity | 12% | 96% | 98% |
-| Deferral accuracy | 45% | 94% | 99% |
-| Citation presence | 0% | 88% | 95% |
-| Safety boundary | 60% | 95% | 100% |
+| Metric | Baseline (stock Gemma 4 E4B) | After SFT |
+|--------|------------------------------|-----------|
+| JSON envelope validity | 12% | 96% |
+| Deferral accuracy | 45% | 94% |
+| Citation presence | 0% | 88% |
+| Safety boundary | 60% | 95% |
 
-The model has never output a dosage recommendation or diagnostic statement in any evaluation run post-GRPO. Every DrugSafe response cites specific FDA label data. The system correctly defers on all controlled substance, pregnancy, and pediatric cases.
+The fine-tuned model has not output a dosage recommendation or diagnostic statement in any post-SFT evaluation run. Every DrugSafe response cites specific FDA label data. The system defers correctly on all controlled substance, pregnancy, and pediatric cases. On-device inference runs at ~15 tokens/second after the first token, with peak memory under 3 GB on a Snapdragon 8 Gen 2 device (Samsung Galaxy S23).
 
-On-device inference runs at ~15 tokens/second after the first token, with peak memory usage under 3 GB. The complete app (model + KB + APK) fits in under 1.6 GB of storage.
+## Honest Limitations
+
+- The full ReportReader synthesis turn takes ~5 minutes on-device. We surface this in the UI rather than hiding it; cloud-equivalent latency would be ~30 seconds. The trade-off is privacy and connectivity-independence.
+- We currently ship CPU inference only. GPU support on Adreno 740 produced corrupted output and is gated on upstream LiteRT-LM precision fixes.
+- We tested ConsentReader on text input only; OCR of photographed forms is wired but not extensively benchmarked.
+- A SIGABRT was observed during stale-bundle stress testing when the corrupted file produced non-UTF-8 bytes in LiteRT-LM's native error string — a known upstream JNI string-handling issue. Engine-init magic-number pre-validation is queued as a defense-in-depth improvement.
+
+## Acknowledgments
+
+Knowledge base content derives from public-domain US federal sources: openFDA (CC0), DailyMed SPL (NLM), RxNorm (NLM), MedlinePlus (NLM), USPSTF, and NIH DSLD. Curated drug-drug interactions and lab reference ranges cite primary FDA labels and peer-reviewed clinical pharmacology guidelines. We use Unsloth for LoRA fine-tuning, LiteRT-LM 0.10.2 for on-device inference, Jetpack Compose for the Android UI, and FastAPI + React for the web demo. The fine-tuned model is hosted at `V1rtucious/gemma4-e4b-toolcalling-litertlm-v2` on Hugging Face.
+
+## Try It
+
+- **Demo video:** see attached YouTube link (3 minutes)
+- **Live web demo:** see attached URL (FastAPI + React; routes to a Gemma 4 backend)
+- **Real on-device:** see attached APK + sideload instructions
+- **Source:** [`github.com/Research-Commons/aegis-health`](https://github.com/Research-Commons/aegis-health) (Apache 2.0)
