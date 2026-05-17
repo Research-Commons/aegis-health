@@ -118,3 +118,8 @@ eval/output/
 aegis_eval_kit.zip
 C--Users-amanr.claude-settings.json.url
 Plan_for_Angel_Health.md
+
+# HF Space deploy artifact — KB SQLite is cp'd from kb/output/ at deploy time,
+# not tracked in the main repo. The Space's own git repo uses git-lfs for it
+# (see submission/hf_space/.gitattributes).
+submission/hf_space/kb/output/aegis_kb.sqlite

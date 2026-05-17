@@ -1,19 +1,29 @@
 """Aegis Health — Hugging Face Space hosted demo.
 
 Browser-friendly companion to the Aegis Health Android app. Routes inference
-to Gemma 4 via OpenRouter, so judges who cannot sideload the APK can still
-experience the agentic loop and citation grounding.
+to the same fine-tuned SFT v4 checkpoint hosted on a Hugging Face Inference
+Endpoint (V1rtucious/aegis-sft-e4b-merged-v4), so judges who cannot sideload
+the APK can still experience the agentic loop and citation grounding.
 
-The on-device Android APK runs fine-tuned Gemma 4 E4B (INT8 W8/A32 quantized,
-~7.7 GB) entirely offline via LiteRT-LM 0.10.2. This hosted demo uses the
-same tool layer, same SQLite KB, and the same AegisResponse envelope; only
-the inference path is different.
+The on-device Android APK runs the INT8 W8/A32 quantized version of the same
+model (~7.7 GB .litertlm) entirely offline via LiteRT-LM 0.10.2. This hosted
+demo serves the FP16 merged checkpoint via TGI. Same fine-tuned weights,
+same tool layer, same SQLite KB, same AegisResponse envelope — only the
+quantization and runtime differ.
 
 Environment variables (configured as Space secrets / variables):
-- OPENROUTER_API_KEY  (secret, required)
-- OPENROUTER_MODEL    (public variable, defaults to google/gemma-3-27b-it;
-                       override to whichever Gemma 4 SKU your OpenRouter
-                       account has access to, e.g. google/gemma-4-9b-it)
+- INFERENCE_BASE_URL  (public variable, required)  — your HF Inference
+                       Endpoint root URL (no trailing slash). Will look like
+                       https://<id>.us-east-1.aws.endpoints.huggingface.cloud
+- INFERENCE_API_KEY   (secret, required)           — your HF user access token
+                       with read permission on the Endpoint
+- INFERENCE_MODEL     (public variable, optional)  — defaults to "tgi"
+                       (the TGI server's default model name). Only override
+                       if your Endpoint uses a different model identifier.
+
+The Endpoint deploys the fine-tuned SFT v4 checkpoint at
+V1rtucious/aegis-sft-e4b-merged-v4 — same model as the Android APK,
+served in FP16 (cloud) instead of INT8 W8/A32 (on-device).
 """
 
 from __future__ import annotations
@@ -43,13 +53,19 @@ from tools.tools.dispatcher import ToolDispatcher  # noqa: E402
 TOOL_DEFS_PATH = ROOT / "tools" / "tools" / "tool_defs.json"
 KB_PATH = ROOT / "kb" / "output" / "aegis_kb.sqlite"
 
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
-OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "google/gemma-3-27b-it")
+INFERENCE_API_KEY = os.environ.get("INFERENCE_API_KEY", "")
+INFERENCE_BASE_URL = os.environ.get("INFERENCE_BASE_URL", "").rstrip("/")
+INFERENCE_MODEL = os.environ.get("INFERENCE_MODEL", "tgi")
 
-if not OPENROUTER_API_KEY:
+if not INFERENCE_API_KEY:
     logger.warning(
-        "OPENROUTER_API_KEY is not set; the demo will fail on first request. "
+        "INFERENCE_API_KEY is not set; the demo will fail on first request. "
         "Add it as a Secret under Space Settings → Variables and secrets."
+    )
+if not INFERENCE_BASE_URL:
+    logger.warning(
+        "INFERENCE_BASE_URL is not set; the demo will fail on first request. "
+        "Add it as a public Variable pointing at your HF Inference Endpoint."
     )
 
 with open(TOOL_DEFS_PATH) as fh:
@@ -57,9 +73,10 @@ with open(TOOL_DEFS_PATH) as fh:
 
 dispatcher = ToolDispatcher(db_path=str(KB_PATH))
 
+# HF Inference Endpoints expose an OpenAI-compatible API at <endpoint>/v1.
 client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=OPENROUTER_API_KEY or "missing",
+    base_url=f"{INFERENCE_BASE_URL}/v1" if INFERENCE_BASE_URL else "http://missing",
+    api_key=INFERENCE_API_KEY or "missing",
 )
 
 # ---------------------------------------------------------------------------
@@ -96,12 +113,15 @@ def run_agentic_loop(user_message: str) -> tuple[str, str]:
         {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": user_message},
     ]
-    trace_lines: list[str] = [f"**Model:** `{OPENROUTER_MODEL}` (via OpenRouter)\n"]
+    trace_lines: list[str] = [
+        "**Model:** `V1rtucious/aegis-sft-e4b-merged-v4` "
+        "(fine-tuned Gemma 4 E4B SFT v4, FP16 via HF Inference Endpoint)\n"
+    ]
 
     for turn in range(MAX_TURNS):
         try:
             response = client.chat.completions.create(
-                model=OPENROUTER_MODEL,
+                model=INFERENCE_MODEL,
                 messages=messages,
                 tools=TOOL_DEFS,
                 tool_choice="auto",
@@ -112,10 +132,12 @@ def run_agentic_loop(user_message: str) -> tuple[str, str]:
             logger.exception("OpenRouter call failed")
             trace_lines.append(f"\n❌ **Inference error:** `{exc}`")
             return "\n".join(trace_lines), (
-                "An error occurred while calling the model. "
-                "Check that `OPENROUTER_API_KEY` is set and `OPENROUTER_MODEL` "
-                "(currently `" + OPENROUTER_MODEL + "`) is available on your "
-                "OpenRouter account."
+                "An error occurred while calling the inference endpoint. "
+                "Check that `INFERENCE_API_KEY` and `INFERENCE_BASE_URL` are set "
+                "in Space Settings → Variables and secrets, and that the "
+                "endpoint is running (HF Inference Endpoints scale to zero "
+                "after idle; the first request after a cold start can take "
+                "~30 seconds to warm the GPU)."
             )
 
         msg = response.choices[0].message
@@ -227,15 +249,16 @@ INTRO_MD = """
 
 **Offline medical safety assistant powered by Gemma 4.** This Space is the
 browser-friendly companion to the
-[Android app](https://github.com/Research-Commons/aegis-health) and routes
-inference to Gemma 4 via OpenRouter for judges who cannot sideload the APK.
+[Android app](https://github.com/Research-Commons/aegis-health) and serves
+the **same fine-tuned Gemma 4 E4B SFT v4 checkpoint** (V1rtucious/aegis-sft-e4b-merged-v4)
+through an HF Inference Endpoint, so judges who cannot sideload the APK can
+still experience the agentic loop and citation grounding.
 
-The on-device build is a fine-tuned **Gemma 4 E4B** (INT8 W8/A32 quantized,
-~7.7 GB) running entirely offline via LiteRT-LM. The four modes — DrugSafe,
-ConsentReader, HealthPartner, and ReportReader — all use the same Kotlin/Python
-tool layer and SQLite knowledge base across both deployments. Every medical
-claim is cited (FDA · NLM · RxNorm · MedlinePlus · USPSTF · NIH DSLD) or
-deferred to a clinician.
+The on-device build is the INT8 W8/A32 quantized version of the same model
+(~7.7 GB `.litertlm`) running entirely offline via LiteRT-LM. Cloud serves
+FP16; phone serves INT8. **Same weights, same tool layer, same SQLite KB**
+across both deployments. Every medical claim is cited (FDA · NLM · RxNorm ·
+MedlinePlus · USPSTF · NIH DSLD) or deferred to a clinician.
 
 > ⚠️ **Not medical advice.** Aegis Health is a research demo for the Kaggle
 > Gemma 4 Impact Challenge. Always consult a clinician for medical decisions.
@@ -337,7 +360,7 @@ with gr.Blocks(
 
     gr.Markdown(
         "---\n"
-        f"*Inference: `{OPENROUTER_MODEL}` via OpenRouter · "
+        "*Inference: fine-tuned `aegis-sft-e4b-merged-v4` (FP16) via HF Inference Endpoint · "
         "Tool layer + KB: identical to the on-device APK · "
         "Apache 2.0 licensed · "
         "Built for the Kaggle Gemma 4 Impact Challenge (Health & Sciences track).*"
