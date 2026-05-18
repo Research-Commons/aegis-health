@@ -1,3 +1,0 @@
-*.sqlite filter=lfs diff=lfs merge=lfs -text
-*.litertlm filter=lfs diff=lfs merge=lfs -text
-*.task filter=lfs diff=lfs merge=lfs -text
