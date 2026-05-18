@@ -159,7 +159,7 @@ fun StartupErrorScreen(
 
         Spacer(Modifier.height(24.dp))
         PrimaryButton(
-            text = "Download model (4.1 GB)",
+            text = "Download model (~7.7 GB)",
             onClick = { /* handled by user; offline by design */ },
             leading = Icons.Default.Download,
             modifier = Modifier.fillMaxWidth(),

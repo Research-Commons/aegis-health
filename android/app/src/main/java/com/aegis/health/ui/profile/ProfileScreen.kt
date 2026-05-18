@@ -91,7 +91,7 @@ fun ProfileScreen(
             SettingRow(
                 icon = Icons.Default.Memory,
                 title = "Gemma 4 E4B",
-                sub = "4.1 GB · Loaded · Last verified today",
+                sub = "~7.7 GB · Loaded · Last verified today",
                 onClick = {},
                 divider = true,
             )

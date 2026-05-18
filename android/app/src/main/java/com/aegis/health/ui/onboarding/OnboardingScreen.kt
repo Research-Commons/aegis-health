@@ -100,7 +100,7 @@ fun OnboardingScreen(
         )
         Spacer(Modifier.height(10.dp))
         Text(
-            "Powered by Gemma 4 E4B · 4.1 GB on disk",
+            "Powered by Gemma 4 E4B · ~7.7 GB on disk",
             style = MaterialTheme.typography.bodySmall,
             color = colors.onSurfaceMuted,
             modifier = Modifier.fillMaxWidth(),
