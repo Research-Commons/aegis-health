@@ -42,11 +42,9 @@ The notebook serves [`rescommons/aegis-sft-e4b-merged-v4`](https://huggingface.c
    The final Kaggle submission still needs a public code repository, so remove
    this dependency by making the repo public before final submission.
 
-5. **Paste in the script**:
-   - Open `aegis_health_kaggle.py` from this directory.
-   - In the Kaggle notebook editor, either:
-     - **Single cell**: paste the entire file into one cell, OR
-     - **Multiple cells**: split at each `# %% CELL N` marker — one cell per section. Multi-cell is recommended so you can inspect intermediate output.
+5. **Import or paste the notebook**:
+   - Preferred: upload/import `aegis_health_kaggle.ipynb` from this directory.
+   - Fallback: open `aegis_health_kaggle.py` and split at each `# %% CELL N` marker - one cell per section.
 
 6. **Save** the notebook (top-right). Use a public Save (Save & Run All — or just Save Version → Quick Save for now).
 
