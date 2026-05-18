@@ -22,10 +22,12 @@ import sys, subprocess
 def _pip_install(*pkgs):
     subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "-U", *pkgs])
 _pip_install(
-    "transformers>=4.45,<5",
-    "accelerate>=0.30,<1",
-    "bitsandbytes>=0.43",
-    "gradio>=4.44,<5",
+    # Gemma 4 support lives in current Transformers 5.x. Older 4.x builds may
+    # fail with "model_type gemma4 not recognized".
+    "transformers>=5.8,<6",
+    "accelerate>=1.7,<2",
+    "bitsandbytes>=0.46,<1",
+    "gradio>=5.49,<6",
     "pydantic>=2,<3",
     "sentencepiece",
     # Pin protobuf to a range that's compatible with transformers + sentencepiece
@@ -39,18 +41,44 @@ _pip_install(
 
 # %% CELL 2 — Auth + clone the Aegis repo (~30 sec) --------------------------
 import os
+import stat
+import tempfile
 from pathlib import Path
 from kaggle_secrets import UserSecretsClient
 
+secrets = UserSecretsClient()
+
 # Kaggle Secret with read access to V1rtucious/aegis-sft-e4b-merged-v4
-os.environ["HF_TOKEN"] = UserSecretsClient().get_secret("HF_TOKEN")
+os.environ["HF_TOKEN"] = secrets.get_secret("HF_TOKEN")
 os.environ["HUGGING_FACE_HUB_TOKEN"] = os.environ["HF_TOKEN"]
 
+def _optional_secret(name: str) -> str | None:
+    try:
+        value = secrets.get_secret(name)
+    except Exception:
+        return None
+    return value.strip() if value and value.strip() else None
+
 REPO_DIR = Path("/kaggle/working/aegis-health")
+REPO_URL = "https://github.com/Research-Commons/aegis-health.git"
 if not REPO_DIR.exists():
-    subprocess.check_call(
-        ["git", "clone", "https://github.com/Research-Commons/aegis-health.git", str(REPO_DIR)]
-    )
+    github_token = _optional_secret("GITHUB_TOKEN")
+    clone_env = os.environ.copy()
+    clone_env["GIT_TERMINAL_PROMPT"] = "0"
+    if github_token:
+        clone_env["GITHUB_TOKEN"] = github_token
+        askpass = Path(tempfile.gettempdir()) / "aegis-git-askpass.sh"
+        askpass.write_text(
+            "#!/bin/sh\n"
+            "case \"$1\" in\n"
+            "*Username*) echo \"x-access-token\" ;;\n"
+            "*Password*) printf '%s' \"$GITHUB_TOKEN\" ;;\n"
+            "*) echo \"\" ;;\n"
+            "esac\n"
+        )
+        askpass.chmod(stat.S_IRWXU)
+        clone_env["GIT_ASKPASS"] = str(askpass)
+    subprocess.check_call(["git", "clone", REPO_URL, str(REPO_DIR)], env=clone_env)
 
 # Make the bundled tools/ package importable.
 if str(REPO_DIR) not in sys.path:
@@ -62,9 +90,14 @@ if str(REPO_DIR) not in sys.path:
 # Skipping it would mean tools return empty results, so we run it once.
 KB_PATH = REPO_DIR / "kb" / "output" / "aegis_kb.sqlite"
 if not KB_PATH.exists():
-    # `make install` pulls Python deps for the kb pipeline; `make kb` runs it.
-    subprocess.check_call(["make", "install"], cwd=str(REPO_DIR))
-    subprocess.check_call(["make", "kb"], cwd=str(REPO_DIR))
+    # Install only the KB + tool extras. The repo-level `make install` also
+    # pulls training/RL/export stacks and can perturb the notebook's model
+    # runtime, so keep this Kaggle path narrow.
+    subprocess.check_call(
+        [sys.executable, "-m", "pip", "install", "-q", "-e", ".[kb,tools]"],
+        cwd=str(REPO_DIR),
+    )
+    subprocess.check_call([sys.executable, "-m", "kb.build"], cwd=str(REPO_DIR))
 assert KB_PATH.exists(), f"KB build failed; expected file at {KB_PATH}"
 print(f"KB ready at {KB_PATH} ({KB_PATH.stat().st_size / 1e6:.1f} MB)")
 
@@ -111,7 +144,7 @@ model = AutoModelForCausalLM.from_pretrained(
     device_map="auto",
     token=os.environ["HF_TOKEN"],
     trust_remote_code=False,
-    torch_dtype=torch.float16,
+    dtype=torch.float16,
 )
 model.eval()
 print(f"Model loaded. Device map: {model.hf_device_map}")
@@ -379,6 +412,6 @@ with gr.Blocks(
 #
 # That URL is what you paste into the Kaggle Writeup as the live demo link.
 # Keep the notebook running — when this cell stops, the share URL dies.
-# share URLs are valid for 72 hours from launch; the Kaggle session itself
-# expires after 9 hours of inactivity, whichever comes first.
+# Gradio share URLs currently last up to about one week, but they are only a
+# proxy to this running Kaggle notebook. If the notebook stops, the link dies.
 demo.launch(share=True, server_name="0.0.0.0", server_port=7860)

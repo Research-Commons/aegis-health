@@ -81,11 +81,11 @@ The fine-tuned model has not output a dosage recommendation or diagnostic statem
 
 ## Acknowledgments
 
-Knowledge base content derives from public-domain US federal sources: openFDA (CC0), DailyMed SPL (NLM), RxNorm (NLM), MedlinePlus (NLM), USPSTF, and NIH DSLD. Curated drug-drug interactions and lab reference ranges cite primary FDA labels and peer-reviewed clinical pharmacology guidelines. We use Unsloth for LoRA fine-tuning, LiteRT-LM 0.10.2 for on-device inference, Jetpack Compose for the Android UI, and FastAPI + React for the web demo. The fine-tuned model is hosted at `V1rtucious/gemma4-e4b-toolcalling-litertlm-v2` on Hugging Face.
+Knowledge base content derives from public-domain US federal sources: openFDA (CC0), DailyMed SPL (NLM), RxNorm (NLM), MedlinePlus (NLM), USPSTF, and NIH DSLD. Curated drug-drug interactions and lab reference ranges cite primary FDA labels and peer-reviewed clinical pharmacology guidelines. We use Unsloth for LoRA fine-tuning, LiteRT-LM 0.10.2 for on-device inference, Jetpack Compose for the Android UI, and Kaggle + Gradio for the hosted browser demo. The fine-tuned SFT checkpoint is hosted at `V1rtucious/aegis-sft-e4b-merged-v4`; the on-device LiteRT-LM bundle is hosted at `V1rtucious/gemma4-e4b-toolcalling-litertlm-v2`.
 
 ## Try It
 
 - **Demo video:** see attached YouTube link (3 minutes)
-- **Live web demo:** see attached URL (FastAPI + React; routes to a Gemma 4 backend)
+- **Live web demo:** see attached Kaggle/Gradio URL (Kaggle-hosted notebook running the fine-tuned Gemma 4 E4B checkpoint in 8-bit with the same tool layer and SQLite KB)
 - **Real on-device:** see attached APK + sideload instructions
 - **Source:** [`github.com/Research-Commons/aegis-health`](https://github.com/Research-Commons/aegis-health) (Apache 2.0)

@@ -8,7 +8,7 @@ The notebook serves [`V1rtucious/aegis-sft-e4b-merged-v4`](https://huggingface.c
 
 - $0 cost on Kaggle's free T4 GPU tier (vs ~$3–5 for HF Inference Endpoints over the judging window)
 - Lives on the same platform Kaggle judges use — they can fork the notebook and re-run it themselves, which is a strong reproducibility signal
-- Trade-offs: 9-hour Kaggle session limit, gradio.live URL expires after 72 hours, manual restart when either limit hits
+- Trade-offs: Kaggle sessions are time-limited and the `gradio.live` URL only works while the notebook process is running. Plan for a manual restart if the session stops.
 
 ## One-time setup (~10 min)
 
@@ -33,6 +33,15 @@ The notebook serves [`V1rtucious/aegis-sft-e4b-merged-v4`](https://huggingface.c
      - Value: paste your `hf_...` token
    - Make sure it's **attached** to this notebook (toggle on).
 
+   If the GitHub repository is still private while you are testing, add a
+   second attached secret:
+   - Label: `GITHUB_TOKEN`
+   - Value: a GitHub fine-grained token with read access to
+     `Research-Commons/aegis-health`
+
+   The final Kaggle submission still needs a public code repository, so remove
+   this dependency by making the repo public before final submission.
+
 5. **Paste in the script**:
    - Open `aegis_health_kaggle.py` from this directory.
    - In the Kaggle notebook editor, either:
@@ -45,9 +54,9 @@ The notebook serves [`V1rtucious/aegis-sft-e4b-merged-v4`](https://huggingface.c
 
 1. **Click "Run All"** in the Kaggle notebook editor.
 2. **Watch the cell outputs**:
-   - Cell 1 (install deps): ~2 min
+   - Cell 1 (install deps): ~2 min; installs current Transformers 5.x for Gemma 4 support and lets Transformers choose its compatible `huggingface_hub`
    - Cell 2 (auth + git clone): ~30 sec
-   - Cell 3 (build KB): ~3 min on first run
+   - Cell 3 (build KB): ~3 min on first run; installs only the repo's KB/tool extras, not the full training stack
    - Cell 4 (tool dispatcher): should print `Dispatcher smoke test: normalize_drug(warfarin) → {...}`
    - Cell 5 (load model): ~5 min — downloading + 8-bit quantizing the model is the slow step
    - Cell 6 (define handlers): instant
@@ -76,8 +85,8 @@ Where `[the notebook]` links to your Kaggle notebook's public URL (Kaggle gives 
 
 | Issue | Mitigation |
 |---|---|
-| **9-hour Kaggle session limit** | Kaggle stops the kernel after 9 hours. To extend, click in the notebook every couple of hours to reset the idle timer. If the kernel stops, click Run All again — the model loads in ~5 min on second run since HF caches the weights between sessions. |
-| **gradio.live URL expires after 72 hours** | After 72 hours, restart Cell 9 only — it'll generate a fresh URL. Update the Writeup with the new URL. |
+| **Kaggle session stops** | Kaggle notebook sessions are time-limited. If the kernel stops, click Run All again and update the Writeup if the public URL changes. |
+| **gradio.live URL stops working** | Gradio share links currently last up to about one week, but they are only a proxy to the running notebook. If Kaggle stops the process, restart Cell 9 after the app is loaded to generate a fresh URL. |
 | **30 hours / week free GPU quota** | A continuous 24-hour run burns most of the weekly quota. If you can, only run during active judging windows. |
 | **Cold start = ~10 min total** | The first run after a kernel restart re-downloads the model (~5 min) and rebuilds the KB (~3 min). Consider uploading the KB as a Kaggle Dataset attached to the notebook to skip the rebuild on subsequent runs (cuts to ~5 min). |
 | **First request after kernel-warm = ~30 sec** | bitsandbytes 8-bit inference compiles CUDA kernels on first call. Subsequent calls are ~3–8 sec for a typical DrugSafe agentic loop. |
