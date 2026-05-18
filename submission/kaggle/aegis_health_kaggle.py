@@ -147,8 +147,14 @@ model = AutoModelForCausalLM.from_pretrained(
     dtype=torch.float16,
 )
 model.eval()
-print(f"Model loaded. Device map: {model.hf_device_map}")
-print(f"Model dtype: {next(model.parameters()).dtype}")
+_first_param = next(model.parameters())
+_device_map = getattr(model, "hf_device_map", None)
+print("Model loaded.")
+if _device_map is not None:
+    print(f"Device map: {_device_map}")
+else:
+    print(f"First parameter device: {_first_param.device}")
+print(f"First parameter dtype: {_first_param.dtype}")
 
 
 # %% CELL 6 — Define generate() + the per-mode handlers ----------------------
@@ -234,6 +240,7 @@ def _run_with_trace(user_message: str) -> tuple[str, str]:
 
 
 def run_drugsafe(drugs: str, age: str, conditions: str):
+    print(f"[DrugSafe] request drugs={drugs!r} age={age!r} conditions={conditions!r}", flush=True)
     drug_list = [d.strip() for d in drugs.split(",") if d.strip()]
     if not drug_list:
         return "", "Please enter at least one drug name (comma-separated)."
@@ -242,10 +249,13 @@ def run_drugsafe(drugs: str, age: str, conditions: str):
         msg += f" Patient age: {age.strip()}."
     if conditions.strip():
         msg += f" Conditions: {conditions.strip()}."
-    return _run_with_trace(msg)
+    result = _run_with_trace(msg)
+    print("[DrugSafe] response ready", flush=True)
+    return result
 
 
 def run_consent(text: str):
+    print(f"[ConsentReader] request chars={len(text or '')}", flush=True)
     if not text.strip():
         return "", "Please paste the consent text you'd like simplified."
     msg = (
@@ -254,10 +264,16 @@ def run_consent(text: str):
         "pay particular attention to. Do not advise the patient whether to sign.\n\n"
         f"{text.strip()}"
     )
-    return _run_with_trace(msg)
+    result = _run_with_trace(msg)
+    print("[ConsentReader] response ready", flush=True)
+    return result
 
 
 def run_healthpartner(age: str, sex: str, conditions: str, meds: str):
+    print(
+        f"[HealthPartner] request age={age!r} sex={sex!r} conditions={conditions!r} meds={meds!r}",
+        flush=True,
+    )
     if not age.strip():
         return "", "Please enter the patient age."
     msg = f"Patient profile — Age: {age.strip()}, Sex: {sex}."
@@ -270,10 +286,62 @@ def run_healthpartner(age: str, sex: str, conditions: str, meds: str):
         "recommendations. Cite the recommendation ID for each item. Note what "
         "demographic information is missing."
     )
-    return _run_with_trace(msg)
+    result = _run_with_trace(msg)
+    print("[HealthPartner] response ready", flush=True)
+    return result
 
 
 # %% CELL 7 — Smoke test (runs ~30 sec on T4; verify before launching UI) ----
+def _busy_status(mode: str) -> str:
+    return (
+        f"### Running {mode}\n"
+        "Gemma 4 is generating and may call the local SQLite-backed tools. "
+        "First requests on Kaggle can take 30-90 seconds."
+    )
+
+
+def _ready_status(mode: str) -> str:
+    return f"### Done\n{mode} response is ready. Expand the trace to inspect tool calls."
+
+
+def _error_status(mode: str, exc: Exception) -> str:
+    return (
+        f"### {mode} error\n"
+        f"`{type(exc).__name__}: {exc}`\n\n"
+        "Check the Kaggle cell logs under the launch cell for the full traceback."
+    )
+
+
+def ui_drugsafe(drugs: str, age: str, conditions: str):
+    yield _busy_status("DrugSafe"), "", ""
+    try:
+        trace, response = run_drugsafe(drugs, age, conditions)
+    except Exception as exc:  # noqa: BLE001 - surface failures in the public demo
+        yield _error_status("DrugSafe", exc), "", ""
+        raise
+    yield _ready_status("DrugSafe"), trace, response
+
+
+def ui_consent(text: str):
+    yield _busy_status("ConsentReader"), "", ""
+    try:
+        trace, response = run_consent(text)
+    except Exception as exc:  # noqa: BLE001
+        yield _error_status("ConsentReader", exc), "", ""
+        raise
+    yield _ready_status("ConsentReader"), trace, response
+
+
+def ui_healthpartner(age: str, sex: str, conditions: str, meds: str):
+    yield _busy_status("HealthPartner"), "", ""
+    try:
+        trace, response = run_healthpartner(age, sex, conditions, meds)
+    except Exception as exc:  # noqa: BLE001
+        yield _error_status("HealthPartner", exc), "", ""
+        raise
+    yield _ready_status("HealthPartner"), trace, response
+
+
 print("\n=== Smoke test — DrugSafe: warfarin + ibuprofen, 72yo ===")
 _trace, _resp = run_drugsafe("warfarin, ibuprofen", "72", "")
 print(_trace[-500:])
@@ -346,10 +414,19 @@ with gr.Blocks(
                 )
                 d_btn = gr.Button("Check safety", variant="primary")
             with gr.Column(scale=3):
+                d_status = gr.Markdown(
+                    "### Ready\nEnter medications and click **Check safety**.",
+                    label="Status",
+                )
                 d_resp = gr.Markdown(label="Aegis response", value="")
         with gr.Accordion("🔍 Agentic loop trace (tool calls + KB lookups)", open=False):
             d_trace = gr.Markdown(value="")
-        d_btn.click(run_drugsafe, [d_drugs, d_age, d_cond], [d_trace, d_resp])
+        d_btn.click(
+            ui_drugsafe,
+            [d_drugs, d_age, d_cond],
+            [d_status, d_trace, d_resp],
+            show_progress="full",
+        )
 
     with gr.Tab("📄 ConsentReader"):
         gr.Markdown(
@@ -366,10 +443,19 @@ with gr.Blocks(
                 )
                 c_btn = gr.Button("Simplify", variant="primary")
             with gr.Column(scale=3):
+                c_status = gr.Markdown(
+                    "### Ready\nPaste text and click **Simplify**.",
+                    label="Status",
+                )
                 c_resp = gr.Markdown(label="Aegis response", value="")
         with gr.Accordion("🔍 Agentic loop trace", open=False):
             c_trace = gr.Markdown(value="")
-        c_btn.click(run_consent, [c_text], [c_trace, c_resp])
+        c_btn.click(
+            ui_consent,
+            [c_text],
+            [c_status, c_trace, c_resp],
+            show_progress="full",
+        )
 
     with gr.Tab("🩺 HealthPartner"):
         gr.Markdown(
@@ -388,10 +474,19 @@ with gr.Blocks(
                 h_meds = gr.Textbox(label="Current medications (optional)")
                 h_btn = gr.Button("Get checklist", variant="primary")
             with gr.Column(scale=3):
+                h_status = gr.Markdown(
+                    "### Ready\nEnter a profile and click **Get checklist**.",
+                    label="Status",
+                )
                 h_resp = gr.Markdown(label="Aegis response", value="")
         with gr.Accordion("🔍 Agentic loop trace", open=False):
             h_trace = gr.Markdown(value="")
-        h_btn.click(run_healthpartner, [h_age, h_sex, h_cond, h_meds], [h_trace, h_resp])
+        h_btn.click(
+            ui_healthpartner,
+            [h_age, h_sex, h_cond, h_meds],
+            [h_status, h_trace, h_resp],
+            show_progress="full",
+        )
 
     with gr.Tab("📊 ReportReader"):
         gr.Markdown(REPORTREADER_TAB_MD)
@@ -414,4 +509,5 @@ with gr.Blocks(
 # Keep the notebook running — when this cell stops, the share URL dies.
 # Gradio share URLs currently last up to about one week, but they are only a
 # proxy to this running Kaggle notebook. If the notebook stops, the link dies.
-demo.launch(share=True, server_name="0.0.0.0", server_port=7860)
+demo.queue(default_concurrency_limit=1)
+demo.launch(share=True, server_name="0.0.0.0", server_port=7860, debug=True)
