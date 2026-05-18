@@ -87,5 +87,5 @@ Knowledge base content derives from public-domain US federal sources: openFDA (C
 
 - **Demo video:** see attached YouTube link (3 minutes)
 - **Live web demo:** see attached Kaggle/Gradio URL (Kaggle-hosted notebook running the fine-tuned Gemma 4 E4B checkpoint in 8-bit with the same tool layer and SQLite KB)
-- **Real on-device:** see attached APK + sideload instructions
+- **Real on-device:** see attached APK + [`submission/android_sideload`](android_sideload/) sideload instructions
 - **Source:** [`github.com/Research-Commons/aegis-health`](https://github.com/Research-Commons/aegis-health) (Apache 2.0)

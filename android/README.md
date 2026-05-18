@@ -2,6 +2,9 @@
 
 Offline, on-device medical safety assistant powered by the Gemma 4 E4B tool-calling LiteRT-LM artifact.
 
+For the standalone GitHub documentation package used by judges, see
+[`../submission/android_sideload/`](../submission/android_sideload/).
+
 ## Current Model Artifact
 
 - Hugging Face repo: https://huggingface.co/rescommons/gemma4-e4b-toolcalling-litertlm-v2

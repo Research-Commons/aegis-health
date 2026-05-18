@@ -1,0 +1,24 @@
+{
+  "android_package": "com.aegis.health",
+  "apk": {
+    "distribution": "GitHub Release asset",
+    "suggested_filename": "aegis-health-demo.apk",
+    "local_debug_build_path": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "approx_size": "161 MB"
+  },
+  "litertlm_model": {
+    "huggingface_repo": "rescommons/gemma4-e4b-toolcalling-litertlm-v2",
+    "repo_filename": "model.litertlm",
+    "device_filename": "aegis_model.litertlm",
+    "device_path": "/sdcard/Android/data/com.aegis.health/files/aegis_model.litertlm",
+    "approx_size": "7.7 GB"
+  },
+  "source_sft_checkpoint": {
+    "huggingface_repo": "rescommons/aegis-sft-e4b-merged-v4"
+  },
+  "knowledge_base": {
+    "bundled_in_apk": true,
+    "asset_path": "android/app/src/main/assets/aegis_kb.sqlite"
+  }
+}
+

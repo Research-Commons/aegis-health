@@ -175,6 +175,8 @@ make demo
 
 This walks through getting Aegis Health installed and running on a fresh Android device — useful for evaluation, demos, or onboarding contributors. The shipping path is a fine-tuned Gemma 4 E4B model in LiteRT-LM `.litertlm` format, sideloaded into the app's external files directory.
 
+For the judge-facing APK + model sideload package, see [`submission/android_sideload/`](submission/android_sideload/).
+
 ### Hardware requirements
 
 | Resource | Minimum | Recommended |
