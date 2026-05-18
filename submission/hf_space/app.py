@@ -2,7 +2,7 @@
 
 Browser-friendly companion to the Aegis Health Android app. Routes inference
 to the same fine-tuned SFT v4 checkpoint hosted on a Hugging Face Inference
-Endpoint (V1rtucious/aegis-sft-e4b-merged-v4), so judges who cannot sideload
+Endpoint (rescommons/aegis-sft-e4b-merged-v4), so judges who cannot sideload
 the APK can still experience the agentic loop and citation grounding.
 
 The on-device Android APK runs the INT8 W8/A32 quantized version of the same
@@ -22,7 +22,7 @@ Environment variables (configured as Space secrets / variables):
                        if your Endpoint uses a different model identifier.
 
 The Endpoint deploys the fine-tuned SFT v4 checkpoint at
-V1rtucious/aegis-sft-e4b-merged-v4 — same model as the Android APK,
+rescommons/aegis-sft-e4b-merged-v4 — same model as the Android APK,
 served in FP16 (cloud) instead of INT8 W8/A32 (on-device).
 """
 
@@ -114,7 +114,7 @@ def run_agentic_loop(user_message: str) -> tuple[str, str]:
         {"role": "user", "content": user_message},
     ]
     trace_lines: list[str] = [
-        "**Model:** `V1rtucious/aegis-sft-e4b-merged-v4` "
+        "**Model:** `rescommons/aegis-sft-e4b-merged-v4` "
         "(fine-tuned Gemma 4 E4B SFT v4, FP16 via HF Inference Endpoint)\n"
     ]
 
@@ -250,7 +250,7 @@ INTRO_MD = """
 **Offline medical safety assistant powered by Gemma 4.** This Space is the
 browser-friendly companion to the
 [Android app](https://github.com/Research-Commons/aegis-health) and serves
-the **same fine-tuned Gemma 4 E4B SFT v4 checkpoint** (V1rtucious/aegis-sft-e4b-merged-v4)
+the **same fine-tuned Gemma 4 E4B SFT v4 checkpoint** (rescommons/aegis-sft-e4b-merged-v4)
 through an HF Inference Endpoint, so judges who cannot sideload the APK can
 still experience the agentic loop and citation grounding.
 
@@ -265,7 +265,8 @@ MedlinePlus · USPSTF · NIH DSLD) or deferred to a clinician.
 
 **Submission links:** [GitHub](https://github.com/Research-Commons/aegis-health) ·
 [Android APK release](https://github.com/Research-Commons/aegis-health/releases/tag/v1.1.0-demo) ·
-[Fine-tuned model on HF Hub](https://huggingface.co/V1rtucious/gemma4-e4b-toolcalling-litertlm-v2) ·
+[Fine-tuned SFT model](https://huggingface.co/rescommons/aegis-sft-e4b-merged-v4) ·
+[LiteRT-LM model](https://huggingface.co/rescommons/gemma4-e4b-toolcalling-litertlm-v2) ·
 Apache 2.0 licensed
 """
 

@@ -127,7 +127,7 @@ endif
 
 # SFT uses run_base.py with --fp16 and --tag sft so both base and SFT are scored through
 # the same code path and all three metric groups (A/B/C), with matched precision.
-SFT_CHECKPOINT ?= V1rtucious/aegis-sft-e4b-merged
+SFT_CHECKPOINT ?= rescommons/aegis-sft-e4b-merged-v4
 
 eval-sft:
 	python -m eval.run_base --model-id $(SFT_CHECKPOINT) --tag sft --fp16 --enable-tools --anchor-path $(ANCHOR_PATH)

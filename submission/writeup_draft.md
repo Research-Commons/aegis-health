@@ -81,7 +81,7 @@ The fine-tuned model has not output a dosage recommendation or diagnostic statem
 
 ## Acknowledgments
 
-Knowledge base content derives from public-domain US federal sources: openFDA (CC0), DailyMed SPL (NLM), RxNorm (NLM), MedlinePlus (NLM), USPSTF, and NIH DSLD. Curated drug-drug interactions and lab reference ranges cite primary FDA labels and peer-reviewed clinical pharmacology guidelines. We use Unsloth for LoRA fine-tuning, LiteRT-LM 0.10.2 for on-device inference, Jetpack Compose for the Android UI, and Kaggle + Gradio for the hosted browser demo. The fine-tuned SFT checkpoint is hosted at `V1rtucious/aegis-sft-e4b-merged-v4`; the on-device LiteRT-LM bundle is hosted at `V1rtucious/gemma4-e4b-toolcalling-litertlm-v2`.
+Knowledge base content derives from public-domain US federal sources: openFDA (CC0), DailyMed SPL (NLM), RxNorm (NLM), MedlinePlus (NLM), USPSTF, and NIH DSLD. Curated drug-drug interactions and lab reference ranges cite primary FDA labels and peer-reviewed clinical pharmacology guidelines. We use Unsloth for LoRA fine-tuning, LiteRT-LM 0.10.2 for on-device inference, Jetpack Compose for the Android UI, and Kaggle + Gradio for the hosted browser demo. The fine-tuned SFT checkpoint is hosted at `rescommons/aegis-sft-e4b-merged-v4`; the on-device LiteRT-LM bundle is hosted at `rescommons/gemma4-e4b-toolcalling-litertlm-v2`.
 
 ## Try It
 

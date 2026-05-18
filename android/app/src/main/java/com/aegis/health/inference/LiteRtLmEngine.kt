@@ -362,7 +362,7 @@ object LiteRtLmEngine : InferenceEngine {
             throw FileNotFoundException(
                 "Model not found at ${externalModel.absolutePath}. " +
                 "Download with: huggingface-cli download " +
-                "V1rtucious/gemma4-e4b-toolcalling-litertlm-v2 model.litertlm --local-dir ./downloads. " +
+                "rescommons/gemma4-e4b-toolcalling-litertlm-v2 model.litertlm --local-dir ./downloads. " +
                 "Then sideload with: adb push ./downloads/model.litertlm " +
                 "/sdcard/Android/data/com.aegis.health/files/$MODEL_FILE",
             )

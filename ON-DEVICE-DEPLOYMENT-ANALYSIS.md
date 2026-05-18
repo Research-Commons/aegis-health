@@ -1,7 +1,7 @@
 # On-Device Deployment Analysis
 
 **Date:** 2026-05-02
-**Subject:** Why the Aegis Health SFT model (`V1rtucious/aegis-sft-e4b-merged-v4`) ships on-device with the LiteRT-LM CPU backend, and not via any of the faster paths we evaluated.
+**Subject:** Why the Aegis Health SFT model (`rescommons/aegis-sft-e4b-merged-v4`) ships on-device with the LiteRT-LM CPU backend, and not via any of the faster paths we evaluated.
 
 **Status update, 2026-05-11:** `V1rtucious/gemma4-e4b-toolcalling-litertlm-v3`, a new W4 `.litertlm` export, was tested on the Galaxy S23 and reproduced the same native LiteRT-LM crash on first prompt (`SIGSEGV`, `liblitertlm_jni.so`, PC `0x102aaf0`). The W8 `v2` bundle remains the default runtime artifact.
 
@@ -14,7 +14,7 @@ We exhaustively evaluated five on-device runtime/quantization combinations for o
 The project must ship a *fine-tuned* SFT model, not a base Gemma. The eval contract (deferral intent, citation grounding, KB severity calibration) requires the SFT to be the model that runs in the APK. The Gemma 4 hackathon mandates Gemma 4 / Gemma 3n family — pivoting to a different model architecture is not allowed.
 
 So the deployment surface is fixed:
-- Model identity: `V1rtucious/aegis-sft-e4b-merged-v4` (LoRA-merged FP16 safetensors, ~16 GB)
+- Model identity: `rescommons/aegis-sft-e4b-merged-v4` (LoRA-merged FP16 safetensors, ~16 GB)
 - Target architecture: Gemma 3n E4B (also called "Gemma 4 E4B" in some communities)
 - Target device: Android, on-device only, no network calls
 - Target runtime ecosystem: Google's edge LLM stack (LiteRT-LM or MediaPipe LLM Inference)
@@ -27,7 +27,7 @@ So the deployment surface is fixed:
 |---|---|
 | Runtime | `com.google.ai.edge.litertlm:litertlm-android:0.10.2` |
 | Backend | `Backend.CPU(numOfThreads = 4)` |
-| Bundle | `V1rtucious/gemma4-e4b-toolcalling-litertlm` (W8, ~7.7 GB) |
+| Bundle | `rescommons/gemma4-e4b-toolcalling-litertlm-v2` (W8, ~7.7 GB) |
 | Recipe | `dynamic_wi8_afp32` via `litert_torch.generative.export_hf.export()` |
 | Latency | ~5 minutes per response |
 | Output quality | Clean — valid AegisResponse JSON, correct tool-call markers, faithful to FP16 transformers eval |
@@ -126,9 +126,9 @@ For post-hackathon: track [mediapipe #6049](https://github.com/google-ai-edge/me
 - LiteRT-LM GPU first-run init log: `android/gpu-first-run-logcat.txt`
 - Working W8 export notebook: `training/notebooks/working_litertlm_export.ipynb`
 - Earlier SFT splice debugging: `HANDOVER-LITERTLM-DEBUG.md`
-- Working W8 bundle: [V1rtucious/gemma4-e4b-toolcalling-litertlm](https://huggingface.co/V1rtucious/gemma4-e4b-toolcalling-litertlm)
+- Working W8 bundle: [rescommons/gemma4-e4b-toolcalling-litertlm-v2](https://huggingface.co/rescommons/gemma4-e4b-toolcalling-litertlm-v2)
 - Failing W4 bundle: [V1rtucious/gemma4-e4b-toolcalling-litertlm-int4](https://huggingface.co/V1rtucious/gemma4-e4b-toolcalling-litertlm-int4)
-- SFT model source: [V1rtucious/aegis-sft-e4b-merged-v4](https://huggingface.co/V1rtucious/aegis-sft-e4b-merged-v4)
+- SFT model source: [rescommons/aegis-sft-e4b-merged-v4](https://huggingface.co/rescommons/aegis-sft-e4b-merged-v4)
 - MediaPipe LLM Inference Android: [docs](https://ai.google.dev/edge/mediapipe/solutions/genai/llm_inference)
 - MediaPipe HF→.task conversion guide: [docs](https://ai.google.dev/gemma/docs/conversions/hf-to-mediapipe-task)
 - MediaPipe Gemma 3n converter blocker: [github.com/google-ai-edge/mediapipe issue #6049](https://github.com/google-ai-edge/mediapipe/issues/6049)

@@ -4,13 +4,13 @@ Offline, on-device medical safety assistant powered by the Gemma 4 E4B tool-call
 
 ## Current Model Artifact
 
-- Hugging Face repo: https://huggingface.co/V1rtucious/gemma4-e4b-toolcalling-litertlm-v2
+- Hugging Face repo: https://huggingface.co/rescommons/gemma4-e4b-toolcalling-litertlm-v2
 - Repo filename: `model.litertlm`
 - Device filename: `aegis_model.litertlm` (renamed on push)
 - Device path: `/sdcard/Android/data/com.aegis.health/files/aegis_model.litertlm`
 
 ```powershell
-huggingface-cli download V1rtucious/gemma4-e4b-toolcalling-litertlm-v2 `
+huggingface-cli download rescommons/gemma4-e4b-toolcalling-litertlm-v2 `
   model.litertlm `
   --local-dir .\downloads
 

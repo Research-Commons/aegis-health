@@ -2,14 +2,14 @@
 # AEGIS HEALTH — KAGGLE HOSTED INFERENCE NOTEBOOK
 # ============================================================================
 # Hosts the fine-tuned Gemma 4 E4B SFT v4 checkpoint
-# (V1rtucious/aegis-sft-e4b-merged-v4) on Kaggle's free GPU with a public
+# (rescommons/aegis-sft-e4b-merged-v4) on Kaggle's free GPU with a public
 # Gradio share URL, for the Kaggle Gemma 4 Impact Hackathon submission.
 #
 # PREREQUISITES (set in the Kaggle notebook's right-side panel):
 # ── Accelerator:  GPU T4 x2  (or P100)
 # ── Internet:     ON
 # ── Add a Secret named HF_TOKEN with read access to
-#    V1rtucious/aegis-sft-e4b-merged-v4
+#    rescommons/aegis-sft-e4b-merged-v4
 #
 # Paste each "# %% CELL N" block into a separate Kaggle notebook cell, OR
 # paste the entire file into a single cell — both work.
@@ -48,7 +48,7 @@ from kaggle_secrets import UserSecretsClient
 
 secrets = UserSecretsClient()
 
-# Kaggle Secret with read access to V1rtucious/aegis-sft-e4b-merged-v4
+# Kaggle Secret with read access to rescommons/aegis-sft-e4b-merged-v4
 os.environ["HF_TOKEN"] = secrets.get_secret("HF_TOKEN")
 os.environ["HUGGING_FACE_HUB_TOKEN"] = os.environ["HF_TOKEN"]
 
@@ -125,7 +125,7 @@ print(f"Dispatcher smoke test: normalize_drug(warfarin) → {_smoke[:120]}")
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
-MODEL_ID = "V1rtucious/aegis-sft-e4b-merged-v4"
+MODEL_ID = "rescommons/aegis-sft-e4b-merged-v4"
 
 bnb_config = BitsAndBytesConfig(
     load_in_8bit=True,
@@ -211,7 +211,7 @@ def _run_with_trace(user_message: str) -> tuple[str, str]:
     """Custom agentic loop that captures a trace alongside the final response."""
     prompt = _build_prompt(user_message)
     trace_lines: list[str] = [
-        "**Model:** `V1rtucious/aegis-sft-e4b-merged-v4` "
+        "**Model:** `rescommons/aegis-sft-e4b-merged-v4` "
         "(fine-tuned Gemma 4 E4B SFT v4, 8-bit via bitsandbytes on Kaggle T4)\n"
     ]
     conversation = prompt
@@ -357,7 +357,7 @@ INTRO_MD = """
 
 **Offline medical safety assistant powered by Gemma 4.** This Kaggle notebook
 serves the **fine-tuned Gemma 4 E4B SFT v4 checkpoint**
-([`V1rtucious/aegis-sft-e4b-merged-v4`](https://huggingface.co/V1rtucious/aegis-sft-e4b-merged-v4))
+([`rescommons/aegis-sft-e4b-merged-v4`](https://huggingface.co/rescommons/aegis-sft-e4b-merged-v4))
 through a public Gradio share URL, so judges who cannot sideload the APK can
 still experience the agentic loop and citation grounding.
 
@@ -372,7 +372,7 @@ layer, same SQLite KB** across both deployments. Every medical claim is cited
 
 **Submission links:** [GitHub](https://github.com/Research-Commons/aegis-health) ·
 [Android APK release](https://github.com/Research-Commons/aegis-health/releases/tag/v1.1.0-demo) ·
-[Fine-tuned model on HF Hub](https://huggingface.co/V1rtucious/aegis-sft-e4b-merged-v4) ·
+[Fine-tuned model on HF Hub](https://huggingface.co/rescommons/aegis-sft-e4b-merged-v4) ·
 Apache 2.0 licensed
 """
 

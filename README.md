@@ -208,7 +208,7 @@ make kb
 cp kb/output/aegis_kb.sqlite android/app/src/main/assets/
 
 # 4. Download the .litertlm model from Hugging Face (~7.7 GB)
-huggingface-cli download V1rtucious/gemma4-e4b-toolcalling-litertlm-v2 \
+huggingface-cli download rescommons/gemma4-e4b-toolcalling-litertlm-v2 \
   model.litertlm \
   --local-dir ./downloads
 
@@ -233,7 +233,7 @@ adb shell am start -n com.aegis.health/.MainActivity
 ### PowerShell variant (Windows)
 
 ```powershell
-huggingface-cli download V1rtucious/gemma4-e4b-toolcalling-litertlm-v2 `
+huggingface-cli download rescommons/gemma4-e4b-toolcalling-litertlm-v2 `
   model.litertlm `
   --local-dir .\downloads
 
@@ -292,7 +292,7 @@ Before declaring the install good:
 
 **`Model not found at ...`** — model wasn't pushed, or it landed at the wrong path. The app reads from `getExternalFilesDir(null)`, which is `/sdcard/Android/data/com.aegis.health/files/` and only exists once the app has been installed and launched at least once. Install the APK first, launch it (it'll fail to find the model, that's fine), then run the `adb push` step.
 
-**Engine init succeeds but the first prompt crashes (SIGSEGV)** — confirm you downloaded `model.litertlm` from `V1rtucious/gemma4-e4b-toolcalling-litertlm-v2` (the W8 build). The `V1rtucious/gemma4-e4b-toolcalling-litertlm-v3` W4 build reproduces the known LiteRT-LM 0.10.2 native crash on the first prompt; do not use it as the default runtime artifact until upstream W4 support is fixed (see [ON-DEVICE-DEPLOYMENT-ANALYSIS.md](ON-DEVICE-DEPLOYMENT-ANALYSIS.md)).
+**Engine init succeeds but the first prompt crashes (SIGSEGV)** — confirm you downloaded `model.litertlm` from `rescommons/gemma4-e4b-toolcalling-litertlm-v2` (the W8 build). The `V1rtucious/gemma4-e4b-toolcalling-litertlm-v3` W4 build reproduces the known LiteRT-LM 0.10.2 native crash on the first prompt; do not use it as the default runtime artifact until upstream W4 support is fixed (see [ON-DEVICE-DEPLOYMENT-ANALYSIS.md](ON-DEVICE-DEPLOYMENT-ANALYSIS.md)).
 
 **Responses take longer than ~3 minutes** — confirm the device has at least 8 GB RAM free and isn't thermal-throttling. Background-killing other apps (`adb shell am kill-all`) before each smoke test helps. Also check the selected device profile in [`LiteRtLmEngine.kt`](android/app/src/main/java/com/aegis/health/inference/LiteRtLmEngine.kt); too many threads can spill work onto slower small cores.
 

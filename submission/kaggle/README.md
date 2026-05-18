@@ -2,7 +2,7 @@
 
 This directory contains everything needed to host the fine-tuned **Gemma 4 E4B SFT v4** checkpoint as a public Gradio demo on a Kaggle notebook, for the Kaggle Gemma 4 Impact Hackathon submission.
 
-The notebook serves [`V1rtucious/aegis-sft-e4b-merged-v4`](https://huggingface.co/V1rtucious/aegis-sft-e4b-merged-v4) (the FP16 merged SFT checkpoint) loaded in 8-bit via bitsandbytes on Kaggle's free T4 GPU. Same fine-tuned weights as the Android APK; cloud 8-bit on T4 vs phone INT8 W8/A32 via LiteRT-LM.
+The notebook serves [`rescommons/aegis-sft-e4b-merged-v4`](https://huggingface.co/rescommons/aegis-sft-e4b-merged-v4) (the FP16 merged SFT checkpoint) loaded in 8-bit via bitsandbytes on Kaggle's free T4 GPU. Same fine-tuned weights as the Android APK; cloud 8-bit on T4 vs phone INT8 W8/A32 via LiteRT-LM.
 
 ## Why Kaggle and not HF Inference Endpoints
 

@@ -47,7 +47,7 @@ object EngineRouter {
         if (!litertModel.exists()) {
             throw FileNotFoundException(
                 "No model file found in ${externalDir.absolutePath}. Sideload with:\n" +
-                "  huggingface-cli download V1rtucious/gemma4-e4b-toolcalling-litertlm-v2 " +
+                "  huggingface-cli download rescommons/gemma4-e4b-toolcalling-litertlm-v2 " +
                 "model.litertlm --local-dir ./downloads\n" +
                 "  adb push ./downloads/model.litertlm " +
                 "/sdcard/Android/data/com.aegis.health/files/$LITERT_MODEL",
